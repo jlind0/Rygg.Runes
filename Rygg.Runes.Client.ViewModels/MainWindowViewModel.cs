@@ -24,6 +24,12 @@ namespace Rygg.Runes.Client.ViewModels
             get => annoatedImage;
             set => this.RaiseAndSetIfChanged(ref annoatedImage, value);
         }
+        private bool isLoading = false;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => this.RaiseAndSetIfChanged(ref isLoading, value);
+        }
         public Interaction<string, bool> HasPermissions => hasPermissions;
         public Interaction<string, bool> Alert => alert;
         public Interaction<string, Stream> OpenFile => openFile;
@@ -40,6 +46,7 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
+            this.IsLoading = true;
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
                 Runes.Clear();
@@ -62,6 +69,7 @@ namespace Rygg.Runes.Client.ViewModels
             }
             else
                 await Alert.Handle("Permissions required").GetAwaiter();
+            this.IsLoading = false;
         }
     }
 }
