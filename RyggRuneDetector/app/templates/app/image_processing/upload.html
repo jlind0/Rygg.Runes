@@ -1,0 +1,16 @@
+<!-- image_processing/templates/image_processing/upload.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Processing Service</title>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
