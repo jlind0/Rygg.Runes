@@ -6,6 +6,7 @@ using ReactiveUI.Maui;
 using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
+using System.Reactive.Disposables;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -22,7 +23,7 @@ namespace RyggRunes.MAUI.Client
                 {
                     await DisplayAlert("Alert", interaction.Input, "OK");
                     interaction.SetOutput(true);
-                });
+                }).DisposeWith(d);
                 ViewModel.OpenFile.RegisterHandler(async interaction =>
                 {
                     var fileResult = await FilePicker.PickAsync(new PickOptions
@@ -32,18 +33,14 @@ namespace RyggRunes.MAUI.Client
                     });
                     if (fileResult != null)
                         interaction.SetOutput(await fileResult.OpenReadAsync());
-                });
+                }).DisposeWith(d);
                 ViewModel.HasPermissions.RegisterHandler(async interaction =>
                 {
                     var status = await Permissions.RequestAsync<Permissions.StorageRead>();
                     interaction.SetOutput(status == PermissionStatus.Granted);
-                });
+                }).DisposeWith(d);
             });
-            ViewModel.WhenAnyPropertyChanged(nameof(ViewModel.AnnotatedImage)).Do(p =>
-            {
-                if (p.AnnotatedImage != null)
-                    imgAnnoated.Source = ImageSource.FromStream(() => new MemoryStream(p.AnnotatedImage));
-            }).Subscribe();
+            
         }
     }
 }

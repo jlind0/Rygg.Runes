@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <r:ReactiveContentPage x:TypeArguments="vm:MainWindowViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+             xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
              x:Class="RyggRunes.MAUI.Client.MainPage">
-
+    <r:ReactiveContentPage.Resources>
+        <ResourceDictionary>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+        </ResourceDictionary>
+    </r:ReactiveContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
@@ -13,7 +18,7 @@
             <Button Text="Select Image" Command="{Binding ProcessImage}" />
             <Label>Runes</Label>
             <ListView ItemsSource="{Binding Runes}"/>
-            <Image x:Name="imgAnnoated" WidthRequest="500" HeightRequest="500" Aspect="AspectFit" />
+            <Image Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" WidthRequest="500" HeightRequest="500" Aspect="AspectFit" />
         </VerticalStackLayout>
     </ScrollView>
 
