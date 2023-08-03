@@ -1,6 +1,7 @@
 ﻿
 using ReactiveUI;
 using RyggRunes.Client.Core;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,11 +52,32 @@ namespace Rygg.Runes.Client.ViewModels
             {
                 Runes.Clear();
                 byte[] fileBytes;
+                
                 using (var memoryStream = new MemoryStream())
                 {
                     using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
                     await file.CopyToAsync(memoryStream, token);
                     fileBytes = memoryStream.ToArray();
+                }
+                using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
+                {
+                    int sourceWidth = sourceBitmap.Width;
+                    int sourceHeight = sourceBitmap.Height;
+                    var targetWidth = (sourceWidth > 1000 ? 1000 : sourceWidth);
+                    // Calculate the aspect ratio to maintain the original image's proportions
+                    float aspectRatio = (float)sourceWidth / sourceHeight;
+                    var targetHeight = (int)( targetWidth / aspectRatio);
+                    
+                    using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
+                    {
+                        using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
+                        {
+                            using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
+                            {
+                                fileBytes= compressedData.ToArray();
+                            }
+                        }
+                    }
                 }
                 var resp = await RunesProxy.ProcessImage(fileBytes, token);
                 if (resp != null)
