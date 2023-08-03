@@ -13,6 +13,7 @@
             <Button Text="Select Image" Command="{Binding ProcessImage}" />
             <Label>Runes</Label>
             <ListView ItemsSource="{Binding Runes}"/>
+            <Image x:Name="imgAnnoated" WidthRequest="500" HeightRequest="500" Aspect="AspectFit" />
         </VerticalStackLayout>
     </ScrollView>
 

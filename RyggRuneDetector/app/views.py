@@ -26,7 +26,8 @@ def image_upload(request):
             detector = RuneDetection(str(Path(__file__).parent/'model_RuneOCR_20230722.onnx'))
             im_annotated, annotations = detector.run(Image.open(image))
             
-            return JsonResponse({'success': True, 'annotations' : annotations})
+            return JsonResponse({'success': True, 
+                                 'annotations' : annotations})
         else:
             return JsonResponse({'success': False, 'error': 'Invalid form data.'})
     else:
@@ -40,7 +41,9 @@ def post_image(request):
         byte_data = request.body
         detector = RuneDetection(str(Path(__file__).parent/'model_RuneOCR_20230722.onnx'))
         im_annotated, annotations = detector.run(Image.open(io.BytesIO(byte_data)))
-        return JsonResponse({'success': True, 'annotations' : annotations})
+        return JsonResponse({'success': True, 
+                             'annotations' : annotations, 
+                             'annotatedImage': serialize_image_to_json(im_annotated)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid form data.'})
 
@@ -52,19 +55,7 @@ def serialize_image_to_json(image):
 
     # Encode the byte stream as base64
     image_base64 = base64.b64encode(image_byte_array.getvalue()).decode('utf-8')
-
-    # Create a dictionary representing the image data
-    image_data = {
-        'format': image.format,
-        'mode': image.mode,
-        'size': image.size,
-        'data': image_base64,
-    }
-
-    # Convert the dictionary to JSON
-    json_data = json.dumps(image_data)
-
-    return json_data
+    return image_base64;
 
 def process_image(image):
     # Open the uploaded image using Pillow

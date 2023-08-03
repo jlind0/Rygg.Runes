@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using ReactiveUI;
 using ReactiveUI.Maui;
 using System.Reactive.Linq;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -37,6 +39,11 @@ namespace RyggRunes.MAUI.Client
                     interaction.SetOutput(status == PermissionStatus.Granted);
                 });
             });
+            ViewModel.WhenAnyPropertyChanged(nameof(ViewModel.AnnotatedImage)).Do(p =>
+            {
+                if (p.AnnotatedImage != null)
+                    imgAnnoated.Source = ImageSource.FromStream(() => new MemoryStream(p.AnnotatedImage));
+            }).Subscribe();
         }
     }
 }

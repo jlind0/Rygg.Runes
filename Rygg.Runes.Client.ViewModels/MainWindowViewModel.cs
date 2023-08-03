@@ -18,6 +18,12 @@ namespace Rygg.Runes.Client.ViewModels
         private readonly Interaction<string, bool> hasPermissions;
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;
+        private byte[] annoatedImage;
+        public byte[] AnnotatedImage
+        {
+            get => annoatedImage;
+            set => this.RaiseAndSetIfChanged(ref annoatedImage, value);
+        }
         public Interaction<string, bool> HasPermissions => hasPermissions;
         public Interaction<string, bool> Alert => alert;
         public Interaction<string, Stream> OpenFile => openFile;
@@ -44,9 +50,14 @@ namespace Rygg.Runes.Client.ViewModels
                     await file.CopyToAsync(memoryStream, token);
                     fileBytes = memoryStream.ToArray();
                 }
-                foreach(var rune in await RunesProxy.ProcessImage(fileBytes, token))
+                var resp = await RunesProxy.ProcessImage(fileBytes, token);
+                if (resp != null)
                 {
-                    Runes.Add(rune);
+                    AnnotatedImage = resp.AnnotatedImage;
+                    foreach (var rune in resp.Annotations)
+                    {
+                        Runes.Add(rune);
+                    }
                 }
             }
             else
