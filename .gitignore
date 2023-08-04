@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/RyggRuneDetector/app/model_RuneOCR_20230722.onnx
+/RyggRuneDetector/packages/rune_ocr-0.0.1.tar.gz
