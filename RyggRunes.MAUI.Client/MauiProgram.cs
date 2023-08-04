@@ -25,6 +25,7 @@ namespace RyggRunes.MAUI.Client
 
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<IRunesProxy, RunesProxy>();
+            builder.Services.AddSingleton<IChatGPTProxy, ChatGPTProxy>();
             builder.Services.AddScoped<MainWindowViewModel>();
             builder.Services.TryAddTransient<MainPage>();
             return builder.Build();

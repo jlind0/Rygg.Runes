@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -31,19 +32,45 @@ namespace Rygg.Runes.Client.ViewModels
             get => isLoading;
             set => this.RaiseAndSetIfChanged(ref isLoading, value);
         }
+        private string question;
+        public string Question
+        {
+            get => question;
+            set => this.RaiseAndSetIfChanged(ref question, value);
+        }
+        private string answer;
+        public string Answer
+        {
+            get => answer;
+            set => this.RaiseAndSetIfChanged(ref answer, value);
+        }
+        public bool HasRunes
+        {
+            get => this.Runes.Count > 0;
+        }
         public Interaction<string, bool> HasPermissions => hasPermissions;
         public Interaction<string, bool> Alert => alert;
         public Interaction<string, Stream> OpenFile => openFile;
         protected IRunesProxy RunesProxy { get; }
+        protected IChatGPTProxy ChatProxy { get; }
         public ObservableCollection<string> Runes { get; } = new ObservableCollection<string>();
         public ICommand ProcessImage { get; }
-        public MainWindowViewModel(IRunesProxy runesProxy) 
+        public ICommand AskFuture { get; }
+        public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy) 
         {
             RunesProxy = runesProxy;
             hasPermissions = new Interaction<string, bool>();
             alert = new Interaction<string, bool>();
             openFile = new Interaction<string, Stream>();
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
+            ChatProxy = chatProxy;
+            AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
+        }
+        protected async Task DoAskFuture(CancellationToken token = default)
+        {
+            IsLoading = true;
+            Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
+            IsLoading = false;
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
@@ -51,6 +78,7 @@ namespace Rygg.Runes.Client.ViewModels
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
                 Runes.Clear();
+                this.RaisePropertyChanged(nameof(HasRunes));
                 byte[] fileBytes;
                 
                 using (var memoryStream = new MemoryStream())
@@ -87,6 +115,7 @@ namespace Rygg.Runes.Client.ViewModels
                     {
                         Runes.Add(rune);
                     }
+                    this.RaisePropertyChanged(nameof(HasRunes));
                 }
             }
             else
