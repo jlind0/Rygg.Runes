@@ -22,6 +22,7 @@ namespace RyggRunes.MAUI.Client
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Configuration.AddJsonFile("appsettings.json");
+            builder.Configuration.AddUserSecrets<MainPage>();
 
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<IRunesProxy, RunesProxy>();
