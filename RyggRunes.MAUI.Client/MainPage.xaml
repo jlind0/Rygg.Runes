@@ -27,7 +27,7 @@
                 <Label>Question</Label>
                 <Editor Text="{Binding Question}" WidthRequest="700" HeightRequest="150"></Editor>
                 <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                <Editor Text="{Binding Answer}" IsEnabled="False" WidthRequest="700" HeightRequest="300"/>
+                <Label Text="{Binding Answer}"/>
             </VerticalStackLayout>
             
         </VerticalStackLayout>
