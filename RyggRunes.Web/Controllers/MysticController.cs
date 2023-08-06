@@ -1,0 +1,32 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
+using RyggRunes.Client.Core;
+
+namespace RyggRunes.Web.Controllers
+{
+    //[Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    [RequiredScope("access_as_user")]
+    public class MysticController : ControllerBase
+    {
+        protected IChatGPTProxy ChatProxy { get; }
+        public MysticController(IChatGPTProxy chatProxy)
+        {
+            ChatProxy = chatProxy;
+        }
+        [HttpPost]
+        public Task<string> AskQuestions([FromBody] MysticRequest request, CancellationToken token = default)
+        {
+            return ChatProxy.GetReading(request.Runes, request.Question, token);
+        }
+    }
+    public class MysticRequest
+    {
+        public string[] Runes { get; set; }
+        public string Question { get; set; }
+    }
+}

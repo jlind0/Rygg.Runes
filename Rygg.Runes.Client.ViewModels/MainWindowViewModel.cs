@@ -1,4 +1,7 @@
 ﻿
+using MAUI.MSALClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client;
 using ReactiveUI;
 using RyggRunes.Client.Core;
 using SkiaSharp;
@@ -12,6 +15,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Rygg.Runes.Client.ViewModels
 {
@@ -21,6 +25,12 @@ namespace Rygg.Runes.Client.ViewModels
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;
         private byte[] annoatedImage;
+        private bool isLoggedIn = false;
+        public bool IsLoggedIn
+        {
+            get => isLoggedIn;
+            set => this.RaiseAndSetIfChanged(ref isLoggedIn, value);
+        }
         public byte[] AnnotatedImage
         {
             get => annoatedImage;
@@ -56,8 +66,12 @@ namespace Rygg.Runes.Client.ViewModels
         public ObservableCollection<string> Runes { get; } = new ObservableCollection<string>();
         public ICommand ProcessImage { get; }
         public ICommand AskFuture { get; }
-        public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy) 
+        public ICommand Login { get; }
+        protected string ApiScope { get; }
+        protected IPublicClientApplication ClientApplication { get; }
+        public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy, IConfiguration config, IPublicClientApplication clientApplication) 
         {
+            ClientApplication = clientApplication;
             RunesProxy = runesProxy;
             hasPermissions = new Interaction<string, bool>();
             alert = new Interaction<string, bool>();
@@ -65,12 +79,40 @@ namespace Rygg.Runes.Client.ViewModels
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             ChatProxy = chatProxy;
             AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
+            ApiScope = config["AzureAD:ApiScope"];
+            Login = ReactiveCommand.CreateFromTask(DoLogin);
+        }
+        protected async Task DoLogin()
+        {
+            
+            try
+            {
+                await ClientApplication.AcquireTokenInteractive(new string[] {"api://5991da6c-f355-4684-8048-aa9553b17fdd/access_as_user"})
+                        .WithPrompt(Prompt.SelectAccount)
+                        .ExecuteAsync()
+                        .ConfigureAwait(false);
+                IsLoggedIn = true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         protected async Task DoAskFuture(CancellationToken token = default)
         {
-            IsLoading = true;
-            Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-            IsLoading = false;
+            try
+            {
+                IsLoading = true;
+                Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
