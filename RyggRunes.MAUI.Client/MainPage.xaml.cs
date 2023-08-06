@@ -48,11 +48,14 @@ namespace RyggRunes.MAUI.Client
 #if WINDOWS
                     var captureUi = new RyggRunes.MAUI.Client.WinUI.CustomCameraCaptureUI();
                     var result = await captureUi.CaptureFileAsync(CameraCaptureUIMode.Photo);
-                    using (var stream = await result.OpenStreamForReadAsync())
-                    using (var ms = new MemoryStream())
+                    if (result != null)
                     {
-                        await stream.CopyToAsync(ms);
-                        interaction.SetOutput(ms.ToArray());
+                        using (var stream = await result.OpenStreamForReadAsync())
+                        using (var ms = new MemoryStream())
+                        {
+                            await stream.CopyToAsync(ms);
+                            interaction.SetOutput(ms.ToArray());
+                        }
                     }
 #else
                     if (MediaPicker.IsCaptureSupported)
