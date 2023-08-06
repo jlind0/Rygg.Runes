@@ -6,6 +6,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Rygg.Runes.Client.ViewModels;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Abstractions;
+using MAUI.MSALClient;
+using Rygg.Runes.Proxy;
+using Microsoft.Identity.Client;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -21,12 +26,21 @@ namespace RyggRunes.MAUI.Client
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            
+            //PlatformConfig.Instance.RedirectUri = PublicClientSingleton.Instance.MSALClientHelper.AzureADConfig.RedirectURI;
             builder.Configuration.AddJsonFile("appsettings.json");
-            builder.Configuration.AddUserSecrets<MainPage>();
+            
+            builder.Services.AddSingleton(provider =>
+            {
+                return PublicClientApplicationBuilder.Create(builder.Configuration["AzureAD:ClientId"])
+                .WithAuthority(builder.Configuration["AzureAD:Authority"])
+                .WithRedirectUri("http://localhost") // needed only for the system browser
+                .Build();
 
+            });
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<IRunesProxy, RunesProxy>();
-            builder.Services.AddSingleton<IChatGPTProxy, ChatGPTProxy>();
+            builder.Services.AddSingleton<IChatGPTProxy, MysticProxy>();
             builder.Services.AddScoped<MainWindowViewModel>();
             builder.Services.TryAddTransient<MainPage>();
             return builder.Build();
