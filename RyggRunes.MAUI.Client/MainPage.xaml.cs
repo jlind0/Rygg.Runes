@@ -7,13 +7,16 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
-
+#if WINDOWS
+using Windows.Media.Capture;
+#endif
 namespace RyggRunes.MAUI.Client
 {
     public partial class MainPage : ReactiveContentPage<MainWindowViewModel>
     {
         public MainPage(MainWindowViewModel vm)
         {
+            
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
@@ -37,7 +40,39 @@ namespace RyggRunes.MAUI.Client
                 ViewModel.HasPermissions.RegisterHandler(async interaction =>
                 {
                     var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-                    interaction.SetOutput(status == PermissionStatus.Granted);
+                    var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
+                    interaction.SetOutput(status == PermissionStatus.Granted && cameraStatus == PermissionStatus.Granted);
+                }).DisposeWith(d);
+                ViewModel.CaptureWithCamera.RegisterHandler(async interaction =>
+                {
+#if WINDOWS
+                    var captureUi = new RyggRunes.MAUI.Client.WinUI.CustomCameraCaptureUI();
+                    var result = await captureUi.CaptureFileAsync(CameraCaptureUIMode.Photo);
+                    using (var stream = await result.OpenStreamForReadAsync())
+                    using (var ms = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(ms);
+                        interaction.SetOutput(ms.ToArray());
+                    }
+#else
+                    if (MediaPicker.IsCaptureSupported)
+                    {
+                        var photo = await MediaPicker.Default.CaptureVideoAsync(new MediaPickerOptions
+                        {
+                            Title = "Take a Photo"
+                        });
+
+                        if (photo != null)
+                        {
+                            using (var stream = await photo.OpenReadAsync())
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await stream.CopyToAsync(memoryStream);
+                                interaction.SetOutput(memoryStream.ToArray());
+                            }
+                        }
+                    }
+#endif
                 }).DisposeWith(d);
             });
             
