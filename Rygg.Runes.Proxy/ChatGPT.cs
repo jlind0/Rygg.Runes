@@ -22,7 +22,7 @@ namespace Rygg.Runes.Proxy
         {
             BaseUri = new Uri(config["MysticAPI"]);
             ClientApplication = clientApplication;
-            ApiScope = config["AzureAD:ApiScope"];
+            ApiScope = config["MSGraphApi:Scopes"];
 
         }
         protected HttpClient Create()
@@ -41,7 +41,7 @@ namespace Rygg.Runes.Proxy
         public async Task<string> GetReading(string[] runes, string message = "Tell me the future", CancellationToken token = default)
         {
             var accounts = (await ClientApplication.GetAccountsAsync()).ToList();
-            var result = await ClientApplication.AcquireTokenSilent(new string[] { "api://5991da6c-f355-4684-8048-aa9553b17fdd/access_as_user" }, accounts.First()).ExecuteAsync();
+            var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
             using (var client = Create())
             {
                 client.DefaultRequestHeaders.Authorization =

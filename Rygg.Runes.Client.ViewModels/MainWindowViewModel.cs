@@ -79,7 +79,7 @@ namespace Rygg.Runes.Client.ViewModels
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             ChatProxy = chatProxy;
             AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
-            ApiScope = config["AzureAD:ApiScope"];
+            ApiScope = config["MSGraphApi:Scopes"];
             Login = ReactiveCommand.CreateFromTask(DoLogin);
         }
         protected async Task DoLogin()
@@ -87,7 +87,7 @@ namespace Rygg.Runes.Client.ViewModels
             
             try
             {
-                await ClientApplication.AcquireTokenInteractive(new string[] {"api://5991da6c-f355-4684-8048-aa9553b17fdd/access_as_user"})
+                await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
                         .WithPrompt(Prompt.SelectAccount)
                         .ExecuteAsync()
                         .ConfigureAwait(false);
