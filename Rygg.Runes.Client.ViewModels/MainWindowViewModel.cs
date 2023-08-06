@@ -24,6 +24,7 @@ namespace Rygg.Runes.Client.ViewModels
         private readonly Interaction<string, bool> hasPermissions;
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;
+        private readonly Interaction<string, byte[]> captureWithCamera;
         private byte[] annoatedImage;
         private bool isLoggedIn = false;
         public bool IsLoggedIn
@@ -58,6 +59,7 @@ namespace Rygg.Runes.Client.ViewModels
         {
             get => this.Runes.Count > 0;
         }
+        public Interaction<string, byte[]> CaptureWithCamera => captureWithCamera;
         public Interaction<string, bool> HasPermissions => hasPermissions;
         public Interaction<string, bool> Alert => alert;
         public Interaction<string, Stream> OpenFile => openFile;
@@ -67,6 +69,7 @@ namespace Rygg.Runes.Client.ViewModels
         public ICommand ProcessImage { get; }
         public ICommand AskFuture { get; }
         public ICommand Login { get; }
+        public ICommand TakePhoto { get; }
         protected string ApiScope { get; }
         protected IPublicClientApplication ClientApplication { get; }
         public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy, IConfiguration config, IPublicClientApplication clientApplication) 
@@ -81,55 +84,27 @@ namespace Rygg.Runes.Client.ViewModels
             AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
             ApiScope = config["MSGraphApi:Scopes"];
             Login = ReactiveCommand.CreateFromTask(DoLogin);
+            TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
+            captureWithCamera = new Interaction<string, byte[]>();
         }
-        protected async Task DoLogin()
+        protected async Task DoTakePhoto(CancellationToken token = default)
         {
-            
-            try
+            if(await HasPermissions.Handle("permissions"))
             {
-                await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
-                        .WithPrompt(Prompt.SelectAccount)
-                        .ExecuteAsync()
-                        .ConfigureAwait(false);
-                IsLoggedIn = true;
+                var fileBytes = await CaptureWithCamera.Handle("image").GetAwaiter();
+                if(fileBytes != null)
+                    await ProcessImageRequest(fileBytes, token);
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            else
+                await Alert.Handle("Permissions required").GetAwaiter();
         }
-        protected async Task DoAskFuture(CancellationToken token = default)
-        {
-            try
-            {
-                IsLoading = true;
-                Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-                Answer = Answer.Replace("\\n", "<br>");
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
-        protected async Task DoProcessImage(CancellationToken token = default)
+        protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
         {
             this.IsLoading = true;
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
                 Runes.Clear();
                 this.RaisePropertyChanged(nameof(HasRunes));
-                byte[] fileBytes;
-                
-                using (var memoryStream = new MemoryStream())
-                {
-                    using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
-                    await file.CopyToAsync(memoryStream, token);
-                    fileBytes = memoryStream.ToArray();
-                }
                 using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
                 {
                     int sourceWidth = sourceBitmap.Width;
@@ -137,15 +112,15 @@ namespace Rygg.Runes.Client.ViewModels
                     var targetWidth = (sourceWidth > 1000 ? 1000 : sourceWidth);
                     // Calculate the aspect ratio to maintain the original image's proportions
                     float aspectRatio = (float)sourceWidth / sourceHeight;
-                    var targetHeight = (int)( targetWidth / aspectRatio);
-                    
+                    var targetHeight = (int)(targetWidth / aspectRatio);
+
                     using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
                     {
                         using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
                         {
                             using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
                             {
-                                fileBytes= compressedData.ToArray();
+                                fileBytes = compressedData.ToArray();
                             }
                         }
                     }
@@ -164,6 +139,52 @@ namespace Rygg.Runes.Client.ViewModels
             else
                 await Alert.Handle("Permissions required").GetAwaiter();
             this.IsLoading = false;
+        }
+        protected async Task DoLogin(CancellationToken token = default)
+        {
+            
+            try
+            {
+                await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
+                        .WithPrompt(Prompt.SelectAccount)
+                        .ExecuteAsync(token)
+                        .ConfigureAwait(false);
+                IsLoggedIn = true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        protected async Task DoAskFuture(CancellationToken token = default)
+        {
+            if (string.IsNullOrWhiteSpace(Question))
+                return;
+            try
+            {
+                IsLoading = true;
+                Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
+                Answer = Answer.Replace("\\n", "<br>");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+        protected async Task DoProcessImage(CancellationToken token = default)
+        {
+            byte[] fileBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
+                await file.CopyToAsync(memoryStream, token);
+                fileBytes = memoryStream.ToArray();
+            }
+            await ProcessImageRequest(fileBytes, token);
         }
     }
 }

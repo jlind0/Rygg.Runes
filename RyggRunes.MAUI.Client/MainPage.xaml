@@ -10,9 +10,8 @@
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
         </ResourceDictionary>
     </r:ReactiveContentPage.Resources>
-    <ScrollView>
-        <VerticalStackLayout>
-            <Button Text="Login" WidthRequest="150" Command="{Binding Login}">
+    <toolkit:DockLayout>
+        <Button Text="Login" WidthRequest="150" Command="{Binding Login}" toolkit:DockLayout.DockPosition="Top">
                 <Button.Triggers>
                     <DataTrigger Binding="{Binding IsLoggedIn}" TargetType="Button"  Value="True">
                         <Setter Property="IsVisible" Value="False"/>
@@ -22,28 +21,28 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <VerticalStackLayout
+        <HorizontalStackLayout toolkit:DockLayout.DockPosition="Bottom"
             VerticalOptions="Start" Padding="10" IsVisible="{Binding IsLoggedIn}">
 
-                <Button Text="Select Image" Command="{Binding ProcessImage}" WidthRequest="250" />
-                <Label>Runes</Label>
-                <HorizontalStackLayout HorizontalOptions="Center" Padding="15">
-                    <ListView ItemsSource="{Binding Runes}"/>
-                    <Image MaximumHeightRequest="500" MaximumWidthRequest="500"
+            <Button Text="Select Image" Command="{Binding ProcessImage}" WidthRequest="250" />
+            <Button Text="Take Photo" Command="{Binding TakePhoto}" WidthRequest="250"/>
+        </HorizontalStackLayout>
+        <VerticalStackLayout IsVisible="{Binding HasRunes}" HorizontalOptions="Center" Padding="15" toolkit:DockLayout.DockPosition="Left">
+            <Label>Runes</Label>
+            <ListView ItemsSource="{Binding Runes}"/>
+            <Image MaximumHeightRequest="300" MaximumWidthRequest="300"
                 Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
                 Aspect="AspectFit" />
-                </HorizontalStackLayout>
-
-                <VerticalStackLayout IsVisible="{Binding HasRunes}">
-                    <Label>Question</Label>
-                    <Editor Text="{Binding Question}" WidthRequest="700" HeightRequest="150"></Editor>
-                    <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                    <Label TextType="Html" Text="{Binding Answer}"/>
-                </VerticalStackLayout>
-
-            </VerticalStackLayout>
         </VerticalStackLayout>
-        
-    </ScrollView>
+        <VerticalStackLayout IsVisible="{Binding HasRunes}" toolkit:DockLayout.DockPosition="Right">
+            <Label>Question</Label>
+            <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
+            <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
+            <ScrollView MaximumHeightRequest="300" MaximumWidthRequest="300">
+                <Label TextType="Html" Text="{Binding Answer}"/>
+            </ScrollView>
+        </VerticalStackLayout>
+    </toolkit:DockLayout>
+    
 
 </r:ReactiveContentPage>
