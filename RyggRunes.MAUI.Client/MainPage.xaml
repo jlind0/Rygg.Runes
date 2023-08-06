@@ -38,7 +38,7 @@
                     <Label>Question</Label>
                     <Editor Text="{Binding Question}" WidthRequest="700" HeightRequest="150"></Editor>
                     <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                    <Label Text="{Binding Answer}"/>
+                    <Label TextType="Html" Text="{Binding Answer}"/>
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
