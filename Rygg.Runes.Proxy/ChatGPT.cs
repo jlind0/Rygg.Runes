@@ -40,20 +40,27 @@ namespace Rygg.Runes.Proxy
         }
         public async Task<string> GetReading(string[] runes, string message = "Tell me the future", CancellationToken token = default)
         {
-            var accounts = (await ClientApplication.GetAccountsAsync()).ToList();
-            var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
-            using (var client = Create())
+            try
             {
-                client.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
-                var content = new StringContent(JsonSerializer.Serialize(new MysticRequest()
+                var accounts = (await ClientApplication.GetAccountsAsync()).ToList();
+                var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
+                using (var client = Create())
                 {
-                    Runes = runes,
-                    Question = message
-                }), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("Mystic", content, token);
-                if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsStringAsync(token);
+                    client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                    var content = new StringContent(JsonSerializer.Serialize(new MysticRequest()
+                    {
+                        Runes = runes,
+                        Question = message
+                    }), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync("Mystic", content, token);
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsStringAsync(token);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw;
             }
             throw new InvalidOperationException();
         }

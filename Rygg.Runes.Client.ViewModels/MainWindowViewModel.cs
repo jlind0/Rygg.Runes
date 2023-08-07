@@ -163,8 +163,8 @@ namespace Rygg.Runes.Client.ViewModels
             try
             {
                 IsLoading = true;
-                Answer = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-                Answer = Answer.Replace("\\n", "<br>");
+                string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
+                Answer = answ.Replace("\\n", "<br>");
             }
             catch (Exception ex)
             {
