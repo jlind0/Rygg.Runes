@@ -33,8 +33,8 @@ namespace RyggRunes.MAUI.Client
             builder.Services.AddSingleton(provider =>
             {
                 return PublicClientApplicationBuilder.Create(builder.Configuration["AzureAD:ClientId"])
-                .WithAuthority(builder.Configuration["AzureAD:Authority"])
-                .WithRedirectUri("http://localhost") // needed only for the system browser
+                .WithB2CAuthority(builder.Configuration["AzureAD:Authority"])
+                .WithRedirectUri(builder.Configuration["AzureAD:RedirectURI"]) // needed only for the system browser
                 .Build();
 
             });
