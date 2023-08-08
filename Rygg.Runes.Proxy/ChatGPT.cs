@@ -4,9 +4,11 @@ using Microsoft.Identity.Client;
 using RyggRunes.Client.Core;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,11 +20,13 @@ namespace Rygg.Runes.Proxy
         protected Uri BaseUri { get; }
         protected IPublicClientApplication ClientApplication { get; }
         protected string ApiScope { get; }
+        protected string SignInSignOutPolicy { get; }
         public MysticProxy(IConfiguration config, IPublicClientApplication clientApplication)
         {
             BaseUri = new Uri(config["MysticAPI"]);
             ClientApplication = clientApplication;
             ApiScope = config["MSGraphApi:Scopes"];
+            SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"];
 
         }
         protected HttpClient Create()
@@ -42,7 +46,8 @@ namespace Rygg.Runes.Proxy
         {
             try
             {
-                var accounts = (await ClientApplication.GetAccountsAsync()).ToList();
+                var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
+                
                 var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
                 using (var client = Create())
                 {

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rygg.Runes.Client.ViewModel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RyggRunes.Web", "RyggRunes.Web\RyggRunes.Web.csproj", "{4B954FAE-7904-432F-A3E8-DC73DA4C23F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rygg.Runes.Proxy", "Rygg.Runes.Proxy\Rygg.Runes.Proxy.csproj", "{C77AEC83-F251-49EF-A319-6FB5E5CD6784}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rygg.Runes.Proxy", "Rygg.Runes.Proxy\Rygg.Runes.Proxy.csproj", "{C77AEC83-F251-49EF-A319-6FB5E5CD6784}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

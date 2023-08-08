@@ -145,9 +145,8 @@ namespace Rygg.Runes.Client.ViewModels
             
             try
             {
-                await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
-                        .WithPrompt(Prompt.SelectAccount)
-                        .ExecuteAsync(token)
+               var result = await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
+                        .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token)
                         .ConfigureAwait(false);
                 IsLoggedIn = true;
             }

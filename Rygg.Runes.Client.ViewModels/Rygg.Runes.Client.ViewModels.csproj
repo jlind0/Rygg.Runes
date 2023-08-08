@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.32.0" />
     <PackageReference Include="ReactiveUI" Version="19.4.1" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
   </ItemGroup>
 
   <ItemGroup>
