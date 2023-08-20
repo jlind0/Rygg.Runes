@@ -8,9 +8,8 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Abstractions;
-using MAUI.MSALClient;
 using Rygg.Runes.Proxy;
-using Microsoft.Identity.Client;
+using System.Reflection;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -26,10 +25,13 @@ namespace RyggRunes.MAUI.Client
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            
-            //PlatformConfig.Instance.RedirectUri = PublicClientSingleton.Instance.MSALClientHelper.AzureADConfig.RedirectURI;
-            builder.Configuration.AddJsonFile("appsettings.json");
-            
+
+            var a = Assembly.GetExecutingAssembly();
+            using (var stream = a.GetManifestResourceStream("RyggRunes.MAUI.Client.appsettings.json"))
+            {
+
+                builder.Configuration.AddJsonStream(stream);
+            }
             builder.Services.AddSingleton(provider =>
             {
                 return PublicClientApplicationBuilder.Create(builder.Configuration["AzureAD:ClientId"])

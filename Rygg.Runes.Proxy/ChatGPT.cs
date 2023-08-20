@@ -1,5 +1,4 @@
-﻿using MAUI.MSALClient;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Client;
 using RyggRunes.Client.Core;
 using System;
