@@ -35,49 +35,58 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <MtouchLink>None</MtouchLink>
-	  <MtouchUseLlvm>True</MtouchUseLlvm>
+	  <MtouchUseLlvm>False</MtouchUseLlvm>
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchProfiling>True</MtouchProfiling>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
 	  <MtouchLink>SdkOnly</MtouchLink>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchProfiling>True</MtouchProfiling>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
+	  <MtouchUseLlvm>False</MtouchUseLlvm>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
