@@ -20,18 +20,19 @@ namespace Rygg.Runes.Client.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
     {
+        public IDispatcherService DispatcherService { get; set; } = null!;
         private readonly Interaction<string, bool> hasPermissions;
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;
         private readonly Interaction<string, byte[]> captureWithCamera;
-        private byte[] annoatedImage;
+        private byte[]? annoatedImage;
         private bool isLoggedIn = false;
         public bool IsLoggedIn
         {
             get => isLoggedIn;
             set => this.RaiseAndSetIfChanged(ref isLoggedIn, value);
         }
-        public byte[] AnnotatedImage
+        public byte[]? AnnotatedImage
         {
             get => annoatedImage;
             set => this.RaiseAndSetIfChanged(ref annoatedImage, value);
@@ -42,14 +43,14 @@ namespace Rygg.Runes.Client.ViewModels
             get => isLoading;
             set => this.RaiseAndSetIfChanged(ref isLoading, value);
         }
-        private string question;
-        public string Question
+        private string? question;
+        public string? Question
         {
             get => question;
             set => this.RaiseAndSetIfChanged(ref question, value);
         }
-        private string answer;
-        public string Answer
+        private string? answer;
+        public string? Answer
         {
             get => answer;
             set => this.RaiseAndSetIfChanged(ref answer, value);
@@ -81,7 +82,7 @@ namespace Rygg.Runes.Client.ViewModels
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             ChatProxy = chatProxy;
             AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
-            ApiScope = config["MSGraphApi:Scopes"];
+            ApiScope = config["MSGraphApi:Scopes"] ?? throw new InvalidDataException();
             Login = ReactiveCommand.CreateFromTask(DoLogin);
             TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
             captureWithCamera = new Interaction<string, byte[]>();
@@ -102,7 +103,7 @@ namespace Rygg.Runes.Client.ViewModels
             this.IsLoading = true;
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
-                Runes.Clear();
+                await DispatcherService.Dispatch(() => Runes.Clear());
                 this.RaisePropertyChanged(nameof(HasRunes));
                 using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
                 {
@@ -127,12 +128,15 @@ namespace Rygg.Runes.Client.ViewModels
                 var resp = await RunesProxy.ProcessImage(fileBytes, token);
                 if (resp != null)
                 {
-                    AnnotatedImage = resp.AnnotatedImage;
-                    foreach (var rune in resp.Annotations)
+                    await this.DispatcherService.Dispatch(() =>
                     {
-                        Runes.Add(rune);
-                    }
-                    this.RaisePropertyChanged(nameof(HasRunes));
+                        AnnotatedImage = resp.AnnotatedImage;
+                        foreach (var rune in resp.Annotations)
+                        {
+                            Runes.Add(rune);
+                        }
+                        this.RaisePropertyChanged(nameof(HasRunes));
+                    });
                 }
             }
             else
@@ -147,7 +151,8 @@ namespace Rygg.Runes.Client.ViewModels
                var result = await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
                         .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token)
                         .ConfigureAwait(false);
-                IsLoggedIn = true;
+
+                await DispatcherService.Dispatch(() => IsLoggedIn = true);
             }
             catch (Exception ex)
             {
@@ -160,9 +165,9 @@ namespace Rygg.Runes.Client.ViewModels
                 return;
             try
             {
-                IsLoading = true;
+                await DispatcherService.Dispatch(() => IsLoading = true);
                 string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-                Answer = answ.Replace("\\n", "<br>");
+                await DispatcherService.Dispatch(() => Answer = answ.Replace("\\n", "<br>"));
             }
             catch (Exception ex)
             {
@@ -170,7 +175,7 @@ namespace Rygg.Runes.Client.ViewModels
             }
             finally
             {
-                IsLoading = false;
+                await DispatcherService.Dispatch(() => IsLoading = false);
             }
         }
         protected async Task DoProcessImage(CancellationToken token = default)

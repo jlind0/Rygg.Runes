@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
+using RyggRunes.MAUI.Client.Dispatcher;
 #if WINDOWS
 using Windows.Media.Capture;
 #endif
@@ -18,6 +19,7 @@ namespace RyggRunes.MAUI.Client
         {
             
             ViewModel = vm;
+            vm.DispatcherService = new MauiDispatcher(Dispatcher);
             InitializeComponent();
             BindingContext = ViewModel;
             this.WhenActivated(d =>
@@ -48,7 +50,7 @@ namespace RyggRunes.MAUI.Client
 #if WINDOWS
                     var captureUi = new RyggRunes.MAUI.Client.WinUI.CustomCameraCaptureUI();
                     var result = await captureUi.CaptureFileAsync(CameraCaptureUIMode.Photo);
-                    if (result != null)
+                    if (result != null && result.IsAvailable)
                     {
                         using (var stream = await result.OpenStreamForReadAsync())
                         using (var ms = new MemoryStream())

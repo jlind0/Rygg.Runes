@@ -4,12 +4,11 @@ using RyggRunes.Client.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Rygg.Runes.Client.ViewModels;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Markup;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Abstractions;
 using Rygg.Runes.Proxy;
 using System.Reflection;
+using Telerik.Maui.Controls.Compatibility;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -19,7 +18,8 @@ namespace RyggRunes.MAUI.Client
         {
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>().UseMauiCommunityToolkit().UseMauiCommunityToolkitMarkup()
+                .UseTelerik()
+                .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
