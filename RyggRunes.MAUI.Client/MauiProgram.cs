@@ -40,6 +40,7 @@ namespace RyggRunes.MAUI.Client
                 .WithRedirectUri(builder.Configuration["AzureAD:RedirectURI"]) // needed only for the system browser
 #elif IOS
                 .WithRedirectUri(builder.Configuration["AzureAD:iOSRedirectURI"])
+                .WithIosKeychainSecurityGroup(builder.Configuration["AzureAD:iOSKeyChainGroup"])
 #elif MACCATALYST
                 .WithRedirectUri(builder.Configuration["AzureAD:iOSRedirectURI"])
 #endif                
