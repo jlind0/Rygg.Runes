@@ -62,7 +62,7 @@ namespace RyggRunes.MAUI.Client
 #else
                     if (MediaPicker.IsCaptureSupported)
                     {
-                        var photo = await MediaPicker.Default.CaptureVideoAsync(new MediaPickerOptions
+                        var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
                         {
                             Title = "Take a Photo"
                         });
