@@ -33,10 +33,9 @@ namespace RyggRunes.MAUI.Client
                 {
                     try
                     {
-                        var fileResult = await FilePicker.PickAsync(new PickOptions
+                        var fileResult = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
                         {
-                            FileTypes = FilePickerFileType.Images,
-                            PickerTitle = "Select an image"
+                            Title = "Pick a Photo with Runes"
                         });
                         if (fileResult != null)
                             interaction.SetOutput(await fileResult.OpenReadAsync());
