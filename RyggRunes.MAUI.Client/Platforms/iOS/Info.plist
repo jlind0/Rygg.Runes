@@ -32,5 +32,8 @@
 	<string>net.azurewebsites.ryggrunes-api</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to the camera to capture photos of runes that are cast.</string>
+
 </dict>
 </plist>
