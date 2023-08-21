@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Reactive.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -100,7 +101,7 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
         {
-            await DispatcherService.Dispatch(() => IsLoading = true);
+            IsLoading = true;
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
                 await DispatcherService.Dispatch(() => Runes.Clear());
@@ -128,15 +129,12 @@ namespace Rygg.Runes.Client.ViewModels
                 var resp = await RunesProxy.ProcessImage(fileBytes, token);
                 if (resp != null)
                 {
-                    await this.DispatcherService.Dispatch(() =>
-                    {
                         AnnotatedImage = resp.AnnotatedImage;
                         foreach (var rune in resp.Annotations)
                         {
                             Runes.Add(rune);
                         }
                         this.RaisePropertyChanged(nameof(HasRunes));
-                    });
                 }
             }
             else
@@ -148,15 +146,14 @@ namespace Rygg.Runes.Client.ViewModels
             
             try
             {
-               var result = await ClientApplication.AcquireTokenInteractive(new string[] {ApiScope})
-                        .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token)
-                        .ConfigureAwait(false);
+                var result = await ClientApplication.AcquireTokenInteractive(new string[] { ApiScope })
+                         .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token);
 
-                await DispatcherService.Dispatch(() => IsLoggedIn = true);
+                IsLoggedIn = true;
             }
             catch (Exception ex)
             {
-                throw;
+                await Alert.Handle(ex.Message).GetAwaiter();
             }
         }
         protected async Task DoAskFuture(CancellationToken token = default)
@@ -165,9 +162,9 @@ namespace Rygg.Runes.Client.ViewModels
                 return;
             try
             {
-                await DispatcherService.Dispatch(() => IsLoading = true);
+                IsLoading = true;
                 string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-                await DispatcherService.Dispatch(() => Answer = answ.Replace("\\n", "<br>"));
+                Answer = answ.Replace("\\n", "<br>");
             }
             catch (Exception ex)
             {
@@ -175,7 +172,7 @@ namespace Rygg.Runes.Client.ViewModels
             }
             finally
             {
-                await DispatcherService.Dispatch(() => IsLoading = false);
+                IsLoading = false;
             }
         }
         protected async Task DoProcessImage(CancellationToken token = default)
