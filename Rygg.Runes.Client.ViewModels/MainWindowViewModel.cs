@@ -100,7 +100,7 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
         {
-            this.IsLoading = true;
+            await DispatcherService.Dispatch(() => IsLoading = true);
             if (await HasPermissions.Handle("permissions").GetAwaiter())
             {
                 await DispatcherService.Dispatch(() => Runes.Clear());
