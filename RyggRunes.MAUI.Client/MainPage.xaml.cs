@@ -31,19 +31,33 @@ namespace RyggRunes.MAUI.Client
                 }).DisposeWith(d);
                 ViewModel.OpenFile.RegisterHandler(async interaction =>
                 {
-                    var fileResult = await FilePicker.PickAsync(new PickOptions
+                    try
                     {
-                        FileTypes = FilePickerFileType.Images,
-                        PickerTitle = "Select an image"
-                    });
-                    if (fileResult != null)
-                        interaction.SetOutput(await fileResult.OpenReadAsync());
+                        var fileResult = await FilePicker.PickAsync(new PickOptions
+                        {
+                            FileTypes = FilePickerFileType.Images,
+                            PickerTitle = "Select an image"
+                        });
+                        if (fileResult != null)
+                            interaction.SetOutput(await fileResult.OpenReadAsync());
+                    }
+                    catch (Exception ex) 
+                    {
+                        await DisplayAlert("Alert", ex.Message, "Ok");
+                    }
                 }).DisposeWith(d);
                 ViewModel.HasPermissions.RegisterHandler(async interaction =>
                 {
-                    var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-                    var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
-                    interaction.SetOutput(status == PermissionStatus.Granted && cameraStatus == PermissionStatus.Granted);
+                    try
+                    {
+                        var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+                        var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
+                        interaction.SetOutput(status == PermissionStatus.Granted && cameraStatus == PermissionStatus.Granted);
+                    }
+                    catch(Exception ex)
+                    {
+                        await DisplayAlert("Alert", ex.Message, "Ok");
+                    }
                 }).DisposeWith(d);
                 ViewModel.CaptureWithCamera.RegisterHandler(async interaction =>
                 {
@@ -60,22 +74,29 @@ namespace RyggRunes.MAUI.Client
                         }
                     }
 #else
-                    if (MediaPicker.IsCaptureSupported)
+                    try
                     {
-                        var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
+                        if (MediaPicker.IsCaptureSupported)
                         {
-                            Title = "Take a Photo"
-                        });
-
-                        if (photo != null)
-                        {
-                            using (var stream = await photo.OpenReadAsync())
-                            using (var memoryStream = new MemoryStream())
+                            var photo = await MediaPicker.Default.CaptureVideoAsync(new MediaPickerOptions
                             {
-                                await stream.CopyToAsync(memoryStream);
-                                interaction.SetOutput(memoryStream.ToArray());
+                                Title = "Take a Photo"
+                            });
+
+                            if (photo != null)
+                            {
+                                using (var stream = await photo.OpenReadAsync())
+                                using (var memoryStream = new MemoryStream())
+                                {
+                                    await stream.CopyToAsync(memoryStream);
+                                    interaction.SetOutput(memoryStream.ToArray());
+                                }
                             }
                         }
+                    }
+                    catch(Exception ex)
+                    {
+                        await DisplayAlert("Alert", ex.Message, "Ok");
                     }
 #endif
                 }).DisposeWith(d);

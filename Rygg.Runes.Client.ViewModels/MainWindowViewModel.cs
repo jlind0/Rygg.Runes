@@ -90,56 +90,73 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task DoTakePhoto(CancellationToken token = default)
         {
-            if(await HasPermissions.Handle("permissions"))
+            try
             {
-                var fileBytes = await CaptureWithCamera.Handle("image").GetAwaiter();
-                if(fileBytes != null)
-                    await ProcessImageRequest(fileBytes, token);
+                if (await HasPermissions.Handle("permissions"))
+                {
+                    var fileBytes = await CaptureWithCamera.Handle("image").GetAwaiter();
+                    if (fileBytes != null)
+                        await ProcessImageRequest(fileBytes, token);
+                }
+                else
+                    await Alert.Handle("Permissions required").GetAwaiter();
             }
-            else
-                await Alert.Handle("Permissions required").GetAwaiter();
+            catch(Exception ex)
+            {
+                await Alert.Handle(ex.Message).GetAwaiter();
+            }
         }
         protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
         {
-            IsLoading = true;
-            if (await HasPermissions.Handle("permissions").GetAwaiter())
+            try
             {
-                await DispatcherService.Dispatch(() => Runes.Clear());
-                this.RaisePropertyChanged(nameof(HasRunes));
-                using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
+                IsLoading = true;
+                if (await HasPermissions.Handle("permissions").GetAwaiter())
                 {
-                    int sourceWidth = sourceBitmap.Width;
-                    int sourceHeight = sourceBitmap.Height;
-                    var targetWidth = (sourceWidth > 1000 ? 1000 : sourceWidth);
-                    // Calculate the aspect ratio to maintain the original image's proportions
-                    float aspectRatio = (float)sourceWidth / sourceHeight;
-                    var targetHeight = (int)(targetWidth / aspectRatio);
-
-                    using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
+                    await DispatcherService.Dispatch(() => Runes.Clear());
+                    this.RaisePropertyChanged(nameof(HasRunes));
+                    using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
                     {
-                        using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
+                        int sourceWidth = sourceBitmap.Width;
+                        int sourceHeight = sourceBitmap.Height;
+                        var targetWidth = (sourceWidth > 1000 ? 1000 : sourceWidth);
+                        // Calculate the aspect ratio to maintain the original image's proportions
+                        float aspectRatio = (float)sourceWidth / sourceHeight;
+                        var targetHeight = (int)(targetWidth / aspectRatio);
+
+                        using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
                         {
-                            using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
+                            using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
                             {
-                                fileBytes = compressedData.ToArray();
+                                using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
+                                {
+                                    fileBytes = compressedData.ToArray();
+                                }
                             }
                         }
                     }
-                }
-                var resp = await RunesProxy.ProcessImage(fileBytes, token);
-                if (resp != null)
-                {
+                    var resp = await RunesProxy.ProcessImage(fileBytes, token);
+                    if (resp != null)
+                    {
                         AnnotatedImage = resp.AnnotatedImage;
                         foreach (var rune in resp.Annotations)
                         {
                             Runes.Add(rune);
                         }
                         this.RaisePropertyChanged(nameof(HasRunes));
+                    }
                 }
+                else
+                    await Alert.Handle("Permissions required").GetAwaiter();
             }
-            else
-                await Alert.Handle("Permissions required").GetAwaiter();
-            this.IsLoading = false;
+            catch (Exception ex)
+            {
+                await Alert.Handle(ex.Message).GetAwaiter();
+            }
+            finally
+            {
+                this.IsLoading = false;
+            }
         }
         protected async Task DoLogin(CancellationToken token = default)
         {
@@ -168,7 +185,7 @@ namespace Rygg.Runes.Client.ViewModels
             }
             catch (Exception ex)
             {
-                throw;
+                await Alert.Handle(ex.Message).GetAwaiter();
             }
             finally
             {
@@ -177,14 +194,19 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
-            byte[] fileBytes;
+            
+            byte[]? fileBytes = null;
             using (var memoryStream = new MemoryStream())
             {
                 using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
-                await file.CopyToAsync(memoryStream, token);
-                fileBytes = memoryStream.ToArray();
+                if (file != null)
+                {
+                    await file.CopyToAsync(memoryStream, token);
+                    fileBytes = memoryStream.ToArray();
+                }
             }
-            await ProcessImageRequest(fileBytes, token);
+            if(fileBytes != null)
+                await ProcessImageRequest(fileBytes, token);
         }
     }
 }
