@@ -24,7 +24,7 @@ def image_upload(request):
             image = form.cleaned_data['image']
             
             detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
-            annotations, img_annotated  = detector.run(Image.open(image), True)
+            annotations, img_annotated  = detector.run(image = Image.open(image), return_image=True, score_thresh=0.1)
             
             return JsonResponse({'success': True, 
                                  'annotations' : annotations,
@@ -42,7 +42,7 @@ def post_image(request):
         byte_data = request.body
         detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
         image = Image.open(io.BytesIO(byte_data));
-        annotations, img_annotated = detector.run(image, True)
+        annotations, img_annotated = detector.run(image=image,return_image= True,score_thresh=0.1)
         return JsonResponse({'success': True, 
                              'annotations' : annotations, 
                              'annotatedImage': serialize_image_to_json(img_annotated)})
