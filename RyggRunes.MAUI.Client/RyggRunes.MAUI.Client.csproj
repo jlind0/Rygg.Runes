@@ -115,6 +115,9 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Resources\Fonts\FA-400.otf" />
+	  <None Remove="Resources\Fonts\FA-Regular-400.otf" />
+	  <None Remove="Resources\Fonts\FA-Solid-900.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -133,6 +136,12 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Rygg.Runes.Client.ViewModels\Rygg.Runes.Client.ViewModels.csproj" />
 	  <ProjectReference Include="..\RyggRunes.Client.Core\RyggRunes.Client.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Resources\Styles\Icons.xaml">
+	    <Generator></Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

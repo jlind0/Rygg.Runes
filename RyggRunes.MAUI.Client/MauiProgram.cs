@@ -24,6 +24,7 @@ namespace RyggRunes.MAUI.Client
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("FA-Solid-900.otf", "FASolid");
                 });
 
             var a = Assembly.GetExecutingAssembly();

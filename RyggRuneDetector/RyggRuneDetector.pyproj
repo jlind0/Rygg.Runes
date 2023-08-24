@@ -60,10 +60,10 @@
     <Folder Include="RyggRuneDetector\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\model_RuneOCR_20230722.onnx" />
+    <Content Include="app\rune_ocr_v2__yolov7_512_HQ2.onnx" />
     <Content Include="app\templates\app\image_processing\upload.html" />
     <Content Include="Dockerfile" />
-    <Content Include="packages\rune_ocr-0.0.1.tar.gz" />
+    <Content Include="packages\rune_ocr-0.0.3.tar.gz" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
@@ -99,6 +99,13 @@
     <None Include="readme.html">
       <SubType>WebBrowser</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\OneDrive\Documents\GitHub\rune_ocr\rune_ocr.pyproj">
+      <Name>rune_ocr</Name>
+      <Project>{d3fa8111-130e-4d54-a832-51e74e620c0a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

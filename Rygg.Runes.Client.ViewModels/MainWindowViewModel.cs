@@ -121,11 +121,15 @@ namespace Rygg.Runes.Client.ViewModels
                     {
                         int sourceWidth = sourceBitmap.Width;
                         int sourceHeight = sourceBitmap.Height;
-                        var targetWidth = (sourceWidth > 1000 ? 1000 : sourceWidth);
+                        var targetWidth = (sourceWidth > 512 ? 512 : sourceWidth);
                         // Calculate the aspect ratio to maintain the original image's proportions
                         float aspectRatio = (float)sourceWidth / sourceHeight;
                         var targetHeight = (int)(targetWidth / aspectRatio);
-
+                        if(targetHeight > 512)
+                        {
+                            targetWidth = (int)(aspectRatio * 512);
+                            targetHeight = 512;
+                        }
                         using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
                         {
                             using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))

@@ -23,11 +23,12 @@ def image_upload(request):
         if form.is_valid():
             image = form.cleaned_data['image']
             
-            detector = RuneDetection(str(Path(__file__).parent/'model_RuneOCR_20230722.onnx'))
-            im_annotated, annotations = detector.run(Image.open(image))
+            detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
+            annotations, img_annotated  = detector.run(Image.open(image), True)
             
             return JsonResponse({'success': True, 
-                                 'annotations' : annotations})
+                                 'annotations' : annotations,
+                                 'annotatedImage': serialize_image_to_json(img_annotated)})
         else:
             return JsonResponse({'success': False, 'error': 'Invalid form data.'})
     else:
@@ -39,11 +40,12 @@ def post_image(request):
     if request.method == 'POST':
        
         byte_data = request.body
-        detector = RuneDetection(str(Path(__file__).parent/'model_RuneOCR_20230722.onnx'))
-        im_annotated, annotations = detector.run(Image.open(io.BytesIO(byte_data)))
+        detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
+        image = Image.open(io.BytesIO(byte_data));
+        annotations, img_annotated = detector.run(image, True)
         return JsonResponse({'success': True, 
                              'annotations' : annotations, 
-                             'annotatedImage': serialize_image_to_json(im_annotated)})
+                             'annotatedImage': serialize_image_to_json(img_annotated)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid form data.'})
 
@@ -57,18 +59,6 @@ def serialize_image_to_json(image):
     image_base64 = base64.b64encode(image_byte_array.getvalue()).decode('utf-8')
     return image_base64;
 
-def process_image(image):
-    # Open the uploaded image using Pillow
-    img = Image.open(image)
-
-    # Apply a filter (e.g., GaussianBlur)
-    processed_img = img.filter(ImageFilter.GaussianBlur(radius=2))
-
-    # Save the processed image in a temporary location
-    processed_img_path = 'C:\\users\\lind\onedrive\\documents\\' + image.name
-    processed_img.save(processed_img_path)
-
-    return processed_img
 
 def home(request):
     """Renders the home page."""
