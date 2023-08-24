@@ -5,8 +5,13 @@
              xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
              x:Class="RyggRunes.MAUI.Client.MainPage">
-    <telerik:RadDockLayout x:Name="radDock">
-        <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
+    <telerik:RadBusyIndicator x:Name="BusyIndicator"
+                            AnimationContentHeightRequest="100"
+                            AnimationContentWidthRequest="100"
+                            AnimationContentColor="#674bb2"
+                            AutomationId="busyIndicator" IsBusy="{Binding IsLoading}">
+        <telerik:RadDockLayout x:Name="radDock">
+            <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
                 <Button.Triggers>
                     <DataTrigger Binding="{Binding IsLoggedIn}" TargetType="Button"  Value="True">
                         <Setter Property="IsVisible" Value="False"/>
@@ -16,36 +21,37 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-        <HorizontalStackLayout telerik:RadDockLayout.Dock="Bottom"
-            VerticalOptions="Start" Padding="10" IsVisible="{Binding IsLoggedIn}">
+            <HorizontalStackLayout telerik:RadDockLayout.Dock="Bottom"
+        VerticalOptions="Start" Padding="10" IsVisible="{Binding IsLoggedIn}">
 
-            <Button Text="Select Image" Command="{Binding ProcessImage}" WidthRequest="250" />
-            <Button Text="Take Photo" Command="{Binding TakePhoto}" WidthRequest="250"/>
-        </HorizontalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Left">
-            <VerticalStackLayout IsVisible="{Binding HasRunes}" HorizontalOptions="Center" Padding="15" >
-                <VerticalStackLayout.Resources>
-                    <ResourceDictionary>
-                        <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
-                    </ResourceDictionary>
-                </VerticalStackLayout.Resources>
-                <Label>Runes</Label>
-                <ListView ItemsSource="{Binding Runes}"/>
-                <Image MaximumHeightRequest="300" MaximumWidthRequest="300"
-         Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
-         Aspect="AspectFit" />
-                <VerticalStackLayout IsVisible="{Binding HasRunes}">
-                    <Label>Question</Label>
-                    <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
-                    <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                    <ScrollView MaximumHeightRequest="300" MaximumWidthRequest="300">
-                        <Label TextType="Html" Text="{Binding Answer}"/>
-                    </ScrollView>
+                <Button Text="Select Image" Command="{Binding ProcessImage}" WidthRequest="250" />
+                <Button Text="Take Photo" Command="{Binding TakePhoto}" WidthRequest="250"/>
+            </HorizontalStackLayout>
+            <ScrollView telerik:RadDockLayout.Dock="Left">
+                <VerticalStackLayout IsVisible="{Binding HasRunes}" HorizontalOptions="Center" Padding="15" >
+                    <VerticalStackLayout.Resources>
+                        <ResourceDictionary>
+                            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+                        </ResourceDictionary>
+                    </VerticalStackLayout.Resources>
+                    <Label>Runes</Label>
+                    <ListView ItemsSource="{Binding Runes}"/>
+                    <Image HeightRequest="300" WidthRequest="300"
+     Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
+     Aspect="AspectFit" />
+                    <VerticalStackLayout IsVisible="{Binding HasRunes}">
+                        <Label>Question</Label>
+                        <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
+                        <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
+                        <ScrollView WidthRequest="300">
+                            <Label TextType="Html" Text="{Binding Answer}"/>
+                        </ScrollView>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
-
-    </telerik:RadDockLayout>
+            </ScrollView>
+        </telerik:RadDockLayout>
+    </telerik:RadBusyIndicator>
+    
     
 
 </r:ReactiveContentPage>

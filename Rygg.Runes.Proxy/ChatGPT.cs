@@ -22,10 +22,10 @@ namespace Rygg.Runes.Proxy
         protected string SignInSignOutPolicy { get; }
         public MysticProxy(IConfiguration config, IPublicClientApplication clientApplication)
         {
-            BaseUri = new Uri(config["MysticAPI"]);
+            BaseUri = new Uri(config["MysticAPI"] ?? throw new InvalidDataException());
             ClientApplication = clientApplication;
-            ApiScope = config["MSGraphApi:Scopes"];
-            SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"];
+            ApiScope = config["MSGraphApi:Scopes"] ?? throw new InvalidDataException();
+            SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"] ?? throw new InvalidDataException();
 
         }
         protected HttpClient Create()

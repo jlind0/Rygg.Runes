@@ -73,8 +73,10 @@ namespace Rygg.Runes.Client.ViewModels
         public ICommand TakePhoto { get; }
         protected string ApiScope { get; }
         protected IPublicClientApplication ClientApplication { get; }
+        protected string SignInSignOutPolicy { get; }
         public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy, IConfiguration config, IPublicClientApplication clientApplication) 
         {
+            SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"] ?? throw new InvalidDataException();
             ClientApplication = clientApplication;
             RunesProxy = runesProxy;
             hasPermissions = new Interaction<string, bool>();
@@ -160,17 +162,41 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task DoLogin(CancellationToken token = default)
         {
-            
+
+            bool tryInteractive = false;
             try
             {
-                var result = await ClientApplication.AcquireTokenInteractive(new string[] { ApiScope })
-                         .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token);
-
-                IsLoggedIn = true;
+                var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
+                if (accounts.Any())
+                {
+                    var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
+                    IsLoggedIn = !string.IsNullOrEmpty(result.AccessToken);
+                    tryInteractive = !IsLoggedIn;
+                }
+                else
+                    tryInteractive = true;
+            }
+            catch (MsalUiRequiredException)
+            {
+                tryInteractive = true;
             }
             catch (Exception ex)
             {
                 await Alert.Handle(ex.Message).GetAwaiter();
+            }
+            if (tryInteractive)
+            {
+                try
+                {
+                    var result = await ClientApplication.AcquireTokenInteractive(new string[] { ApiScope })
+                                .WithPrompt(Prompt.SelectAccount).ExecuteAsync(token);
+                    IsLoggedIn = !string.IsNullOrEmpty(result.AccessToken);
+
+                }
+                catch (Exception ex)
+                {
+                    await Alert.Handle(ex.Message).GetAwaiter();
+                }
             }
         }
         protected async Task DoAskFuture(CancellationToken token = default)
