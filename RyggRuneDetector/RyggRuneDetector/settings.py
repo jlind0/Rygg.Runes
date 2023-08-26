@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import posixpath
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,6 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+AUTHLIB_OAUTH_CLIENTS = {
+    'b2c': {
+        'client_id': config("B2C_CLIENT_ID"),
+        'client_secret': config("B2C_CLIENT_SECRET"),
+        'server_metadata_url':config("B2C_METADATA_URL"),
+        'client_kwargs': {'scope': config("B2C_SCOPE")}
+    }
+ }
 
 # Middleware framework
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/

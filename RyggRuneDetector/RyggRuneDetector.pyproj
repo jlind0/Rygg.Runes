@@ -60,6 +60,7 @@
     <Folder Include="RyggRuneDetector\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="app\rune_ocr_v2__yolov7_512_HQ2.onnx" />
     <Content Include="app\templates\app\image_processing\upload.html" />
     <Content Include="Dockerfile" />

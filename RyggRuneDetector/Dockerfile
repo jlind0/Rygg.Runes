@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt /app/
-COPY packages/rune_ocr-0.0.2.tar.gz /app/packages/
+COPY packages/rune_ocr-0.0.3.tar.gz /app/packages/
 RUN apt-get update
 RUN apt-get install libgl1-mesa-glx -y
 RUN pip install -r requirements.txt
