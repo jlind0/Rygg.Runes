@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Abstractions;
 using Rygg.Runes.Proxy;
 using System.Reflection;
 using Telerik.Maui.Controls.Compatibility;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Markup;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -18,7 +21,7 @@ namespace RyggRunes.MAUI.Client
         {
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseTelerik()
+                .UseTelerik().UseMauiCommunityToolkit().UseMauiCommunityToolkitMarkup()
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {

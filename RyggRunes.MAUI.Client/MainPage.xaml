@@ -2,14 +2,30 @@
 <r:ReactiveContentPage x:TypeArguments="vm:MainWindowViewModel" x:DataType="vm:MainWindowViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
              x:Class="RyggRunes.MAUI.Client.MainPage">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="ImageDataChanged" 
+                                        Command="{Binding CropInteractiveCommand, Source={x:Reference imgEditor}}">
+            <toolkit:EventToCommandBehavior.CommandParameter>
+                <telerik:CropCommandContext AspectRatio="Square">
+                   
+                </telerik:CropCommandContext>
+            </toolkit:EventToCommandBehavior.CommandParameter>
+        </toolkit:EventToCommandBehavior>
+    </ContentPage.Behaviors>
     <telerik:RadBusyIndicator x:Name="BusyIndicator"
                             AnimationContentHeightRequest="100"
                             AnimationContentWidthRequest="100"
                             AnimationContentColor="#674bb2"
                             AutomationId="busyIndicator" IsBusy="{Binding IsLoading}">
+        <telerik:RadBusyIndicator.Resources>
+            <ResourceDictionary>
+                <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            </ResourceDictionary>
+        </telerik:RadBusyIndicator.Resources>
         <telerik:RadDockLayout x:Name="radDock">
             <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
                 <Button.Triggers>
@@ -21,14 +37,32 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
+            <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
+                <VerticalStackLayout.Triggers>
+                    <DataTrigger Binding="{Binding HasRunes}" TargetType="VerticalStackLayout" Value="True">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding HasRunes}" TargetType="VerticalStackLayout" Value="False">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </VerticalStackLayout.Triggers>
+                <telerik:RadImageEditorToolbar AutoGenerateItems="False" ImageEditor="{x:Reference imgEditor}" x:Name="imgToolbar">
+                    <telerik:ImageEditorCropToolbarItem SelectedCropOperation="{x:Reference editCrop}" >
+                        <telerik:ImageEditorCropToolbarItem.CropOperations>
+                            <telerik:CropOperation x:Name="editCrop" AspectRatio="Square" Text="Square"/>
+                        </telerik:ImageEditorCropToolbarItem.CropOperations>
+                    </telerik:ImageEditorCropToolbarItem>
+                    <telerik:ImageEditorRotateLeftToolbarItem/>
+                    <telerik:ImageEditorRotateRightToolbarItem/>
+                </telerik:RadImageEditorToolbar>
+                <telerik:RadImageEditor x:Name="imgEditor" HeightRequest="250" WidthRequest="250" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
+                
+                </telerik:RadImageEditor>
+                <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
+            </VerticalStackLayout>
             <ScrollView telerik:RadDockLayout.Dock="Top">
                 <telerik:RadWrapLayout Orientation="Horizontal"  IsVisible="{Binding HasRunes}">
                     <VerticalStackLayout Margin="20">
-                        <VerticalStackLayout.Resources>
-                            <ResourceDictionary>
-                                <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
-                            </ResourceDictionary>
-                        </VerticalStackLayout.Resources>
                         <Label>Runes</Label>
                         <ListView ItemsSource="{Binding Runes}"/>
                         <Image HeightRequest="300" WidthRequest="300"
@@ -55,7 +89,7 @@ Aspect="AspectFit" />
                         Size="40" Color="Blue" />
                     </telerik:ButtonToolbarItem.ImageSource>
                 </telerik:ButtonToolbarItem>
-                <telerik:ButtonToolbarItem Command="{Binding ProcessImage}">
+                <telerik:ButtonToolbarItem Command="{Binding PickPhoto}">
                     <telerik:ButtonToolbarItem.ImageSource>
                         <FontImageSource Glyph="{x:StaticResource photo}"
                             FontFamily="FASolid"

@@ -25,7 +25,12 @@ namespace Rygg.Runes.Client.ViewModels
         private readonly Interaction<string, bool> hasPermissions;
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;
-        private readonly Interaction<string, byte[]> captureWithCamera;
+        private readonly Interaction<string, Stream> captureWithCamera;
+        private readonly Interaction<string, MemoryStream> saveImage;
+        public Interaction<string, MemoryStream> SaveImage
+        {
+            get => saveImage;
+        }
         private byte[]? annoatedImage;
         private bool isLoggedIn = false;
         public bool IsLoggedIn
@@ -60,7 +65,11 @@ namespace Rygg.Runes.Client.ViewModels
         {
             get => this.Runes.Count > 0;
         }
-        public Interaction<string, byte[]> CaptureWithCamera => captureWithCamera;
+        public bool IsReadyToProcess
+        {
+            get => CapturedImageBytes != null;
+        }
+        public Interaction<string, Stream> CaptureWithCamera => captureWithCamera;
         public Interaction<string, bool> HasPermissions => hasPermissions;
         public Interaction<string, bool> Alert => alert;
         public Interaction<string, Stream> OpenFile => openFile;
@@ -71,6 +80,7 @@ namespace Rygg.Runes.Client.ViewModels
         public ICommand AskFuture { get; }
         public ICommand Login { get; }
         public ICommand TakePhoto { get; }
+        public ICommand PickPhoto { get; }
         protected string ApiScope { get; }
         protected IPublicClientApplication ClientApplication { get; }
         protected string SignInSignOutPolicy { get; }
@@ -88,17 +98,35 @@ namespace Rygg.Runes.Client.ViewModels
             ApiScope = config["MSGraphApi:Scopes"] ?? throw new InvalidDataException();
             Login = ReactiveCommand.CreateFromTask(DoLogin);
             TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
-            captureWithCamera = new Interaction<string, byte[]>();
+            captureWithCamera = new Interaction<string, Stream>();
+            saveImage = new Interaction<string, MemoryStream>();
+            PickPhoto = ReactiveCommand.CreateFromTask(DoPickPhoto);
+        }
+        private byte[]? capturedImageBytes;
+        public byte[]? CapturedImageBytes
+        {
+            get => capturedImageBytes;
+            set => this.RaiseAndSetIfChanged(ref capturedImageBytes, value);
         }
         protected async Task DoTakePhoto(CancellationToken token = default)
         {
             try
             {
+                Runes.Clear();
+                this.RaisePropertyChanged(nameof(HasRunes));
                 if (await HasPermissions.Handle("permissions"))
                 {
-                    var fileBytes = await CaptureWithCamera.Handle("image").GetAwaiter();
-                    if (fileBytes != null)
-                        await ProcessImageRequest(fileBytes, token);
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        using var file = await CaptureWithCamera.Handle("Pick an image with Runes").GetAwaiter();
+                        if (file != null)
+                        {
+                            await file.CopyToAsync(memoryStream, token);
+                            CapturedImageBytes = memoryStream.ToArray();
+                        }
+                    }
+                    this.RaisePropertyChanged(nameof(IsReadyToProcess));
+
                 }
                 else
                     await Alert.Handle("Permissions required").GetAwaiter();
@@ -106,6 +134,28 @@ namespace Rygg.Runes.Client.ViewModels
             catch(Exception ex)
             {
                 await Alert.Handle(ex.Message).GetAwaiter();
+            }
+        }
+        protected async Task DoPickPhoto(CancellationToken token = default)
+        {
+            try
+            {
+                Runes.Clear();
+                this.RaisePropertyChanged(nameof(HasRunes));
+                using (var memoryStream = new MemoryStream())
+                {
+                    using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
+                    if (file != null)
+                    {
+                        await file.CopyToAsync(memoryStream, token);
+                        CapturedImageBytes = memoryStream.ToArray();
+                    }
+                }
+                this.RaisePropertyChanged(nameof(IsReadyToProcess));
+            }
+            catch(Exception ex)
+            {
+                await Alert.Handle(ex.Message);
             }
         }
         protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
@@ -224,19 +274,20 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
-            
-            byte[]? fileBytes = null;
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                using var file = await OpenFile.Handle("Pick an image with Runes").GetAwaiter();
-                if (file != null)
+                byte[]? image = null;
+                using (var file = await SaveImage.Handle("Get cropped image").GetAwaiter())
                 {
-                    await file.CopyToAsync(memoryStream, token);
-                    fileBytes = memoryStream.ToArray();
+                    image = file?.ToArray();
                 }
+                if(image != null)
+                    await ProcessImageRequest(image, token);
             }
-            if(fileBytes != null)
-                await ProcessImageRequest(fileBytes, token);
+            catch(Exception ex)
+            {
+                await Alert.Handle(ex.Message);
+            }
         }
     }
 }
