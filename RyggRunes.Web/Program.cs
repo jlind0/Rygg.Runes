@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var initialScopes = builder.Configuration["DownstreamApi:Scopes"]?.Split(' ') ?? builder.Configuration["MicrosoftGraph:Scopes"]?.Split(' ');
 builder.Services.AddScoped<IChatGPTProxy, ChatGPTProxy>();
+builder.Services.AddScoped<IStorageBlob, StorageBlob>();
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(builder.Configuration)
                     .EnableTokenAcquisitionToCallDownstreamApi()

@@ -1,0 +1,20 @@
+﻿@page
+@model RyggRunes.Web.Pages.ImageBrowserModel
+@{
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>File Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model.Files)
+        {
+            <tr>
+                <td><a href="/ViewImage/@file">@file</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,23 @@
+﻿@page "/ViewImage/{fileName}"
+@model RyggRunes.Web.Pages.ViewImageModel
+@{
+}
+@if (Model.ImageData != null) {
+    <table>
+        <thead>
+            <tr>
+                <th>Rune</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var anno in Model.ImageData.annotations)
+            {
+                <tr>
+                    <td>@anno</td>
+                </tr>
+            }
+        </tbody>
+   </table>
+    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImageData.im_incomming)"/>
+    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImageData.im_annotated)" />
+}

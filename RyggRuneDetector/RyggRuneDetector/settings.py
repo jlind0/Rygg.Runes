@@ -116,8 +116,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-
+AZURE_STORAGE_CONNECTION_STRING = config("AZURE_BLOB_CS")
 
 if config("USE_SSL", cast=bool):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

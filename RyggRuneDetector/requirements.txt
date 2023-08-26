@@ -11,3 +11,4 @@ authlib
 requests
 pyjwt
 python-decouple
+azure-storage-blob

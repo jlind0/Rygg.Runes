@@ -27,6 +27,8 @@ import jwt
 from django.http import HttpResponseForbidden
 from django.conf import settings
 from decouple import config
+from azure.storage.blob import BlobServiceClient, BlobClient
+import uuid
 
 # image_processing/views.py
 
@@ -60,16 +62,28 @@ def logout(request):
 
     return redirect(redirect_url)
 
+def upload_blob(container_name, blob_name, data):
+    blob_service_client = BlobServiceClient.from_connection_string(
+        settings.AZURE_STORAGE_CONNECTION_STRING
+    )
+    blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
+    blob_client.upload_blob(data)
+
 @login_required
 def image_upload(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
-            
+            fileNameBase =  datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%S")  + request.user.username + str(uuid.uuid4())
+            imgincomming = Image.open(image)
             detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
-            annotations, img_annotated  = detector.run(image = Image.open(image), return_image=True, score_thresh=0.1)
-            
+            annotations, img_annotated  = detector.run(image = imgincomming, return_image=True, score_thresh=0.1)
+            upload_blob('rune-images', fileNameBase, json.dumps({ 
+                                                 "im_annotated" : serialize_image_to_json(img_annotated),
+                                                 "im_incomming": serialize_image_to_json(imgincomming),
+                                                 "annotations": annotations
+                                                 }))
             return JsonResponse({'success': True, 
                                  'annotations' : annotations,
                                  'annotatedImage': serialize_image_to_json(img_annotated)})
@@ -125,7 +139,14 @@ def post_image(request):
         byte_data = request.body
         detector = RuneDetection(str(Path(__file__).parent/'rune_ocr_v2__yolov7_512_HQ2.onnx'))
         image = Image.open(io.BytesIO(byte_data));
+        fileNameBase =  datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%S")  + request.user.username + str(uuid.uuid4())
+        
         annotations, img_annotated = detector.run(image=image,return_image= True,score_thresh=0.1)
+        upload_blob('rune-images', fileNameBase, json.dumps({ 
+                                                 "im_annotated" : serialize_image_to_json(img_annotated),
+                                                 "im_incomming": serialize_image_to_json(image),
+                                                 "annotations": annotations
+                                                 }))
         return JsonResponse({'success': True, 
                              'annotations' : annotations, 
                              'annotatedImage': serialize_image_to_json(img_annotated)})
@@ -137,7 +158,6 @@ def serialize_image_to_json(image):
     image_byte_array = io.BytesIO()
     
     image.save(image_byte_array, format='PNG')  # You can choose the format as per your requirement
-
     # Encode the byte stream as base64
     image_base64 = base64.b64encode(image_byte_array.getvalue()).decode('utf-8')
     return image_base64;
