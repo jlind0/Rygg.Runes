@@ -21,30 +21,32 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-
-            <telerik:RadWrapLayout Orientation="Horizontal"  telerik:RadDockLayout.Dock="Top" IsVisible="{Binding HasRunes}">
-                <VerticalStackLayout Margin="20">
-                    <VerticalStackLayout.Resources>
-                        <ResourceDictionary>
-                            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
-                        </ResourceDictionary>
-                    </VerticalStackLayout.Resources>
-                    <Label>Runes</Label>
-                    <ListView ItemsSource="{Binding Runes}"/>
-                    <Image HeightRequest="300" WidthRequest="300"
+            <ScrollView telerik:RadDockLayout.Dock="Top">
+                <telerik:RadWrapLayout Orientation="Horizontal"  IsVisible="{Binding HasRunes}">
+                    <VerticalStackLayout Margin="20">
+                        <VerticalStackLayout.Resources>
+                            <ResourceDictionary>
+                                <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+                            </ResourceDictionary>
+                        </VerticalStackLayout.Resources>
+                        <Label>Runes</Label>
+                        <ListView ItemsSource="{Binding Runes}"/>
+                        <Image HeightRequest="300" WidthRequest="300"
 Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
 Aspect="AspectFit" />
 
-                </VerticalStackLayout>
-                <VerticalStackLayout Margin="20"> 
-                    <Label>Question</Label>
-                    <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
-                    <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                    <ScrollView WidthRequest="300">
-                        <Label TextType="Html" Text="{Binding Answer}"/>
-                    </ScrollView>
-                </VerticalStackLayout>
-            </telerik:RadWrapLayout>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Margin="20">
+                        <Label>Question</Label>
+                        <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
+                        <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
+                        <ScrollView WidthRequest="300">
+                            <Label TextType="Html" Text="{Binding Answer}"/>
+                        </ScrollView>
+                    </VerticalStackLayout>
+                </telerik:RadWrapLayout>
+            </ScrollView>
+            
             <telerik:RadToolbar x:Name="toolbar" HeightRequest="75" telerik:RadDockLayout.Dock="Bottom" IsVisible="{Binding IsLoggedIn}">
                 <telerik:ButtonToolbarItem Command="{Binding TakePhoto}">
                     <telerik:ButtonToolbarItem.ImageSource>
