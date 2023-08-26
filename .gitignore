@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /RyggRuneDetector/packages/rune_ocr-0.0.1.tar.gz
 /NuGet.config
 /RyggRuneDetector/app/rune_ocr_v2__yolov7_512_HQ2.onnx
+/RyggRuneDetector/.env
