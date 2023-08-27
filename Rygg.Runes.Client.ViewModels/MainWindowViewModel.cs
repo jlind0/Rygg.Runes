@@ -67,7 +67,7 @@ namespace Rygg.Runes.Client.ViewModels
         }
         public bool IsReadyToProcess
         {
-            get => CapturedImageBytes != null;
+            get => CapturedImageBytes != null && !HasRunes;
         }
         public Interaction<string, Stream> CaptureWithCamera => captureWithCamera;
         public Interaction<string, bool> HasPermissions => hasPermissions;
@@ -200,6 +200,7 @@ namespace Rygg.Runes.Client.ViewModels
                             Runes.Add(rune);
                         }
                         this.RaisePropertyChanged(nameof(HasRunes));
+                        this.RaisePropertyChanged(nameof(IsReadyToProcess));
                     }
                 }
                 else

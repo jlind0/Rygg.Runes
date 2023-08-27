@@ -38,14 +38,6 @@
                 </Button.Triggers>
             </Button>
             <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
-                <VerticalStackLayout.Triggers>
-                    <DataTrigger Binding="{Binding HasRunes}" TargetType="VerticalStackLayout" Value="True">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding HasRunes}" TargetType="VerticalStackLayout" Value="False">
-                        <Setter Property="IsVisible" Value="True"/>
-                    </DataTrigger>
-                </VerticalStackLayout.Triggers>
                 <telerik:RadImageEditorToolbar AutoGenerateItems="False" ImageEditor="{x:Reference imgEditor}" x:Name="imgToolbar">
                     <telerik:ImageEditorCropToolbarItem SelectedCropOperation="{x:Reference editCrop}" >
                         <telerik:ImageEditorCropToolbarItem.CropOperations>
