@@ -14,6 +14,7 @@ namespace Rygg.Runes.Client.ViewModels
 {
     public class ReadingsViewModel : ReactiveObject
     {
+        private bool isFirstLoad = true;
         public MainWindowViewModel Parent { get; }
         protected IReadingsDataAdapter ReadingsDataAdapter { get; }
         public ObservableCollection<Reading> Readings { get; } = new ObservableCollection<Reading>();
@@ -34,6 +35,9 @@ namespace Rygg.Runes.Client.ViewModels
         {
             try
             {
+                if (isFirstLoad)
+                    await ReadingsDataAdapter.CreateDatabase(token);
+                isFirstLoad = false;
                 Readings.Clear();
                 await foreach(var reading in ReadingsDataAdapter.GetAll(SearchCondition, token))
                 {

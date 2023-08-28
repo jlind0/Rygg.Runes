@@ -24,6 +24,7 @@ namespace Rygg.Runes.Data.Embedded
         IAsyncEnumerable<Reading> GetAll(string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default);
         Task Add(Reading reading, CancellationToken token = default);
         Task Delete(long id, CancellationToken token = default);
+        Task CreateDatabase(CancellationToken token = default);
     }
     public class ReadingsDataAdapter : IReadingsDataAdapter
     {
@@ -35,32 +36,32 @@ namespace Rygg.Runes.Data.Embedded
             ConnectionString = $"Data Source = {Path.Combine(path,DatabaseName)}";
             RootDirectory = path;
         }
-        protected async Task<SqliteConnection> GetConnection(CancellationToken token = default)
+        public async Task CreateDatabase(CancellationToken token = default)
         {
-            //File.Delete(Path.Join(RootDirectory, DatabaseName));
-            if(!File.Exists(Path.Combine(RootDirectory, DatabaseName))) 
+            using (SqliteConnection conn = new SqliteConnection(ConnectionString))
             {
-                using(SqliteConnection conn = new SqliteConnection(ConnectionString))
+                await conn.OpenAsync(token);
+
+                using (var command = conn.CreateCommand())
                 {
-                    await conn.OpenAsync(token);
-                   
-                    using (var command = conn.CreateCommand())
-                    {
-                        command.CommandText = "CREATE TABLE Readings(Id INTEGER PRIMARY KEY AUTOINCREMENT, Question TEXT, Answer TEXT, Runes TEXT, AnnotatedImage BLOB);";
-                        await command.ExecuteNonQueryAsync(token);
-                    }
-                    using (var command = conn.CreateCommand())
-                    {
-                        command.CommandText = "CREATE VIRTUAL TABLE ReadingsFTS USING fts5(Question, Answer, Runes, content='Readings', content_rowid='Id');";
-                        await command.ExecuteNonQueryAsync(token);
-                    }
-                    using (var command = conn.CreateCommand())
-                    {
-                        command.CommandText = "CREATE TRIGGER Readings_AI AFTER INSERT ON Readings BEGIN INSERT INTO ReadingsFTS(rowid,Question, Answer, Runes) VALUES(new.Id, new.Question, new.Answer, new.Runes); END;";
-                        await command.ExecuteNonQueryAsync(token);
-                    }
+                    command.CommandText = "CREATE TABLE IF NOT EXISTS Readings(Id INTEGER PRIMARY KEY AUTOINCREMENT, Question TEXT, Answer TEXT, Runes TEXT, AnnotatedImage BLOB);";
+                    await command.ExecuteNonQueryAsync(token);
+                }
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = "CREATE VIRTUAL TABLE IF NOT EXISTS ReadingsFTS USING fts5(Question, Answer, Runes, content='Readings', content_rowid='Id');";
+                    await command.ExecuteNonQueryAsync(token);
+                }
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = "CREATE TRIGGER IF NOT EXISTS Readings_AI AFTER INSERT ON Readings BEGIN INSERT INTO ReadingsFTS(rowid,Question, Answer, Runes) VALUES(new.Id, new.Question, new.Answer, new.Runes); END;";
+                    await command.ExecuteNonQueryAsync(token);
                 }
             }
+        }
+        protected async Task<SqliteConnection> GetConnection(CancellationToken token = default)
+        {
+            
             var con = new SqliteConnection(ConnectionString);
             await con.OpenAsync(token);
             return con;
