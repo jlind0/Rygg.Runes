@@ -14,10 +14,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <telerik:RadDockLayout HeightRequest="450">
+    <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
         <HorizontalStackLayout HeightRequest="50" telerik:RadDockLayout.Dock="Top">
             <Editor Text="{Binding SearchCondition}" WidthRequest="200"></Editor>
             <telerik:RadButton x:Name="btnSearch" Command="{Binding Load}">
@@ -28,7 +29,7 @@
                 </telerik:RadButton.ImageSource>
             </telerik:RadButton>
         </HorizontalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Bottom" HeightRequest="400">
+        <ScrollView telerik:RadDockLayout.Dock="Bottom" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.90}}">
             <ListView ItemsSource="{Binding Readings}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="d:Reading">
@@ -37,10 +38,10 @@
                                 <Image WidthRequest="200" HeightRequest="200" Source="{Binding AnnotatedImage, Converter= {StaticResource ByteArrayToImageSourceConverter}}"/>
                                 <VerticalStackLayout>
                                     <ListView ItemsSource="{Binding Runes}"/>
-                                    <Label FontSize="28">Question:</Label>
-                                    <Label FontSize="25" Text="{Binding Question}" LineBreakMode="WordWrap"/>
-                                    <Label FontSize="28">Answer:</Label>
-                                    <Label FontSize="25" Text="{Binding Answer}" TextType="Html" LineBreakMode="WordWrap"/>
+                                    <Label FontSize="23">Question:</Label>
+                                    <Label FontSize="20" Text="{Binding Question}" LineBreakMode="WordWrap"/>
+                                    <Label FontSize="23">Answer:</Label>
+                                    <Label FontSize="20" Text="{Binding Answer}" TextType="Html" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
                             </telerik:RadWrapLayout>
                         </ViewCell>

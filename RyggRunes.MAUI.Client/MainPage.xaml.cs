@@ -22,18 +22,13 @@ namespace RyggRunes.MAUI.Client
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
-#if IOS || ANDROID
-            ViewModel.ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;
-            ViewModel.ScreenHeight = DeviceDisplay.MainDisplayInfo.Height;
-#elif WINDOWS || MACCATALYST
-            ViewModel.ScreenWidth = Width;
-            ViewModel.ScreenHeight = Height;
-            this.WhenPropertyChanged(p => p.Width).Subscribe(p => ViewModel.ScreenWidth = p.Value);
-            this.WhenPropertyChanged(p => p.Height).Subscribe(p => ViewModel.ScreenHeight = p.Value);
-#endif
+            ViewModel.ScreenWidth = this.Width;
+            ViewModel.ScreenHeight = this.Height;
             this.WhenActivated(d =>
             {
                 
+                this.WhenPropertyChanged(p => p.Width).Subscribe(p => ViewModel.ScreenWidth = p.Value).DisposeWith(d);
+                this.WhenPropertyChanged(p => p.Height).Subscribe(p => ViewModel.ScreenHeight = p.Value).DisposeWith(d);
                 ViewModel.Alert.RegisterHandler(async interaction =>
                 {
                     await DisplayAlert("Alert", interaction.Input, "OK");

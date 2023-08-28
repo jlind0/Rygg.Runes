@@ -18,12 +18,12 @@
         <telerik:RadBusyIndicator.Resources>
             <ResourceDictionary>
                 <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
-                
+                <c:PixelScaler x:Key="PixelScaler"/>
             </ResourceDictionary>
         </telerik:RadBusyIndicator.Resources>
         <VerticalStackLayout>
             <telerik:RadTabView 
-                HeightRequest="500"
+                HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}"
                 IsVisible="{Binding IsLoggedIn}" HeaderPosition="Left" IsContentSwipeEnabled="False">
                 <telerik:RadTabView.HeaderItemTemplate>
                     <ControlTemplate>
@@ -37,10 +37,10 @@
                     </ControlTemplate>
                 </telerik:RadTabView.HeaderItemTemplate>
                 <telerik:TabViewItem HeaderText="&#xe362;">
-                    <views:DetectorView HeightRequest="500" BindingContext="{Binding DetectorVM}"/>
+                    <views:DetectorView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding DetectorVM}"/>
                 </telerik:TabViewItem>
                 <telerik:TabViewItem HeaderText="&#xf5da;">
-                    <views:ReadingsView HeightRequest="500" BindingContext="{Binding ReadingsVM}"/>
+                    <views:ReadingsView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding ReadingsVM}"/>
                 </telerik:TabViewItem>
                 
             </telerik:RadTabView>

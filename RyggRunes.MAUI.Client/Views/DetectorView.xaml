@@ -21,9 +21,10 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
     <ContentView.Resources>
         <ResourceDictionary>
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <telerik:RadDockLayout HeightRequest="450">
+    <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
         <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
             <telerik:RadImageEditorToolbar AutoGenerateItems="False" ImageEditor="{x:Reference imgEditor}" x:Name="imgToolbar">
                 <telerik:ImageEditorCropToolbarItem SelectedCropOperation="{x:Reference editCrop}" >
@@ -34,55 +35,54 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                 <telerik:ImageEditorRotateLeftToolbarItem/>
                 <telerik:ImageEditorRotateRightToolbarItem/>
             </telerik:RadImageEditorToolbar>
-            <telerik:RadImageEditor x:Name="imgEditor" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
-                HeightRequest="250" 
-                WidthRequest="250">
+            <telerik:RadImageEditor x:Name="imgEditor" 
+                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}" 
+                WidthRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
 
             </telerik:RadImageEditor>
             <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
         <ScrollView telerik:RadDockLayout.Dock="Top" 
-                HeightRequest="400"  
+                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.80}}"  
                     IsVisible="{Binding HasRunes}">
             <telerik:RadWrapLayout Orientation="Horizontal">
-                <VerticalStackLayout Margin="20">
-                    <Label>Runes</Label>
+                <telerik:RadWrapLayout Orientation="Horizontal" Margin="5">
                     <ListView ItemsSource="{Binding Runes}"/>
-                    <Image  HeightRequest="200" 
-                        WidthRequest="200"
+                    <Image  HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.30}}" 
+                        WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.30}}"
                         Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
                         Aspect="AspectFit" />
-                </VerticalStackLayout>
+                </telerik:RadWrapLayout>
                 <VerticalStackLayout Margin="20">
                     <Label>Question</Label>
 
-                    <Editor FontSize="25" Text="{Binding Question}" WidthRequest="300" 
-                            HeightRequest="300"></Editor>
+                    <Editor FontSize="16" Text="{Binding Question}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}" 
+                            HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.15}}"></Editor>
                     <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
-                    <Label TextType="Html" WidthRequest="290" FontSize="25" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
+                    <Label TextType="Html" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}" FontSize="20" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
                 </VerticalStackLayout>
             </telerik:RadWrapLayout>
         </ScrollView>
-        <telerik:RadToolbar x:Name="toolbar" HeightRequest="75" telerik:RadDockLayout.Dock="Bottom">
+        <telerik:RadToolbar x:Name="toolbar" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.13}}" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding TakePhoto}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource camera}"
-            FontFamily="FASolid"
-            Size="40" Color="Blue" />
+                        FontFamily="FASolid"
+                        Size="40" Color="Blue" />
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding PickPhoto}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource photo}"
-                FontFamily="FASolid"
-                Size="40" Color="Blue" />
+                        FontFamily="FASolid"
+                        Size="40" Color="Blue" />
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem IsVisible="{Binding CanSave}" Command="{Binding SaveReading}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource save}"
-FontFamily="FASolid"
-Size="40" Color="Blue" />
+                        FontFamily="FASolid"
+                        Size="40" Color="Blue" />
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
         </telerik:RadToolbar>
