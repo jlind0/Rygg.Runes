@@ -39,8 +39,8 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
             </telerik:RadImageEditor>
             <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="525">
-            <telerik:RadWrapLayout Orientation="Horizontal"  IsVisible="{Binding HasRunes}">
+        <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="525" IsVisible="{Binding HasRunes}">
+            <telerik:RadWrapLayout Orientation="Horizontal">
                 <VerticalStackLayout Margin="20">
                     <Label>Runes</Label>
                     <ListView ItemsSource="{Binding Runes}"/>
