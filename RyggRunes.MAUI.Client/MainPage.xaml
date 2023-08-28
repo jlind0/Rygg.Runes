@@ -18,13 +18,16 @@
         <telerik:RadBusyIndicator.Resources>
             <ResourceDictionary>
                 <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+                <c:PixelScaler x:Key="PixelScaler"/>
             </ResourceDictionary>
         </telerik:RadBusyIndicator.Resources>
         <VerticalStackLayout>
-            <telerik:RadTabView IsVisible="{Binding IsLoggedIn}" HeightRequest="600" HeaderPosition="Left" IsContentSwipeEnabled="False">
+            <telerik:RadTabView 
+                HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}"
+                IsVisible="{Binding IsLoggedIn}" HeaderPosition="Left" IsContentSwipeEnabled="False">
                 <telerik:RadTabView.HeaderItemTemplate>
                     <ControlTemplate>
-                        <Image>
+                        <Image Margin="25">
                                 <Image.Source>
                                     <FontImageSource Glyph="{TemplateBinding Text}"
                                         FontFamily="FASolid"
@@ -34,10 +37,10 @@
                     </ControlTemplate>
                 </telerik:RadTabView.HeaderItemTemplate>
                 <telerik:TabViewItem HeaderText="&#xe362;">
-                    <views:DetectorView BindingContext="{Binding DetectorVM}"/>
+                    <views:DetectorView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding DetectorVM}"/>
                 </telerik:TabViewItem>
                 <telerik:TabViewItem HeaderText="&#xf5da;">
-                    <views:ReadingsView BindingContext="{Binding ReadingsVM}"/>
+                    <views:ReadingsView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding ReadingsVM}"/>
                 </telerik:TabViewItem>
                 
             </telerik:RadTabView>

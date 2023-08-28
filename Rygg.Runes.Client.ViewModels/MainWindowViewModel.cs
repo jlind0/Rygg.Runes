@@ -27,6 +27,18 @@ namespace Rygg.Runes.Client.ViewModels
         private readonly Interaction<string, Stream> openFile;
         private readonly Interaction<string, Stream> captureWithCamera;
         private readonly Interaction<string, MemoryStream> saveImage;
+        private double screenWidth;
+        public double ScreenWidth
+        {
+            get => screenWidth;
+            set => this.RaiseAndSetIfChanged(ref screenWidth, value);
+        }
+        private double screenHeight;
+        public double ScreenHeight
+        {
+            get => screenHeight;
+            set => this.RaiseAndSetIfChanged(ref screenHeight, value);
+        }
         public Interaction<string, MemoryStream> SaveImage
         {
             get => saveImage;

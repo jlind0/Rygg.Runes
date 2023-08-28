@@ -22,4 +22,30 @@ namespace RyggRunes.MAUI.Client.Converters
             return null;
         }
     }
+    public class PixelScaler : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var screen = value as double?;
+            if (screen == null)
+                throw new InvalidDataException();
+            var scale = parameter as double?;
+
+            if (scale == null)
+                return screen.Value;
+            return screen.Value * scale.Value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var screen = value as double?;
+            if (screen == null)
+                throw new InvalidDataException();
+            var scale = parameter as double?;
+
+            if (scale == null)
+                return screen.Value;
+            return (1 / scale.Value) * screen.Value;
+        }
+    }
 }
