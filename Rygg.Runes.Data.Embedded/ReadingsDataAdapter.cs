@@ -32,7 +32,7 @@ namespace Rygg.Runes.Data.Embedded
         protected string RootDirectory { get; }
         public ReadingsDataAdapter(string path)
         {
-            ConnectionString = $"Data Source = {DatabaseName}";
+            ConnectionString = $"Data Source = {Path.Combine(path,DatabaseName)}";
             RootDirectory = path;
         }
         protected async Task<SqliteConnection> GetConnection(CancellationToken token = default)
