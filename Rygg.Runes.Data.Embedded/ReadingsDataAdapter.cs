@@ -38,7 +38,7 @@ namespace Rygg.Runes.Data.Embedded
         protected async Task<SqliteConnection> GetConnection(CancellationToken token = default)
         {
             //File.Delete(Path.Join(RootDirectory, DatabaseName));
-            if(!File.Exists(Path.Join(RootDirectory, DatabaseName))) 
+            if(!File.Exists(Path.Combine(RootDirectory, DatabaseName))) 
             {
                 using(SqliteConnection conn = new SqliteConnection(ConnectionString))
                 {

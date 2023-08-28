@@ -39,7 +39,7 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
             </telerik:RadImageEditor>
             <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Top" MaximumHeightRequest="400">
+        <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="525">
             <telerik:RadWrapLayout Orientation="Horizontal"  IsVisible="{Binding HasRunes}">
                 <VerticalStackLayout Margin="20">
                     <Label>Runes</Label>
@@ -52,10 +52,10 @@ Aspect="AspectFit" />
                 <VerticalStackLayout Margin="20">
                     <Label>Question</Label>
 
-                    <Editor Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
+                    <Editor FontSize="25" Text="{Binding Question}" WidthRequest="300" HeightRequest="150"></Editor>
                     <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
                     <ScrollView WidthRequest="300">
-                        <Label TextType="Html" FontSize="16" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
+                        <Label TextType="Html" WidthRequest="295" FontSize="25" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
                     </ScrollView>
                 </VerticalStackLayout>
             </telerik:RadWrapLayout>
