@@ -117,7 +117,6 @@
 	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Fonts\FA-400.otf" />
 	  <None Remove="Resources\Fonts\FA-Regular-400.otf" />
-	  <None Remove="Resources\Fonts\FA-Solid-900.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -137,12 +136,19 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Rygg.Runes.Client.ViewModels\Rygg.Runes.Client.ViewModels.csproj" />
+	  <ProjectReference Include="..\Rygg.Runes.Data.Embedded\Rygg.Runes.Data.Embedded.csproj" />
 	  <ProjectReference Include="..\RyggRunes.Client.Core\RyggRunes.Client.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Resources\Styles\Icons.xaml">
 	    <Generator></Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DetectorView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ReadingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
 

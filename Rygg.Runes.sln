@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RyggRunes.Web", "RyggRunes.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rygg.Runes.Proxy", "Rygg.Runes.Proxy\Rygg.Runes.Proxy.csproj", "{C77AEC83-F251-49EF-A319-6FB5E5CD6784}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rygg.Runes.Data.Embedded", "Rygg.Runes.Data.Embedded\Rygg.Runes.Data.Embedded.csproj", "{AF0B4C59-4519-4C69-AF64-0EB7798446CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{C77AEC83-F251-49EF-A319-6FB5E5CD6784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77AEC83-F251-49EF-A319-6FB5E5CD6784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C77AEC83-F251-49EF-A319-6FB5E5CD6784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0B4C59-4519-4C69-AF64-0EB7798446CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0B4C59-4519-4C69-AF64-0EB7798446CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0B4C59-4519-4C69-AF64-0EB7798446CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0B4C59-4519-4C69-AF64-0EB7798446CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

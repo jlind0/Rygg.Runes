@@ -12,6 +12,7 @@ using Telerik.Maui.Controls.Compatibility;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Markup;
+using Rygg.Runes.Data.Embedded;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -84,6 +85,7 @@ namespace RyggRunes.MAUI.Client
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<IRunesProxy, RunesProxy>();
             builder.Services.AddSingleton<IChatGPTProxy, MysticProxy>();
+            builder.Services.AddSingleton<IReadingsDataAdapter>(new ReadingsDataAdapter(FileSystem.AppDataDirectory));
             builder.Services.AddScoped<MainWindowViewModel>();
             builder.Services.TryAddTransient<MainPage>();
             return builder.Build();

@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
-using RyggRunes.MAUI.Client.Dispatcher;
 using CommunityToolkit.Maui.Markup;
 #if WINDOWS
 using Windows.Media.Capture;
@@ -16,19 +15,14 @@ namespace RyggRunes.MAUI.Client
 {
     public partial class MainPage : ReactiveContentPage<MainWindowViewModel>
     {
-        public event EventHandler ImageDataChanged;
+       
         public MainPage(MainWindowViewModel vm)
         {
             
             ViewModel = vm;
-            vm.DispatcherService = new MauiDispatcher(Dispatcher);
             InitializeComponent();
             BindingContext = ViewModel;
-            ViewModel.WhenPropertyChanged(p => p.CapturedImageBytes).Subscribe(async pv =>
-            {
-                await Task.Delay(500);
-                ImageDataChanged?.Invoke(this, EventArgs.Empty);
-            });
+            
             this.WhenActivated(d =>
             {
                 ViewModel.Alert.RegisterHandler(async interaction =>
@@ -96,12 +90,7 @@ namespace RyggRunes.MAUI.Client
                     }
 #endif
                 }).DisposeWith(d);
-                ViewModel.SaveImage.RegisterHandler(async interaction =>
-                {
-                    MemoryStream ms = new();
-                    await imgEditor.SaveAsync(ms, ImageFormat.Jpeg, 100);
-                    interaction.SetOutput(ms);
-                }).DisposeWith(d);
+                
             });
             
         }

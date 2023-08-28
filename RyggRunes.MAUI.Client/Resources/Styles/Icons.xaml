@@ -5,4 +5,7 @@
 
     <x:String x:Key="camera">&#xf030;</x:String>
     <x:String x:Key="photo">&#xf03e;</x:String>
+    <x:String x:Key="save">&#xf56e;</x:String>
+    <x:String x:Key="search">&#xf002;</x:String>
+    <x:String x:Key="crystalBall">&#xe362;</x:String>
 </ResourceDictionary>
