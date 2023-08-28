@@ -22,11 +22,12 @@ namespace RyggRunes.MAUI.Client
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
-            this.Loaded += MainPage_Loaded;
             this.WhenPropertyChanged(p => p.Width).Subscribe(p => ViewModel.ScreenWidth = p.Value);
             this.WhenPropertyChanged(p => p.Height).Subscribe(p => ViewModel.ScreenHeight = p.Value);
             this.WhenActivated(d =>
             {
+                ViewModel.ScreenWidth = this.Width;
+                ViewModel.ScreenHeight = this.Height;
                 ViewModel.Alert.RegisterHandler(async interaction =>
                 {
                     await DisplayAlert("Alert", interaction.Input, "OK");
@@ -97,10 +98,5 @@ namespace RyggRunes.MAUI.Client
             
         }
 
-        private void MainPage_Loaded(object sender, EventArgs e)
-        {
-            ViewModel.ScreenWidth = this.Width;
-            ViewModel.ScreenHeight = this.Height;
-        }
     }
 }

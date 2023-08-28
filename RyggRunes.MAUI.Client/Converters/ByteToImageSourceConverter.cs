@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Maui.Devices;
+using ReactiveUI;
 
 namespace RyggRunes.MAUI.Client.Converters
 {
@@ -27,8 +29,8 @@ namespace RyggRunes.MAUI.Client.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var screen = value as double?;
-            if (screen == null)
-                throw new InvalidDataException();
+            if (screen == null || screen <= 0)
+                screen = DeviceDisplay.MainDisplayInfo.Height;
             var scale = parameter as double?;
 
             if (scale == null)
@@ -39,8 +41,8 @@ namespace RyggRunes.MAUI.Client.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var screen = value as double?;
-            if (screen == null)
-                throw new InvalidDataException();
+            if(screen == null || screen <= 0)
+                screen = DeviceDisplay.MainDisplayInfo.Height;
             var scale = parameter as double?;
 
             if (scale == null)
