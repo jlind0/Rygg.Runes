@@ -35,7 +35,7 @@ namespace RyggRunes.MAUI.Client.Converters
 
             if (scale == null)
                 return screen.Value;
-            return screen.Value * scale.Value;
+            return Math.Round(screen.Value * scale.Value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -47,7 +47,7 @@ namespace RyggRunes.MAUI.Client.Converters
 
             if (scale == null)
                 return screen.Value;
-            return (1 / scale.Value) * screen.Value;
+            return Math.Round((1 / scale.Value) * screen.Value);
         }
     }
 }
