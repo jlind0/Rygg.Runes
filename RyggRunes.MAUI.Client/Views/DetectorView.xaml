@@ -36,8 +36,8 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                 <telerik:ImageEditorRotateRightToolbarItem/>
             </telerik:RadImageEditorToolbar>
             <telerik:RadImageEditor x:Name="imgEditor" 
-                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}" 
-                WidthRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
+                HeightRequest="300" 
+                WidthRequest="300" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
 
             </telerik:RadImageEditor>
             <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
@@ -48,16 +48,16 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
             <telerik:RadWrapLayout Orientation="Horizontal">
                 <telerik:RadWrapLayout Orientation="Horizontal" Margin="5">
                     <ListView ItemsSource="{Binding Runes}"/>
-                    <Image  HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.30}}" 
-                        WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.30}}"
+                    <Image  HeightRequest="300" 
+                        WidthRequest="300"
                         Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
                         Aspect="AspectFit" />
                 </telerik:RadWrapLayout>
                 <VerticalStackLayout Margin="20">
                     <Label>Question</Label>
 
-                    <Editor FontSize="16" Text="{Binding Question}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}" 
-                            HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.15}}"></Editor>
+                    <Editor FontSize="16" Text="{Binding Question}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}" 
+                            HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.20}}"></Editor>
                     <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
                     <Label TextType="Html" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}" FontSize="20" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
                 </VerticalStackLayout>
