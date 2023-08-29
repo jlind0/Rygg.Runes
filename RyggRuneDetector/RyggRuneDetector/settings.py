@@ -26,8 +26,8 @@ SECRET_KEY = 'f7ef060f-07d2-4202-9cbc-f4877e08f938'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ryggrune-api.azurewebsites.net', 'localhost']
-CSRF_TRUSTED_ORIGINS = ['https://ryggrune-api.azurewebsites.net', 'http://localhost']
+ALLOWED_HOSTS = ['ryggrune-api.azurewebsites.net', 'localhost', 'api.runes.mystical.nexus']
+CSRF_TRUSTED_ORIGINS = ['https://ryggrune-api.azurewebsites.net', 'http://localhost', 'https://api.runes.mystical.nexus']
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
