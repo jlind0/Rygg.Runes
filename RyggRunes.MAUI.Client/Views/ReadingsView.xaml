@@ -29,8 +29,10 @@
                 </telerik:RadButton.ImageSource>
             </telerik:RadButton>
         </HorizontalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Bottom" x:Name="scrlReadings" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
-            <ListView ItemsSource="{Binding Readings}">
+        <ScrollView telerik:RadDockLayout.Dock="Bottom" x:Name="scrlReadings"
+                WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}"
+                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
+            <ListView ItemsSource="{Binding Readings}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="d:Reading">
                         <ViewCell>
