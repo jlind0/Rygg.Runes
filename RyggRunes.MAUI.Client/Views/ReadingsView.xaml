@@ -32,10 +32,10 @@
         <ScrollView telerik:RadDockLayout.Dock="Bottom" x:Name="scrlReadings"
                 WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}"
                 HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
-            <ListView ItemsSource="{Binding Readings}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
-                <ListView.ItemTemplate>
+            <CollectionView ItemsSource="{Binding Readings}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="d:Reading">
-                        <ViewCell>
+                        <SwipeView>
                             <VerticalStackLayout>
                                 <Image WidthRequest="200" HeightRequest="200" Source="{Binding AnnotatedImage, Converter= {StaticResource ByteArrayToImageSourceConverter}}"/>
                                 <ListView ItemsSource="{Binding Runes}"/>
@@ -44,10 +44,10 @@
                                 <Label FontSize="23">Answer:</Label>
                                 <Label Margin="10" FontSize="20" Text="{Binding Answer}" TextType="Html" LineBreakMode="WordWrap"/>
                             </VerticalStackLayout>
-                        </ViewCell>
+                        </SwipeView>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </ScrollView>
 
     </telerik:RadDockLayout>
