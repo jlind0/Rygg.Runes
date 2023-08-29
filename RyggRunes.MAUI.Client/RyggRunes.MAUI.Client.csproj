@@ -34,14 +34,14 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <MtouchLink>None</MtouchLink>
 	  <MtouchUseLlvm>False</MtouchUseLlvm>
 	  <MtouchDebug>True</MtouchDebug>
@@ -50,27 +50,27 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
 	  <MtouchLink>SdkOnly</MtouchLink>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchProfiling>True</MtouchProfiling>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
@@ -78,14 +78,14 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationTitle>Rygg Runes Detector</ApplicationTitle>
-	  <ApplicationVersion>12</ApplicationVersion>
+	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
+	  <ApplicationVersion>28</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	</PropertyGroup>
 

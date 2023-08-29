@@ -44,6 +44,8 @@ namespace RyggRunes.MAUI.Client
                         });
                         if (fileResult != null)
                             interaction.SetOutput(await fileResult.OpenReadAsync());
+                        else
+                            interaction.SetOutput(null);
                     }
                     catch (Exception ex) 
                     {
@@ -86,6 +88,8 @@ namespace RyggRunes.MAUI.Client
                             {
                                 interaction.SetOutput(await photo.OpenReadAsync());
                             }
+                            else
+                                interaction.SetOutput(null);
                         }
                     }
                     catch(Exception ex)

@@ -34,8 +34,9 @@
 	<string>1.0.0</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to the camera to capture photos of runes that are cast.</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>We need access to the microphone to record audio for sharing.</string>
-
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone to record audio for sharing.</string>
+	<key>CFBundleDisplayName</key>
+	<string>Mystical Nexus</string>
 </dict>
 </plist>

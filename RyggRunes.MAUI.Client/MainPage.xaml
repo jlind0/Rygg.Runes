@@ -50,11 +50,11 @@
                 <telerik:RadTabView.HeaderItemTemplate>
                     <ControlTemplate>
                         <telerik:RadBorder BorderColor="Transparent" BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
-                            <Image Margin="25" BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
+                            <Image Margin="20" BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
                                 <Image.Source>
                                     <FontImageSource Glyph="{TemplateBinding Text}"
                 FontFamily="FASolid"
-                Size="40" Color="{Binding TextColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
+                Size="30" Color="{Binding TextColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
 
                                     </FontImageSource>
                                 </Image.Source>
