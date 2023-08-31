@@ -21,7 +21,8 @@ namespace Rygg.Runes.Data.Embedded
     }
     public interface IReadingsDataAdapter
     {
-        IAsyncEnumerable<Reading> GetAll(string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default);
+        IAsyncEnumerable<Reading> GetAll(int pageSize = 5, int page = 1, string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default);
+        Task<long> Count(string? searchCondition = null, CancellationToken token = default);
         Task Add(Reading reading, CancellationToken token = default);
         Task Delete(long id, CancellationToken token = default);
         Task CreateDatabase(CancellationToken token = default);
@@ -95,21 +96,24 @@ namespace Rygg.Runes.Data.Embedded
             }
         }
 
-        public async IAsyncEnumerable<Reading> GetAll(string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default)
+        public async IAsyncEnumerable<Reading> GetAll(int pageSize = 5, int page = 1, string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default)
         {
             using(var conn = await GetConnection(token))
             {
                 
                 using(var cmd = conn.CreateCommand())
                 {
-                    if (!string.IsNullOrEmpty(searchCondition))
+                    if (!string.IsNullOrWhiteSpace(searchCondition))
                     {
-                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition";
+                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition LIMIT @PageSize OFFSET @Offset;";
                         cmd.Parameters.AddWithValue("@SearchCondition", searchCondition);
 
                     }
                     else
-                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes from ReadingsFTS;";
+                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes from ReadingsFTS LIMIT @PageSize OFFSET @Offset;";
+                    int offset = (page - 1) * pageSize;
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                    cmd.Parameters.AddWithValue("@Offset", offset);
                     using (var dr = await cmd.ExecuteReaderAsync(token))
                     {
                         while (await dr.ReadAsync(token))
@@ -132,6 +136,26 @@ namespace Rygg.Runes.Data.Embedded
                                 
                         }
                     }
+                }
+            }
+        }
+
+        public async Task<long> Count(string? searchCondition = null, CancellationToken token = default)
+        {
+            using(var conn = await GetConnection(token))
+            {
+                using(var cmd = conn.CreateCommand())
+                {
+                    if (!string.IsNullOrWhiteSpace(searchCondition))
+                    {
+                        cmd.CommandText = "SELECT COUNT(*) FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition";
+                        cmd.Parameters.AddWithValue("@SearchCondition", searchCondition);
+                    }
+                    else
+                    {
+                        cmd.CommandText = "SELECT COUNT(*) FROM ReadingsFTS";
+                    }
+                    return (long)(await cmd.ExecuteScalarAsync(token) ?? throw new InvalidDataException());
                 }
             }
         }

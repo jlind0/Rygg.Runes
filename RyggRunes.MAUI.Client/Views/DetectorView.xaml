@@ -55,10 +55,8 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                 </telerik:RadWrapLayout>
                 <VerticalStackLayout Margin="20">
                     <Label>Question</Label>
-
                     <Editor FontSize="16" Text="{Binding Question}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.60}}" 
                             HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.20}}"></Editor>
-                    <Button Text="Ask the Mystic" Command="{Binding AskFuture}" WidthRequest="250"/>
                     <Label TextType="Html" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.65}}" FontSize="20" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
                 </VerticalStackLayout>
             </telerik:RadWrapLayout>
@@ -76,6 +74,13 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                     <FontImageSource Glyph="{x:StaticResource photo}"
                         FontFamily="FASolid"
                         Size="40" Color="Blue" />
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding AskFuture}" IsVisible="{Binding HasRunes}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource Glyph="&#xe1e7;"
+            FontFamily="FASolid"
+            Size="40" Color="Blue" />
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem IsVisible="{Binding CanSave}" Command="{Binding SaveReading}">

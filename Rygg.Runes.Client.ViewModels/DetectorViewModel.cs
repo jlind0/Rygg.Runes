@@ -240,6 +240,7 @@ namespace Rygg.Runes.Client.ViewModels
             {
                 Parent.IsLoading = true;
                 Answer = null;
+                HasSaved = false;
                 this.RaisePropertyChanged(nameof(CanSave));
                 string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
                 Answer = answ.Replace("\\n", "<br>");

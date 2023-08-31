@@ -21,7 +21,7 @@
     <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
         <HorizontalStackLayout HeightRequest="50" telerik:RadDockLayout.Dock="Top">
             <Editor Text="{Binding SearchCondition}" WidthRequest="200"></Editor>
-            <telerik:RadButton x:Name="btnSearch" Command="{Binding Load}">
+            <telerik:RadButton x:Name="btnSearch" Command="{Binding Search}">
                 <telerik:RadButton.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource search}"
                         FontFamily="FASolid"
@@ -29,26 +29,44 @@
                 </telerik:RadButton.ImageSource>
             </telerik:RadButton>
         </HorizontalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Bottom" x:Name="scrlReadings"
-                WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}"
-                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
-            <CollectionView ItemsSource="{Binding Readings}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="d:Reading">
-                        <SwipeView>
+        <telerik:RadDockLayout telerik:RadDockLayout.Dock="Bottom" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}"
+HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
+            <ScrollView telerik:RadDockLayout.Dock="Top" x:Name="scrlReadings" 
+                        HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.65}}" 
+                        WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
+                <telerik:RadItemsControl ItemsSource="{Binding Readings}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}">
+                    <telerik:RadItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ReadingViewModel">
                             <VerticalStackLayout>
-                                <Image WidthRequest="200" HeightRequest="200" Source="{Binding AnnotatedImage, Converter= {StaticResource ByteArrayToImageSourceConverter}}"/>
+                                <Image WidthRequest="200" HeightRequest="200" Source="{Binding AnnotatedImage, Converter= {StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}"/>
                                 <ListView ItemsSource="{Binding Runes}"/>
                                 <Label FontSize="23">Question:</Label>
                                 <Label Margin="10" FontSize="20" Text="{Binding Question}" LineBreakMode="WordWrap"/>
                                 <Label FontSize="23">Answer:</Label>
                                 <Label Margin="10" FontSize="20" Text="{Binding Answer}" TextType="Html" LineBreakMode="WordWrap"/>
                             </VerticalStackLayout>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
+                        </DataTemplate>
+                    </telerik:RadItemsControl.ItemTemplate>
+                </telerik:RadItemsControl>
+            </ScrollView>
+            <telerik:RadToolbar x:Name="toolbar" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.15}}" telerik:RadDockLayout.Dock="Bottom">
+                <telerik:ButtonToolbarItem Command="{Binding PageBack}" IsVisible="{Binding CanPageBack}">
+                    <telerik:ButtonToolbarItem.ImageSource>
+                        <FontImageSource Glyph="&#xf0d9;"
+                FontFamily="FASolid"
+                Size="40" Color="Blue" />
+                    </telerik:ButtonToolbarItem.ImageSource>
+                </telerik:ButtonToolbarItem>
+                <telerik:ButtonToolbarItem Command="{Binding PageForward}" IsVisible="{Binding CanPageForward}">
+                    <telerik:ButtonToolbarItem.ImageSource>
+                        <FontImageSource Glyph="&#xf0da;"
+                            FontFamily="FASolid"
+                            Size="40" Color="Blue" />
+                    </telerik:ButtonToolbarItem.ImageSource>
+                </telerik:ButtonToolbarItem>
+            </telerik:RadToolbar>
+        </telerik:RadDockLayout>
+        
 
     </telerik:RadDockLayout>
 </r:ReactiveContentView>
