@@ -105,7 +105,8 @@ namespace Rygg.Runes.Client.ViewModels
                         Answer = Answer ?? throw new InvalidDataException()
 
                     }, token);
-                    this.HasSaved = true;
+                    HasSaved = true;
+                    await Parent.ReadingsVM.DoLoad(token);
                     this.RaisePropertyChanged(nameof(CanSave));
                 }
             }

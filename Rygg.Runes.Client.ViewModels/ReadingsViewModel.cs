@@ -86,7 +86,7 @@ namespace Rygg.Runes.Client.ViewModels
             Page = 1;
             await DoLoad(token);
         }
-        protected async Task DoLoad(CancellationToken token = default)
+        public async Task DoLoad(CancellationToken token = default)
         {
             try
             {
