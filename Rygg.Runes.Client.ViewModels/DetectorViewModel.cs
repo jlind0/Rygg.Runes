@@ -233,6 +233,7 @@ namespace Rygg.Runes.Client.ViewModels
             }
             catch (Exception ex)
             {
+                await Parent.Alert.Handle(ex.StackTrace ?? "").GetAwaiter();
                 await Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
             finally
