@@ -131,7 +131,7 @@
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.55.0" />
 		<PackageReference Include="ReactiveUI" Version="19.4.1" />
 		<PackageReference Include="ReactiveUI.MAUI" Version="19.4.1" />
-		<PackageReference Include="Telerik.UI.for.Maui.Trial" Version="6.1.0" />
+		<PackageReference Include="Telerik.UI.for.Maui" Version="6.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
