@@ -87,7 +87,7 @@ namespace Rygg.Runes.Client.ViewModels
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
             PickPhoto = ReactiveCommand.CreateFromTask(DoPickPhoto);
-            AskFuture = ReactiveCommand.CreateFromTask(DoAskFuture);
+            AskFuture = ReactiveCommand.CreateFromTask<bool>(DoAskFuture);
             SaveReading = ReactiveCommand.CreateFromTask(DoSaveReading);
         }
         protected async Task DoSaveReading(CancellationToken token = default)
@@ -174,7 +174,7 @@ namespace Rygg.Runes.Client.ViewModels
                 await Parent.Alert.Handle(ex.Message);
             }
         }
-        protected async Task ProcessImageRequest(byte[] fileBytes, CancellationToken token = default)
+        protected async Task ProcessImageRequest(byte[] fileBytes, bool isFirst = true, CancellationToken token = default)
         {
             try
             {
@@ -221,6 +221,16 @@ namespace Rygg.Runes.Client.ViewModels
                 else
                     await Parent.Alert.Handle("Permissions required").GetAwaiter();
             }
+            catch (MsalClientException ex)
+            {
+                if (isFirst)
+                {
+                    await Parent.DoLogin(true, token);
+                    await ProcessImageRequest(fileBytes, false, token);
+                }
+                else
+                    await Parent.Alert.Handle(ex.Message).GetAwaiter();
+            }
             catch (Exception ex)
             {
                 await Parent.Alert.Handle(ex.Message).GetAwaiter();
@@ -230,7 +240,7 @@ namespace Rygg.Runes.Client.ViewModels
                 Parent.IsLoading = false;
             }
         }
-        protected async Task DoAskFuture(CancellationToken token = default)
+        protected async Task DoAskFuture(bool isFirst = true, CancellationToken token = default)
         {
             if (string.IsNullOrWhiteSpace(Question))
             {
@@ -246,6 +256,16 @@ namespace Rygg.Runes.Client.ViewModels
                 string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
                 Answer = answ.Replace("\\n", "<br>");
                 this.RaisePropertyChanged(nameof(CanSave));
+            }
+            catch (MsalClientException ex)
+            {
+                if (isFirst)
+                {
+                    await Parent.DoLogin(true, token);
+                    await DoAskFuture(false, token);
+                }
+                else
+                    await Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
             catch (Exception ex)
             {
@@ -266,7 +286,7 @@ namespace Rygg.Runes.Client.ViewModels
                     image = file?.ToArray();
                 }
                 if (image != null)
-                    await ProcessImageRequest(image, token);
+                    await ProcessImageRequest(image, token: token);
             }
             catch (Exception ex)
             {

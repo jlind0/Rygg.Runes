@@ -11,7 +11,6 @@ namespace RyggRunes.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [RequiredScope("access_as_user")]
     public class MysticController : ControllerBase
     {
         protected IChatGPTProxy ChatProxy { get; }

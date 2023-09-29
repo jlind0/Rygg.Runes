@@ -88,7 +88,7 @@ namespace Rygg.Runes.Client.ViewModels
             ChatProxy = chatProxy;
             
             ApiScope = config["MSGraphApi:Scopes"] ?? throw new InvalidDataException();
-            Login = ReactiveCommand.CreateFromTask(DoLogin);
+            Login = ReactiveCommand.CreateFromTask<bool>(DoLogin);
             
             captureWithCamera = new Interaction<string, Stream>();
             saveImage = new Interaction<string, MemoryStream>();
@@ -96,30 +96,35 @@ namespace Rygg.Runes.Client.ViewModels
         }
        
        
-        protected async Task DoLogin(CancellationToken token = default)
+        public async Task DoLogin(bool forceInteractive = false, CancellationToken token = default)
         {
 
             bool tryInteractive = false;
-            try
+            if (!forceInteractive)
             {
-                var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
-                if (accounts.Any())
+                try
                 {
-                    var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
-                    IsLoggedIn = !string.IsNullOrEmpty(result.AccessToken);
-                    tryInteractive = !IsLoggedIn;
+                    var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
+                    if (accounts.Any())
+                    {
+                        var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
+                        IsLoggedIn = !string.IsNullOrEmpty(result.AccessToken);
+                        tryInteractive = !IsLoggedIn;
+                    }
+                    else
+                        tryInteractive = true;
                 }
-                else
+                catch (MsalUiRequiredException)
+                {
                     tryInteractive = true;
+                }
+                catch (Exception ex)
+                {
+                    await Alert.Handle(ex.Message).GetAwaiter();
+                }
             }
-            catch (MsalUiRequiredException)
-            {
+            else
                 tryInteractive = true;
-            }
-            catch (Exception ex)
-            {
-                await Alert.Handle(ex.Message).GetAwaiter();
-            }
             if (tryInteractive)
             {
                 try
