@@ -100,6 +100,11 @@ namespace RyggRunes.MAUI.Client
                 }).DisposeWith(d);
                 
             });
+
+        }
+
+        private void ReactiveContentPage_Loaded(object sender, EventArgs e)
+        {
 #if IOS
             try
             {
@@ -111,6 +116,5 @@ namespace RyggRunes.MAUI.Client
             }
 #endif
         }
-
     }
 }
