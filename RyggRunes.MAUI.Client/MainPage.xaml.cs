@@ -18,7 +18,16 @@ namespace RyggRunes.MAUI.Client
        
         public MainPage(MainWindowViewModel vm)
         {
-            
+#if IOS
+            try
+            {
+                Xamarin.Essentials.SecureStorage.RemoveAll();
+            }
+            catch(Exception ex)
+            {
+                DisplayAlert("Alert", ex.Message, "OK").Wait();
+            }
+#endif
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
