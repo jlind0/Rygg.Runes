@@ -62,7 +62,7 @@ namespace RyggRunes.Client.Core
                 RunesPostResponse? resp = null;
                 var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
 
-                var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).ExecuteAsync();
+                var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).WithForceRefresh(true).ExecuteAsync(token);
                 using (var client = Create())
                 {
                     client.DefaultRequestHeaders.Authorization =
