@@ -81,9 +81,6 @@ namespace RyggRunes.MAUI.Client
 #endif
                 return client;
             });
-#if IOS
-            Xamarin.Essentials.SecureStorage.RemoveAll();
-#endif
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<IRunesProxy, RunesProxy>();
             builder.Services.AddSingleton<IChatGPTProxy, MysticProxy>();
