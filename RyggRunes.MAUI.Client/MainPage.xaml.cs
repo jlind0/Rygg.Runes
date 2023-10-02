@@ -103,7 +103,7 @@ namespace RyggRunes.MAUI.Client
 
         }
 
-        private void ReactiveContentPage_Loaded(object sender, EventArgs e)
+        private async void ReactiveContentPage_Loaded(object sender, EventArgs e)
         {
 #if IOS
             try
@@ -112,7 +112,7 @@ namespace RyggRunes.MAUI.Client
             }
             catch (Exception ex)
             {
-                DisplayAlert("Alert", ex.Message, "OK").Wait();
+                await DisplayAlert("Alert", ex.Message, "OK");
             }
 #endif
         }
