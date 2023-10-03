@@ -108,7 +108,7 @@ namespace RyggRunes.MAUI.Client
 #if IOS
             try
             {
-                Xamarin.Essentials.SecureStorage.RemoveAll();
+                SecureStorage.Default.RemoveAll();
             }
             catch (Exception ex)
             {
