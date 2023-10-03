@@ -113,6 +113,8 @@ namespace RyggRunes.MAUI.Client
             catch (Exception ex)
             {
                 await DisplayAlert("Alert", ex.Message, "OK");
+                if(ex.InnerException != null)
+                    await DisplayAlert("Alert", ex.InnerException.Message, "Ok");
             }
 #endif
         }
