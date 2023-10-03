@@ -103,20 +103,5 @@ namespace RyggRunes.MAUI.Client
 
         }
 
-        private async void ReactiveContentPage_Loaded(object sender, EventArgs e)
-        {
-#if IOS
-            try
-            {
-                SecureStorage.Default.RemoveAll();
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Alert", ex.Message, "OK");
-                if(ex.InnerException != null)
-                    await DisplayAlert("Alert", ex.InnerException.Message, "Ok");
-            }
-#endif
-        }
     }
 }
