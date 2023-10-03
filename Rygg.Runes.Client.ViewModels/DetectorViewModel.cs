@@ -221,7 +221,7 @@ namespace Rygg.Runes.Client.ViewModels
                 else
                     await Parent.Alert.Handle("Permissions required").GetAwaiter();
             }
-            catch (MsalClientException ex)
+            catch (MsalException ex)
             {
                 if (isFirst)
                 {

@@ -102,7 +102,6 @@ namespace Rygg.Runes.Client.ViewModels
             bool tryInteractive = false;
             if (!forceInteractive)
             {
-                await Alert.Handle("Logging in silent").GetAwaiter();
                 try
                 {
                     var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
@@ -128,7 +127,6 @@ namespace Rygg.Runes.Client.ViewModels
                 tryInteractive = true;
             if (tryInteractive)
             {
-                await Alert.Handle("Try interactive").GetAwaiter();
                 try
                 {
                     var result = await ClientApplication.AcquireTokenInteractive(new string[] { ApiScope })
