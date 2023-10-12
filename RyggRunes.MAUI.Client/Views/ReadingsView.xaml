@@ -21,13 +21,17 @@
     <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
         <HorizontalStackLayout HeightRequest="50" telerik:RadDockLayout.Dock="Top">
             <Editor Text="{Binding SearchCondition}" WidthRequest="200"></Editor>
-            <telerik:RadButton x:Name="btnSearch" Command="{Binding Search}">
+            <telerik:RadButton x:Name="btnSearch">
                 <telerik:RadButton.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource search}"
                         FontFamily="FASolid"
                         Size="30" Color="Blue" />
                 </telerik:RadButton.ImageSource>
+                <telerik:RadButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" Command="{Binding Search}"/>
+                </telerik:RadButton.GestureRecognizers>
             </telerik:RadButton>
+            
         </HorizontalStackLayout>
         <telerik:RadDockLayout telerik:RadDockLayout.Dock="Bottom" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.9}}"
 HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}">
