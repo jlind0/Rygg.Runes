@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -20,6 +21,12 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace Rygg.Runes.Client.ViewModels
 {
+    public enum ViewModes
+    {
+        Home,
+        Search,
+        Admin
+    }
     public class MainWindowViewModel : ReactiveObject
     {
         private readonly Interaction<string, bool> hasPermissions;
@@ -63,21 +70,30 @@ namespace Rygg.Runes.Client.ViewModels
         public Interaction<string, Stream> OpenFile => openFile;
         protected IRunesProxy RunesProxy { get; }
         protected IChatGPTProxy ChatProxy { get; }
-        
+        private ReactiveObject[] selectedViewModel;
+        public ReactiveObject[] SelectedViewModel
+        {
+            get => selectedViewModel;
+            protected set => this.RaiseAndSetIfChanged(ref selectedViewModel, value);
+        }
         public ICommand Login { get; }
-        
+        public ReactiveCommand<ViewModes, Unit> SelectViewMode { get; }
         protected string ApiScope { get; }
         protected IPublicClientApplication ClientApplication { get; }
         protected string SignInSignOutPolicy { get; }
         protected IReadingsDataAdapter ReadingsDataAdapter { get; }
-        public DetectorViewModel DetectorVM { get; }
+        public HomeViewModel HomeVM { get; }
         public ReadingsViewModel ReadingsVM { get; }
+        public AdminViewModel AdminVM { get; }
         public MainWindowViewModel(IRunesProxy runesProxy, IChatGPTProxy chatProxy, 
             IConfiguration config, IPublicClientApplication clientApplication, 
             IReadingsDataAdapter readingsDataAdapter) 
         {
-            DetectorVM = new DetectorViewModel(this, runesProxy, chatProxy, config, readingsDataAdapter);
+
+            HomeVM = new HomeViewModel(this, runesProxy, chatProxy, config, readingsDataAdapter);
             ReadingsVM = new ReadingsViewModel(this, readingsDataAdapter);
+            AdminVM = new AdminViewModel(this);
+            selectedViewModel = new ReactiveObject[] { HomeVM };
             SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"] ?? throw new InvalidDataException();
             ClientApplication = clientApplication;
             RunesProxy = runesProxy;
@@ -93,8 +109,19 @@ namespace Rygg.Runes.Client.ViewModels
             captureWithCamera = new Interaction<string, Stream>();
             saveImage = new Interaction<string, MemoryStream>();
             ReadingsDataAdapter = readingsDataAdapter;
+            SelectViewMode = ReactiveCommand.Create<ViewModes>(DoSelectViewMode);
         }
-       
+        
+        protected void DoSelectViewMode(ViewModes mode)
+        {
+            SelectedViewModel = mode switch
+            {
+                ViewModes.Admin => new ReactiveObject[] { AdminVM },
+                ViewModes.Search => new ReactiveObject[] { ReadingsVM },
+                ViewModes.Home => new ReactiveObject[] { HomeVM },
+                _ => throw new NotImplementedException(),
+            };
+        }
        
         public async Task DoLogin(bool forceInteractive = false, CancellationToken token = default)
         {

@@ -17,59 +17,50 @@
                             AutomationId="busyIndicator" IsBusy="{Binding IsLoading}">
         <telerik:RadBusyIndicator.Resources>
             <ResourceDictionary>
+                <DataTemplate x:Key="AdminTemplate">
+                    <VerticalStackLayout>
+                        <Label Text="Coming Soon"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+                <DataTemplate x:Key="HistoryTemplate">
+                    <views:ReadingsView ViewModel="{Binding}"/>
+                </DataTemplate>
+                <DataTemplate x:Key="HomeTemplate">
+                    <views:HomeView ViewModel="{Binding}"/>
+                </DataTemplate>
                 <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
                 <c:PixelScaler x:Key="PixelScaler"/>
-                <Style TargetType="telerik:TabViewHeaderItem" x:Key="TabViewHeaderItemStyle">
-                    <Setter Property="TextColor" Value="Blue" />
-                    <Setter Property="BackgroundColor" Value="White" />
-                    <Setter Property="VisualStateManager.VisualStateGroups">
-                        <VisualStateGroupList>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="TextColor" Value="Blue" />
-                                        <Setter Property="BackgroundColor" Value="White" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="TextColor" Value="White" />
-                                        <Setter Property="BackgroundColor" Value="Blue" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateGroupList>
-                    </Setter>
-                </Style>
+                <c:ViewTemplateSelector x:Key="SelectorView" AdminTemplate="{StaticResource AdminTemplate}" HistoryTemplate="{StaticResource HistoryTemplate}" HomeTemplate="{StaticResource HomeTemplate}"/>
+                
             </ResourceDictionary>
         </telerik:RadBusyIndicator.Resources>
-        <VerticalStackLayout>
-            <telerik:RadTabView 
-                HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}"
-                IsVisible="{Binding IsLoggedIn}" HeaderItemStyle="{StaticResource TabViewHeaderItemStyle}" HeaderPosition="Left" IsContentSwipeEnabled="False">
-                <telerik:RadTabView.HeaderItemTemplate>
-                    <ControlTemplate>
-                        <telerik:RadBorder BorderColor="Transparent" BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
-                            <Image Margin="20" BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
-                                <Image.Source>
-                                    <FontImageSource Glyph="{TemplateBinding Text}"
-                FontFamily="FASolid"
-                Size="30" Color="{Binding TextColor, Source={RelativeSource AncestorType={x:Type telerik:TabViewHeaderItem}}}">
-
-                                    </FontImageSource>
-                                </Image.Source>
-                            </Image>
-                        </telerik:RadBorder>
-                    </ControlTemplate>
-                </telerik:RadTabView.HeaderItemTemplate>
-                <telerik:TabViewItem HeaderText="&#xe362;">
-                    <views:DetectorView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding DetectorVM}"/>
-                </telerik:TabViewItem>
-                <telerik:TabViewItem HeaderText="&#xf5da;">
-                    <views:ReadingsView HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" BindingContext="{Binding ReadingsVM}"/>
-                </telerik:TabViewItem>
-                
-            </telerik:RadTabView>
+        <telerik:RadDockLayout WidthRequest="{Binding ScreenWidth}" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
+            
+            <VerticalStackLayout VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
+                <VerticalStackLayout >
+                    <Label HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}"></Label>
+                </VerticalStackLayout>
+                <telerik:RadButton >
+                    <telerik:RadButton.Triggers>
+                        <EventTrigger Event="Clicked">
+                            <c:PropertySetter Target="{x:Reference popup}" Property="IsOpen" Value="{x:Boolean True}"/>
+                        </EventTrigger>
+                    </telerik:RadButton.Triggers>
+                    <telerik:RadButton.ImageSource>
+                        <FontImageSource FontFamily="FASolid" Color="Black" Glyph="&#xf111;" Size="30"/>
+                    </telerik:RadButton.ImageSource>
+                    <telerik:RadPopup.Popup>
+                        <telerik:RadPopup x:Name="popup" Placement="Bottom">
+                            <VerticalStackLayout>
+                                <telerik:RadButton Text="Home" Command="{Binding SelectViewMode}" CommandParameter="{x:Static vm:ViewModes.Home}"/>
+                                <telerik:RadButton Text="History" Command="{Binding SelectViewMode}" CommandParameter="{x:Static vm:ViewModes.Search}"/>
+                                <telerik:RadButton Text="Admin" Command="{Binding SelectViewMode}" CommandParameter="{x:Static vm:ViewModes.Admin}"/>
+                            </VerticalStackLayout>
+                        </telerik:RadPopup>
+                    </telerik:RadPopup.Popup>
+                </telerik:RadButton>
+            </VerticalStackLayout>
+            <telerik:RadItemsControl telerik:RadDockLayout.Dock="Bottom" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" ItemsSource="{Binding SelectedViewModel}" ItemTemplate="{StaticResource SelectorView}"/>
             <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
                 <Button.Triggers>
                     <DataTrigger Binding="{Binding IsLoggedIn}" TargetType="Button"  Value="True">
@@ -80,7 +71,7 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-        </VerticalStackLayout>
+        </telerik:RadDockLayout>
     </telerik:RadBusyIndicator>
     
     

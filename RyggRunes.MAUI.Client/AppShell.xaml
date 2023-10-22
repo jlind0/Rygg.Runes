@@ -7,7 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Mystical Nexus"
+        Title="Divine Advice"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

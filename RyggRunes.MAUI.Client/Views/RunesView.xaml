@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<r:ReactiveContentView x:TypeArguments="vm:DetectorViewModel" x:DataType="vm:DetectorViewModel" ViewModel="{Binding}" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<r:ReactiveContentView x:TypeArguments="vm:RuneViewModel" x:DataType="vm:RuneViewModel" ViewModel="{Binding}" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
 xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
@@ -7,7 +7,7 @@ xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
 xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
  
-             x:Class="RyggRunes.MAUI.Client.Views.DetectorView">
+             x:Class="RyggRunes.MAUI.Client.Views.RunesView">
     <ContentView.Behaviors>
         <toolkit:EventToCommandBehavior EventName="ImageDataChanged" 
                                  Command="{Binding CropInteractiveCommand, Source={x:Reference imgEditor}}">
@@ -24,7 +24,7 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
             <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.90}}">
+    <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}">
         <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
             <telerik:RadImageEditorToolbar AutoGenerateItems="False" ImageEditor="{x:Reference imgEditor}" x:Name="imgToolbar">
                 <telerik:ImageEditorCropToolbarItem SelectedCropOperation="{x:Reference editCrop}" >
@@ -43,7 +43,7 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
             <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
         <ScrollView telerik:RadDockLayout.Dock="Top" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}"
-                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}"  
+                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}"  
                     IsVisible="{Binding HasRunes}">
             <telerik:RadWrapLayout Orientation="Horizontal">
                 <telerik:RadWrapLayout Orientation="Horizontal" Margin="5">
@@ -61,7 +61,7 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                 </VerticalStackLayout>
             </telerik:RadWrapLayout>
         </ScrollView>
-        <telerik:RadToolbar x:Name="toolbar" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.13}}" telerik:RadDockLayout.Dock="Bottom">
+        <telerik:RadToolbar x:Name="toolbar" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.1}}" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding TakePhoto}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource camera}"

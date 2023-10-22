@@ -5,10 +5,10 @@ using System.Reactive.Disposables;
 
 namespace RyggRunes.MAUI.Client.Views;
 
-public partial class DetectorView : ReactiveContentView<DetectorViewModel>
+public partial class RunesView : ReactiveContentView<RuneViewModel>
 {
     public event EventHandler ImageDataChanged;
-    public DetectorView()
+    public RunesView()
 	{
 		InitializeComponent();
         this.Loaded += DetectorView_Loaded;

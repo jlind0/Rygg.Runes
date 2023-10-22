@@ -27,9 +27,6 @@
                         FontFamily="FASolid"
                         Size="30" Color="Blue" />
                 </telerik:RadButton.ImageSource>
-                <telerik:RadButton.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" Command="{Binding Search}"/>
-                </telerik:RadButton.GestureRecognizers>
             </telerik:RadButton>
             
         </HorizontalStackLayout>

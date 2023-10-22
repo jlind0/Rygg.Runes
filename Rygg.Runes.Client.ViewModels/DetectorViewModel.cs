@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace Rygg.Runes.Client.ViewModels
 {
-    public class DetectorViewModel : ReactiveObject
+    public class RuneViewModel : ReactiveObject
     {
         private bool hasSaved;
         public bool HasSaved
@@ -75,7 +75,7 @@ namespace Rygg.Runes.Client.ViewModels
             set => this.RaiseAndSetIfChanged(ref annoatedImage, value);
         }
 
-        public DetectorViewModel(MainWindowViewModel parent, IRunesProxy runesProxy, IChatGPTProxy chatProxy,
+        public RuneViewModel(MainWindowViewModel parent, IRunesProxy runesProxy, IChatGPTProxy chatProxy,
             IConfiguration config,
             IReadingsDataAdapter readingsAdapter)
         {

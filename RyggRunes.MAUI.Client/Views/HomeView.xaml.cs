@@ -1,14 +1,12 @@
 using ReactiveUI.Maui;
 using Rygg.Runes.Client.ViewModels;
-using System.Reactive.Linq;
 
 namespace RyggRunes.MAUI.Client.Views;
 
-public partial class ReadingsView : ReactiveContentView<ReadingsViewModel>
+public partial class HomeView : ReactiveContentView<HomeViewModel>
 {
-	public ReadingsView()
+	public HomeView()
 	{
 		InitializeComponent();
 	}
-
 }
