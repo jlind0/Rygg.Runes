@@ -40,7 +40,7 @@ namespace RyggRunes.Client.Core
             var sb = new System.Text.StringBuilder();
             sb.AppendLine($"The following runes were case using a spread of {spread.Name}:`");
             int j = 0, rowCount = matrix.GetLength(0), columnCount = matrix.GetLength(1);
-            while(j > rowCount)
+            while(j < rowCount)
             {
                 int i = 0;
                 while(i < columnCount)

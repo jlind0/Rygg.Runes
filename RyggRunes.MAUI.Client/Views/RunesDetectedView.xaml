@@ -31,21 +31,25 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
 
                             <telerik:RadListView HeightRequest="45" ItemsSource="{Binding Runes}" SelectionMode="None">
                                 <telerik:RadListView.LayoutDefinition>
-                                    <telerik:ListViewLinearLayout ItemLength="12" Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                                    <telerik:ListViewLinearLayout  Orientation="Horizontal" HorizontalItemSpacing="2"/>
                                 </telerik:RadListView.LayoutDefinition>
                                 <telerik:RadListView.ItemTemplate>
                                     <DataTemplate x:DataType="vm:RuneItem">
-                                        <telerik:ListViewTemplateCell Height="50" >
-                                            <telerik:RadBorder BorderColor="Black" BackgroundColor="Black" CornerRadius="5" 
-                                            WidthRequest="100" HeightRequest="50">
-                                                <telerik:RadBorder.Triggers>
-                                                    <DataTrigger TargetType="telerik:RadBorder" Binding="{Binding IsBlank}" Value="{x:Boolean True}">
-                                                        <Setter Property="BorderColor" Value="White"/>
-                                                        <Setter Property="BackgroundColor" Value="White"/>
-                                                    </DataTrigger>
-                                                </telerik:RadBorder.Triggers>
-                                                <Label WidthRequest="100" HeightRequest="50" FontSize="50" Text="{Binding RunicCharachter}" TextColor="White"/>
-                                            </telerik:RadBorder>
+                                        <telerik:ListViewTemplateCell Height="60">
+                                            <AbsoluteLayout>
+                                                <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="50" HeightRequest="50">
+                                                    <Rectangle.Triggers>
+                                                        <DataTrigger TargetType="Rectangle" Binding="{Binding IsValidSlot}" Value="{x:Boolean True}">
+                                                            <Setter Property="BackgroundColor" Value="Black"/>
+                                                        </DataTrigger>
+                                                    </Rectangle.Triggers>
+                                                </Rectangle>
+                                                <Label HeightRequest="50" 
+                                                       WidthRequest="50" FontSize="40" HorizontalOptions="Center" 
+                                                       VerticalOptions="Center" ZIndex="1" Text="{Binding RunicCharachter}" 
+                                                       TextColor="White"/>
+                                            </AbsoluteLayout>
+                                            
                                         </telerik:ListViewTemplateCell>
                                     </DataTemplate>
                                 </telerik:RadListView.ItemTemplate>

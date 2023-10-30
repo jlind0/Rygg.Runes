@@ -25,21 +25,18 @@
                         
                         <telerik:RadListView HeightRequest="45"  ItemsSource="{Binding Runes}" SelectionMode="None">
                             <telerik:RadListView.LayoutDefinition>
-                                <telerik:ListViewLinearLayout ItemLength="12" Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                                <telerik:ListViewLinearLayout Orientation="Horizontal" HorizontalItemSpacing="2"/>
                             </telerik:RadListView.LayoutDefinition>
                             <telerik:RadListView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                    <telerik:ListViewTemplateCell Height="35">
-                                        <telerik:RadBorder BorderColor="Black" BackgroundColor="Black" CornerRadius="0.8" 
-                                                           WidthRequest="50" HeightRequest="30">
-                                            <telerik:RadBorder.Triggers>
-                                                <DataTrigger TargetType="telerik:RadBorder" Binding="{Binding DoesNotHaveCard}" Value="{x:Boolean True}">
-                                                    <Setter Property="BorderColor" Value="White"/>
+                                    <telerik:ListViewTemplateCell Height="60">
+                                        <Rectangle BackgroundColor="Black" WidthRequest="50" HeightRequest="50">
+                                            <Rectangle.Triggers>
+                                                <DataTrigger TargetType="Rectangle" Binding="{Binding DoesNotHaveCard}" Value="{x:Boolean True}">
                                                     <Setter Property="BackgroundColor" Value="White"/>
                                                 </DataTrigger>
-                                            </telerik:RadBorder.Triggers>
-                                            <Label Text=" "/>
-                                        </telerik:RadBorder>
+                                            </Rectangle.Triggers>
+                                        </Rectangle>
                                     </telerik:ListViewTemplateCell>
                                 </DataTemplate>
                             </telerik:RadListView.ItemTemplate>
