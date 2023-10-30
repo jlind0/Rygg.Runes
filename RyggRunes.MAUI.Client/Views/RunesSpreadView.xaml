@@ -17,37 +17,27 @@
             <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <VerticalStackLayout WidthRequest="450">
-        <telerik:RadListView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
-            <telerik:RadListView.LayoutDefinition>
-                <telerik:ListViewLinearLayout ItemLength="6" Orientation="Vertical" VerticalItemSpacing="2"/>
-            </telerik:RadListView.LayoutDefinition>
-            <telerik:RadListView.ItemTemplate>
-                <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <telerik:ListViewTemplateCell Height="55">
+    <VerticalStackLayout>
+        <CollectionView ItemsSource="{Binding RuneRows}"  SelectionMode="None">
 
-                        <telerik:RadListView HeightRequest="55" ItemsSource="{Binding Runes}" SelectionMode="None">
-                            <telerik:RadListView.LayoutDefinition>
-                                <telerik:ListViewLinearLayout ItemLength="6" Orientation="Horizontal" HorizontalItemSpacing="2"/>
-                            </telerik:RadListView.LayoutDefinition>
-                            <telerik:RadListView.ItemTemplate>
-                                <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                    <telerik:ListViewTemplateCell Height="55">
-                                        <Rectangle BackgroundColor="White" WidthRequest="50" HeightRequest="50">
-                                            <Rectangle.Triggers>
-                                                <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
-                                                    <Setter Property="BackgroundColor" Value="Black"/>
-                                                </DataTrigger>
-                                            </Rectangle.Triggers>
-                                        </Rectangle>
-                                    </telerik:ListViewTemplateCell>
-                                </DataTemplate>
-                            </telerik:RadListView.ItemTemplate>
-                        </telerik:RadListView>
-                    </telerik:ListViewTemplateCell>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:RuneSpreadRow">
+                    <CollectionView HeightRequest="55" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:RuneSpreadItem">
+                                <Rectangle Margin="2" BackgroundColor="White" WidthRequest="50" HeightRequest="50">
+                                    <Rectangle.Triggers>
+                                        <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
+                                            <Setter Property="BackgroundColor" Value="Black"/>
+                                        </DataTrigger>
+                                    </Rectangle.Triggers>
+                                </Rectangle>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </DataTemplate>
-            </telerik:RadListView.ItemTemplate>
-        </telerik:RadListView>
+                </CollectionView.ItemTemplate>
+        </CollectionView>
         <telerik:RadButton Text="{Binding Name}" Command="{Binding Parent.SelectSpread}" CommandParameter="{Binding}"/>
     </VerticalStackLayout>
 </r:ReactiveContentView>
