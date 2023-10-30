@@ -15,25 +15,25 @@
         </ResourceDictionary>
     </ContentView.Resources>
     <VerticalStackLayout WidthRequest="450">
-        <telerik:RadListView ItemsSource="{Binding RuneRows}" SelectionMode="None">
+        <telerik:RadListView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
             <telerik:RadListView.LayoutDefinition>
-                <telerik:ListViewLinearLayout Orientation="Vertical"/>
+                <telerik:ListViewLinearLayout Orientation="Vertical" VerticalItemSpacing="2"/>
             </telerik:RadListView.LayoutDefinition>
             <telerik:RadListView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <telerik:ListViewTemplateCell Height="45">
-                        
-                        <telerik:RadListView HeightRequest="45"  ItemsSource="{Binding Runes}" SelectionMode="None">
+                    <telerik:ListViewTemplateCell>
+
+                        <telerik:RadListView Height="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.05}, Mode=OneWay}" ItemsSource="{Binding Runes}" SelectionMode="None">
                             <telerik:RadListView.LayoutDefinition>
-                                <telerik:ListViewLinearLayout Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                                <telerik:ListViewLinearLayout  Orientation="Horizontal" HorizontalItemSpacing="2"/>
                             </telerik:RadListView.LayoutDefinition>
                             <telerik:RadListView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                    <telerik:ListViewTemplateCell Height="60">
-                                        <Rectangle BackgroundColor="Black" WidthRequest="50" HeightRequest="50">
+                                    <telerik:ListViewTemplateCell>
+                                        <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}}" HeightRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}, Mode=OneWay}">
                                             <Rectangle.Triggers>
-                                                <DataTrigger TargetType="Rectangle" Binding="{Binding DoesNotHaveCard}" Value="{x:Boolean True}">
-                                                    <Setter Property="BackgroundColor" Value="White"/>
+                                                <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
+                                                    <Setter Property="BackgroundColor" Value="Black"/>
                                                 </DataTrigger>
                                             </Rectangle.Triggers>
                                         </Rectangle>

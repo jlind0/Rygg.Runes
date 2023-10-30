@@ -240,8 +240,10 @@ namespace Rygg.Runes.Client.ViewModels
     public class RuneRow : ReactiveObject
     {
         public RuneItem[] Runes { get; }
-        public RuneRow(RuneItem[] runes)
+        public RunesDetectedViewModel Parent { get; }
+        public RuneRow(RuneItem[] runes, RunesDetectedViewModel parent)
         {
+            Parent = parent;
             Runes = runes;
         }
     }
@@ -266,13 +268,15 @@ namespace Rygg.Runes.Client.ViewModels
         public ReactiveCommand<string, Unit> SetRune { get; }
         public int Row { get; }
         public int Column { get; }
-        public RuneItem(Rune? rune, int row, int column, bool isValidSlot)
+        public RunesDetectedViewModel Parent { get; }
+        public RuneItem(Rune? rune, int row, int column, bool isValidSlot, RunesDetectedViewModel parent)
         {
             Row = row;
             Column = column;
             Rune = rune;
             _isValidSlot = isValidSlot;
             SetRune = ReactiveCommand.Create<string>(DoSetRune);
+            Parent = parent;
         }
         protected void DoSetRune(string rune)
         {
@@ -366,10 +370,10 @@ namespace Rygg.Runes.Client.ViewModels
                 while(i < columnCount)
                 {
                     Rune? rune = matrix[j, i];
-                    items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i]));
+                    items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i], this));
                     i++;
                 }
-                rows.Add(new RuneRow(items.ToArray()));
+                rows.Add(new RuneRow(items.ToArray(), this));
                 j++;
             }
             RuneRows = rows.ToArray();

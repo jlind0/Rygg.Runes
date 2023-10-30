@@ -19,33 +19,33 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <VerticalStackLayout telerik:RadDockLayout.Dock="Top">
             <HorizontalStackLayout>
                 <Label>Question:</Label>
-                <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
+                <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
             </HorizontalStackLayout>
             <telerik:RadListView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
                 <telerik:RadListView.LayoutDefinition>
-                    <telerik:ListViewLinearLayout Orientation="Vertical"/>
+                    <telerik:ListViewLinearLayout Orientation="Vertical" VerticalItemSpacing="2"/>
                 </telerik:RadListView.LayoutDefinition>
                 <telerik:RadListView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RuneRow">
-                        <telerik:ListViewTemplateCell Height="45">
+                        <telerik:ListViewTemplateCell>
 
-                            <telerik:RadListView HeightRequest="45" ItemsSource="{Binding Runes}" SelectionMode="None">
+                            <telerik:RadListView Height="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.05}, Mode=OneWay}" ItemsSource="{Binding Runes}" SelectionMode="None">
                                 <telerik:RadListView.LayoutDefinition>
                                     <telerik:ListViewLinearLayout  Orientation="Horizontal" HorizontalItemSpacing="2"/>
                                 </telerik:RadListView.LayoutDefinition>
                                 <telerik:RadListView.ItemTemplate>
                                     <DataTemplate x:DataType="vm:RuneItem">
-                                        <telerik:ListViewTemplateCell Height="60">
+                                        <telerik:ListViewTemplateCell>
                                             <AbsoluteLayout>
-                                                <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="50" HeightRequest="50">
+                                                <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}}" HeightRequest="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}, Mode=OneWay}">
                                                     <Rectangle.Triggers>
                                                         <DataTrigger TargetType="Rectangle" Binding="{Binding IsValidSlot}" Value="{x:Boolean True}">
                                                             <Setter Property="BackgroundColor" Value="Black"/>
                                                         </DataTrigger>
                                                     </Rectangle.Triggers>
                                                 </Rectangle>
-                                                <Label HeightRequest="50" 
-                                                       WidthRequest="50" FontSize="40" HorizontalOptions="Center" 
+                                                <Label HeightRequest="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.48}, Mode=OneWay}" 
+                                                       WidthRequest="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}, Mode=OneWay}" FontSize="{Binding Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.043}}" HorizontalOptions="Center" 
                                                        VerticalOptions="Center" ZIndex="1" Text="{Binding RunicCharachter}" 
                                                        TextColor="White"/>
                                             </AbsoluteLayout>

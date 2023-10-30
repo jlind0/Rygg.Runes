@@ -51,17 +51,21 @@ namespace Rygg.Runes.Client.ViewModels
     {
         public bool HasCard { get; }
         public bool DoesNotHaveCard { get => !HasCard; }
-        public RuneSpreadItem(bool hasCard)
+        public RuneSpreadViewModel Parent { get; }
+        public RuneSpreadItem(bool hasCard, RuneSpreadViewModel parent)
         {
             HasCard = hasCard;
+            Parent = parent;
         }
     }
     public class RuneSpreadRow
     {
         public RuneSpreadItem[] Runes { get; }
-        public RuneSpreadRow(RuneSpreadItem[] runes)
+        public RuneSpreadViewModel Parent { get; }
+        public RuneSpreadRow(RuneSpreadItem[] runes, RuneSpreadViewModel parent)
         {
             Runes = runes;
+            Parent = parent;
         }
     }
     public abstract class RuneSpreadViewModel : ReactiveObject
@@ -99,10 +103,10 @@ namespace Rygg.Runes.Client.ViewModels
                 int column = 0;
                 while(column < columnCount)
                 {
-                    items.Add(new RuneSpreadItem(Spread.ValidMatrix[row, column]));
+                    items.Add(new RuneSpreadItem(Spread.ValidMatrix[row, column], this));
                     column++;
                 }
-                rows.Add(new RuneSpreadRow(items.ToArray()));
+                rows.Add(new RuneSpreadRow(items.ToArray(), this));
                 row++;
             }
             RuneRows = rows.ToArray();
