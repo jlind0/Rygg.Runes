@@ -18,7 +18,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
     <VerticalStackLayout HorizontalOptions="CenterAndExpand">
-        <CollectionView ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding RuneRows}" SelectionMode="None">
+        <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 35}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
                     <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="35" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
@@ -76,9 +77,16 @@ namespace Rygg.Runes.Client.ViewModels
         public RuneSpreadRow[]? RuneRows
         {
             get => _Rows;
-            protected set => this.RaiseAndSetIfChanged(ref _Rows, value);
+            protected set
+            {
+                this.RaiseAndSetIfChanged(ref _Rows, value);
+                this.RaisePropertyChanged(nameof(RowCount));
+            }
         }
-
+        public double RowCount
+        {
+            get => RuneRows?.Length ?? 5;
+        }
         public abstract string Name { get; }
         public abstract Spread Spread { get; }
         public ICommand Load { get; }
