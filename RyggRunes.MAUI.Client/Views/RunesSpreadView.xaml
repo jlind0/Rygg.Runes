@@ -8,6 +8,9 @@
                 xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
                 xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
              x:Class="RyggRunes.MAUI.Client.Views.RunesSpreadView">
+    <ContentView.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
+    </ContentView.Behaviors>
     <ContentView.Resources>
         <ResourceDictionary>
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
@@ -17,20 +20,20 @@
     <VerticalStackLayout WidthRequest="450">
         <telerik:RadListView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
             <telerik:RadListView.LayoutDefinition>
-                <telerik:ListViewLinearLayout Orientation="Vertical" VerticalItemSpacing="2"/>
+                <telerik:ListViewLinearLayout ItemLength="6" Orientation="Vertical" VerticalItemSpacing="2"/>
             </telerik:RadListView.LayoutDefinition>
             <telerik:RadListView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <telerik:ListViewTemplateCell>
+                    <telerik:ListViewTemplateCell Height="55">
 
-                        <telerik:RadListView Height="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.05}, Mode=OneWay}" ItemsSource="{Binding Runes}" SelectionMode="None">
+                        <telerik:RadListView HeightRequest="55" ItemsSource="{Binding Runes}" SelectionMode="None">
                             <telerik:RadListView.LayoutDefinition>
-                                <telerik:ListViewLinearLayout  Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                                <telerik:ListViewLinearLayout ItemLength="6" Orientation="Horizontal" HorizontalItemSpacing="2"/>
                             </telerik:RadListView.LayoutDefinition>
                             <telerik:RadListView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                    <telerik:ListViewTemplateCell>
-                                        <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}}" HeightRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.048}, Mode=OneWay}">
+                                    <telerik:ListViewTemplateCell Height="55">
+                                        <Rectangle BackgroundColor="White" WidthRequest="50" HeightRequest="50">
                                             <Rectangle.Triggers>
                                                 <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
                                                     <Setter Property="BackgroundColor" Value="Black"/>

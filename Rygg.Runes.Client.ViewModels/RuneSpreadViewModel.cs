@@ -9,6 +9,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Rygg.Runes.Client.ViewModels
 {
@@ -71,9 +72,16 @@ namespace Rygg.Runes.Client.ViewModels
     public abstract class RuneSpreadViewModel : ReactiveObject
     {
         public RuneSpreadsViewModel Parent { get; }
-        public abstract RuneSpreadRow[] RuneRows { get; }
+        private RuneSpreadRow[]? _Rows;
+        public RuneSpreadRow[]? RuneRows
+        {
+            get => _Rows;
+            protected set => this.RaiseAndSetIfChanged(ref _Rows, value);
+        }
+
         public abstract string Name { get; }
         public abstract Spread Spread { get; }
+        public ICommand Load { get; }
         public bool IsSelected
         {
             get => Parent.SelectedSpread == this;
@@ -82,26 +90,31 @@ namespace Rygg.Runes.Client.ViewModels
         {
             Parent = parent;
             Parent.WhenPropertyChanged(p => p.SelectedSpread).Subscribe(p => this.RaisePropertyChanged(nameof(IsSelected)));
+            Load = ReactiveCommand.Create(DoLoad);
         }
+        protected abstract void DoLoad();
     }
     public class RuneSpreadViewModel<TSpread> : RuneSpreadViewModel
         where TSpread: Spread, new()
     {
         public override Spread Spread => new TSpread();
         public override string Name => Spread.Name;
-        public override RuneSpreadRow[] RuneRows { get; }
 
         public RuneSpreadViewModel(RuneSpreadsViewModel parent) : base(parent)
+        {
+            
+        }
+        protected override void DoLoad()
         {
             List<RuneSpreadRow> rows = new List<RuneSpreadRow>();
             int rowCount = Spread.ValidMatrix.GetLength(0);
             int columnCount = Spread.ValidMatrix.GetLength(1);
             int row = 0;
-            while(row < rowCount)
+            while (row < rowCount)
             {
                 List<RuneSpreadItem> items = new List<RuneSpreadItem>();
                 int column = 0;
-                while(column < columnCount)
+                while (column < columnCount)
                 {
                     items.Add(new RuneSpreadItem(Spread.ValidMatrix[row, column], this));
                     column++;
