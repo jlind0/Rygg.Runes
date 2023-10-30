@@ -18,7 +18,7 @@ namespace Rygg.Runes.Client.ViewModels
         protected IChatGPTProxy ChatGPTProxy { get; }
         protected IConfiguration Configuration { get; }
         protected IReadingsDataAdapter ReadingsDataAdapter { get; }
-        public RuneViewModel RunesVM { get; }
+        public RuneDetectorViewModel RunesVM { get; }
         public PalmViewModel PalmVM { get; }
         public TarotViewModel TarotVM { get; }
         public PsychicViewModel PsychicVM { get; }
@@ -32,7 +32,7 @@ namespace Rygg.Runes.Client.ViewModels
             ChatGPTProxy = chatProxy;
             Configuration = config;
             ReadingsDataAdapter = readingsAdapter;
-            RunesVM = new RuneViewModel(parent, runesProxy, chatProxy, config, readingsAdapter);
+            RunesVM = new RuneDetectorViewModel(parent, runesProxy, chatProxy, config, readingsAdapter);
             PalmVM = new PalmViewModel();
             TarotVM = new TarotViewModel();
             PsychicVM = new PsychicViewModel();

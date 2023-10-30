@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rugg.Runes.Data.Core\Rygg.Runes.Data.Core.csproj" />
     <ProjectReference Include="..\RyggRunes.Client.Core\RyggRunes.Client.Core.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DynamicData;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Client;
 using ReactiveUI;
 using Rygg.Runes.Data.Embedded;
@@ -9,19 +10,78 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Rygg.Runes.Data.Core;
+using System.Reactive;
 
 namespace Rygg.Runes.Client.ViewModels
 {
-    public class RuneViewModel : ReactiveObject
+    public abstract class RuneStepViewModel : ReactiveObject
     {
-        private bool hasSaved;
-        public bool HasSaved
+        public abstract int StepNumber { get; }
+        public RuneDetectorViewModel Parent { get; }
+        private bool isActive = false;
+        public ICommand MoveBack { get; }
+        public bool CanMoveBack
         {
-            get => hasSaved;
-            set => this.RaiseAndSetIfChanged(ref hasSaved, value);
+            get => StepNumber > 1;
+        }
+        public bool IsActive
+        {
+            get => isActive;
+            set => this.RaiseAndSetIfChanged(ref isActive, value);
+        }
+        public RuneStepViewModel(RuneDetectorViewModel parent)
+        {
+            Parent = parent;
+            MoveBack = ReactiveCommand.Create(DoMoveBack);
+        }
+        public void DoMoveBack() 
+        {
+            Parent.NavigateStep(StepNumber - 1);
+        }
+        public virtual void Reset(bool fromParent = false)
+        {
+        }
+    }
+    public class RuneAskUniverseStepViewModel : RuneStepViewModel
+    {
+        private string? question;
+        public string? Question
+        {
+            get => question;
+            set => this.RaiseAndSetIfChanged(ref question, value);
+        }
+        public ICommand AskFuture { get; }
+        public RuneAskUniverseStepViewModel(RuneDetectorViewModel parent) : base(parent)
+        {
+            AskFuture = ReactiveCommand.Create(DoAskFuture);
+        }
+        protected void DoAskFuture()
+        {
+            if (!string.IsNullOrWhiteSpace(Question))
+            {
+                Parent.NavigateStep(Parent.SpreadsVM.StepNumber);
+            }
+            
+        }
+        public override int StepNumber => 1;
+        public override void Reset(bool fromParent = false)
+        {
+            Question = null;
+            base.Reset(fromParent);
+        }
+    }
+    public class RunesSelectImageViewModel : RuneStepViewModel
+    {
+        public ICommand TakePhoto { get; }
+        public ICommand PickPhoto { get; }
+        protected IRunesProxy RunesProxy { get; }
+        public ICommand ProcessImage { get; }
+        public bool IsReadyToProcess
+        {
+            get => CapturedImageBytes != null;
         }
         private byte[]? capturedImageBytes;
         public byte[]? CapturedImageBytes
@@ -29,113 +89,30 @@ namespace Rygg.Runes.Client.ViewModels
             get => capturedImageBytes;
             set => this.RaiseAndSetIfChanged(ref capturedImageBytes, value);
         }
-
-        private string? question;
-        public string? Question
-        {
-            get => question;
-            set => this.RaiseAndSetIfChanged(ref question, value);
-        }
-        private string? answer;
-        public string? Answer
-        {
-            get => answer;
-            set => this.RaiseAndSetIfChanged(ref answer, value);
-        }
-        public bool HasRunes
-        {
-            get => this.Runes.Count > 0;
-        }
-        public bool IsReadyToProcess
-        {
-            get => CapturedImageBytes != null && !HasRunes;
-        }
-        public bool CanSave
-        {
-            get => HasRunes && AnnotatedImage != null && 
-                !string.IsNullOrWhiteSpace(Answer) && 
-                !string.IsNullOrEmpty(Question) && !HasSaved;
-        }
-        public ICommand TakePhoto { get; }
-        public ICommand PickPhoto { get; }
-
-        public ICommand AskFuture { get; }
-        public ObservableCollection<string> Runes { get; } = new ObservableCollection<string>();
-        public MainWindowViewModel Parent { get; }
-        protected IRunesProxy RunesProxy { get; }
-        protected IChatGPTProxy ChatProxy { get; }
-        protected IConfiguration Config { get; }
-        protected IReadingsDataAdapter ReadingsAdapter { get; }
-        public ICommand SaveReading { get; }
-        public ICommand ProcessImage { get; }
         private byte[]? annoatedImage;
         public byte[]? AnnotatedImage
         {
             get => annoatedImage;
             set => this.RaiseAndSetIfChanged(ref annoatedImage, value);
         }
-
-        public RuneViewModel(MainWindowViewModel parent, IRunesProxy runesProxy, IChatGPTProxy chatProxy,
-            IConfiguration config,
-            IReadingsDataAdapter readingsAdapter)
+        public RunesSelectImageViewModel(RuneDetectorViewModel parent, IRunesProxy runesProxy) : base(parent)
         {
-            Parent = parent;
             RunesProxy = runesProxy;
-            ChatProxy = chatProxy;
-            Config = config;
-            ReadingsAdapter = readingsAdapter;
-            ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
             PickPhoto = ReactiveCommand.CreateFromTask(DoPickPhoto);
-            AskFuture = ReactiveCommand.CreateFromTask<bool>(DoAskFuture);
-            SaveReading = ReactiveCommand.CreateFromTask(DoSaveReading);
-        }
-        protected async Task DoSaveReading(CancellationToken token = default)
-        {
-            try
-            {
-                if (CanSave)
-                {
-                    Parent.IsLoading = true;
-                    await ReadingsAdapter.Add(new Reading()
-                    {
-                        AnnotatedImage = AnnotatedImage ?? throw new InvalidDataException(),
-                        Runes = Runes.ToArray(),
-                        Question = Question ?? throw new InvalidDataException(),
-                        Answer = Answer ?? throw new InvalidDataException()
-
-                    }, token);
-                    HasSaved = true;
-                    await Parent.ReadingsVM.DoLoad(token);
-                    this.RaisePropertyChanged(nameof(CanSave));
-                }
-            }
-            catch(Exception ex)
-            {
-                await Parent.Alert.Handle(ex.Message).GetAwaiter();
-            }
-            Parent.IsLoading = false;
-        }
-        protected void Reset()
-        {
-            Runes.Clear();
-            Answer = null;
-            Question = null;
-            HasSaved = false;
-            this.RaisePropertyChanged(nameof(HasRunes));
-            this.RaisePropertyChanged(nameof(CanSave));
+            ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
         }
         protected async Task DoTakePhoto(CancellationToken token = default)
         {
             try
             {
                 Reset();
-                
-                if (await Parent.HasPermissions.Handle("permissions"))
+
+                if (await Parent.Parent.HasPermissions.Handle("permissions"))
                 {
                     using (var memoryStream = new MemoryStream())
                     {
-                        using var file = await Parent.CaptureWithCamera.Handle("Pick an image with Runes").GetAwaiter();
+                        using var file = await Parent.Parent.CaptureWithCamera.Handle("Pick an image with Runes").GetAwaiter();
                         if (file != null)
                         {
                             await file.CopyToAsync(memoryStream, token);
@@ -146,11 +123,11 @@ namespace Rygg.Runes.Client.ViewModels
 
                 }
                 else
-                    await Parent.Alert.Handle("Permissions required").GetAwaiter();
+                    await Parent.Parent.Alert.Handle("Permissions required").GetAwaiter();
             }
             catch (Exception ex)
             {
-                await Parent.Alert.Handle(ex.Message).GetAwaiter();
+                await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
         }
         protected async Task DoPickPhoto(CancellationToken token = default)
@@ -160,7 +137,7 @@ namespace Rygg.Runes.Client.ViewModels
                 Reset();
                 using (var memoryStream = new MemoryStream())
                 {
-                    using var file = await Parent.OpenFile.Handle("Pick an image with Runes").GetAwaiter();
+                    using var file = await Parent.Parent.OpenFile.Handle("Pick an image with Runes").GetAwaiter();
                     if (file != null)
                     {
                         await file.CopyToAsync(memoryStream, token);
@@ -171,15 +148,15 @@ namespace Rygg.Runes.Client.ViewModels
             }
             catch (Exception ex)
             {
-                await Parent.Alert.Handle(ex.Message);
+                await Parent.Parent.Alert.Handle(ex.Message);
             }
         }
         protected async Task ProcessImageRequest(byte[] fileBytes, bool isFirst = true, CancellationToken token = default)
         {
             try
             {
-                Parent.IsLoading = true;
-                if (await Parent.HasPermissions.Handle("permissions").GetAwaiter())
+                Parent.Parent.IsLoading = true;
+                if (await Parent.Parent.HasPermissions.Handle("permissions").GetAwaiter())
                 {
                     Reset();
                     using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
@@ -210,90 +187,326 @@ namespace Rygg.Runes.Client.ViewModels
                     if (resp != null)
                     {
                         AnnotatedImage = resp.AnnotatedImage;
-                        foreach (var rune in resp.Annotations)
-                        {
-                            Runes.Add(rune);
-                        }
-                        this.RaisePropertyChanged(nameof(HasRunes));
+                        Parent.RunesDetectedVM.SetRunesDetected(resp.Annotations.Select(r => new Rune(r)).ToArray());
+                        Parent.NavigateStep(Parent.RunesDetectedVM.StepNumber);
                         this.RaisePropertyChanged(nameof(IsReadyToProcess));
                     }
                 }
                 else
-                    await Parent.Alert.Handle("Permissions required").GetAwaiter();
+                    await Parent.Parent.Alert.Handle("Permissions required").GetAwaiter();
             }
             catch (MsalException ex)
             {
                 if (isFirst)
                 {
-                    await Parent.DoLogin(true, token);
+                    await Parent.Parent.DoLogin(true, token);
                     await ProcessImageRequest(fileBytes, false, token);
                 }
                 else
-                    await Parent.Alert.Handle(ex.Message).GetAwaiter();
+                    await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
             catch (Exception ex)
             {
-                await Parent.Alert.Handle(ex.StackTrace ?? "").GetAwaiter();
-                await Parent.Alert.Handle(ex.Message).GetAwaiter();
+                await Parent.Parent.Alert.Handle(ex.StackTrace ?? "").GetAwaiter();
+                await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
             finally
             {
-                Parent.IsLoading = false;
-            }
-        }
-        protected async Task DoAskFuture(bool isFirst = true, CancellationToken token = default)
-        {
-            if (string.IsNullOrWhiteSpace(Question))
-            {
-                await Parent.Alert.Handle("Please ask The Mystic a question.").GetAwaiter();
-                return;
-            }
-            try
-            {
-                Parent.IsLoading = true;
-                Answer = null;
-                HasSaved = false;
-                this.RaisePropertyChanged(nameof(CanSave));
-                string answ = await ChatProxy.GetReading(this.Runes.ToArray(), this.Question, token);
-                Answer = answ.Replace("\\n", "<br>");
-                this.RaisePropertyChanged(nameof(CanSave));
-            }
-            catch (MsalClientException ex)
-            {
-                if (isFirst)
-                {
-                    await Parent.DoLogin(true, token);
-                    await DoAskFuture(false, token);
-                }
-                else
-                    await Parent.Alert.Handle(ex.Message).GetAwaiter();
-            }
-            catch (Exception ex)
-            {
-                await Parent.Alert.Handle(ex.Message).GetAwaiter();
-            }
-            finally
-            {
-                Parent.IsLoading = false;
+                Parent.Parent.IsLoading = false;
             }
         }
         protected async Task DoProcessImage(CancellationToken token = default)
         {
             try
             {
-                byte[]? image = null;
-                using (var file = await Parent.SaveImage.Handle("Get cropped image").GetAwaiter())
-                {
-                    image = file?.ToArray();
-                }
-                if (image != null)
-                    await ProcessImageRequest(image, token: token);
+                if(CapturedImageBytes != null)
+                    await ProcessImageRequest(CapturedImageBytes, token: token);
             }
             catch (Exception ex)
             {
-                await Parent.Alert.Handle(ex.Message);
+                await Parent.Parent.Alert.Handle(ex.Message);
             }
         }
+        public override int StepNumber => 3;
+        public override void Reset(bool fromParent = false)
+        {
+            CapturedImageBytes = null;
+            AnnotatedImage = null;
+            this.RaisePropertyChanged(nameof(IsReadyToProcess));
+            base.Reset(fromParent);
+        }
+
+    }
+    public class RuneRow : ReactiveObject
+    {
+        public RuneItem[] Runes { get; }
+        public RuneRow(RuneItem[] runes)
+        {
+            Runes = runes;
+        }
+    }
+    public class RuneItem : ReactiveObject
+    {
+        public Rune? Rune { get; private set; }
+        
+        public string? RunicCharachter
+        {
+            get => Rune?.RunicCharachter;
+        }
+        public string? RuneName
+        {
+            get => Rune?.Name;
+        }
+        private readonly bool _isValidSlot;
+        public bool IsValidSlot
+        {
+            get => _isValidSlot;
+        }
+        public bool IsBlank { get => Rune == null; }
+        public ReactiveCommand<string, Unit> SetRune { get; }
+        public int Row { get; }
+        public int Column { get; }
+        public RuneItem(Rune? rune, int row, int column, bool isValidSlot)
+        {
+            Row = row;
+            Column = column;
+            Rune = rune;
+            _isValidSlot = isValidSlot;
+            SetRune = ReactiveCommand.Create<string>(DoSetRune);
+        }
+        protected void DoSetRune(string rune)
+        {
+            //TODO: rethink rune
+            throw new NotImplementedException();
+        }
+    }
+    public class RunesDetectedViewModel : RuneStepViewModel
+    {
+        private string? answer;
+        public string? Answer
+        {
+            get => answer;
+            set => this.RaiseAndSetIfChanged(ref answer, value);
+        }
+        private RuneRow[]? runeRows;
+        public RuneRow[]? RuneRows
+        {
+            get => runeRows;
+            set => this.RaiseAndSetIfChanged(ref runeRows, value);
+        }
+        public Rune[] SelectedRunes
+        {
+            get
+            {
+                List<Rune> runes = new List<Rune>();
+                if (RuneRows != null)
+                {
+                    foreach (var row in RuneRows)
+                    {
+                        foreach (var rune in row.Runes.Where(r => r.Rune != null))
+                            runes.Add(rune.Rune ?? throw new InvalidDataException());
+                    }
+                }
+                return runes.ToArray();
+            }
+        }
+        protected IChatGPTProxy ChatProxy { get; }
+        public ICommand AskTheFuture { get; }
+        protected async Task DoAskFuture(bool isFirst = true, CancellationToken token = default)
+        {
+            if (string.IsNullOrWhiteSpace(Parent.AskTheUniverseVM.Question))
+            {
+                await Parent.Parent.Alert.Handle("Please ask The Mystic a question.").GetAwaiter();
+                return;
+            }
+            try
+            {
+                Parent.Parent.IsLoading = true;
+                Answer = null;
+                string answ = await ChatProxy.GetReading(Parent.RunesDetectedVM.SelectedRunes,
+                    Parent.SpreadsVM.SelectedSpread.Spread.Type,
+                    Parent.AskTheUniverseVM.Question, token);
+                Answer = answ.Replace("\\n", "<br>");
+                Parent.NavigateStep(5);
+            }
+            catch (MsalClientException ex)
+            {
+                if (isFirst)
+                {
+                    await Parent.Parent.DoLogin(true, token);
+                    await DoAskFuture(false, token);
+                }
+                else
+                    await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
+            }
+            catch (Exception ex)
+            {
+                await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
+            }
+            finally
+            {
+                Parent.Parent.IsLoading = false;
+            }
+        }
+        public RunesDetectedViewModel(RuneDetectorViewModel parent, IChatGPTProxy chatProxy) : base(parent)
+        {
+            ChatProxy = chatProxy;
+            AskTheFuture = ReactiveCommand.CreateFromTask<bool>(DoAskFuture);
+        }
+        public void SetRunesDetected(Rune[] runes)
+        {
+            RuneRows = null;
+            Parent.SpreadsVM.SelectedSpread.Spread.Validate(runes, out Rune?[,] matrix);
+            List<RuneRow> rows = new();
+            int j = 0, rowCount = matrix.GetLength(0), columnCount = matrix.GetLength(1);
+            while(j < rowCount)
+            {
+                List<RuneItem> items = new List<RuneItem>();
+                int i = 0;
+                while(i < columnCount)
+                {
+                    Rune? rune = matrix[j, i];
+                    items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i]));
+                    i++;
+                }
+                rows.Add(new RuneRow(items.ToArray()));
+                j++;
+            }
+            RuneRows = rows.ToArray();
+        }
+        public override int StepNumber => 4;
+        public override void Reset(bool fromParent = false)
+        {
+            Answer = null;
+            base.Reset(fromParent);
+        }
+    }
+    public class RuneReadingViewModel : RuneStepViewModel
+    {
+
+       
+        public bool CanSave
+        {
+            get => !string.IsNullOrWhiteSpace(Parent.RunesDetectedVM.Answer) && 
+                !string.IsNullOrWhiteSpace(Parent.AskTheUniverseVM.Question) 
+                && !HasSaved;
+        }
+        public ICommand SaveReading { get; }
+        public RuneReadingViewModel(RuneDetectorViewModel parent, IReadingsDataAdapter readingsDataAdapter) : base(parent)
+        {
+            SaveReading = ReactiveCommand.CreateFromTask(DoSaveReading);
+            ReadingsAdapter = readingsDataAdapter;
+        }
+        private bool hasSaved = false;
+        public bool HasSaved
+        {
+            get => hasSaved;
+            set => this.RaiseAndSetIfChanged(ref hasSaved, value);
+        }
+        
+        protected IReadingsDataAdapter ReadingsAdapter { get; }
+        protected async Task DoSaveReading(CancellationToken token = default)
+        {
+            try
+            {
+                if (CanSave)
+                {
+                    Parent.Parent.IsLoading = true;
+                    await ReadingsAdapter.Add(new Reading()
+                    {
+                        AnnotatedImage = Parent.SelectImageVM.AnnotatedImage ?? throw new InvalidDataException(),
+                        Runes = Parent.RunesDetectedVM.SelectedRunes,
+                        Question = Parent.AskTheUniverseVM.Question ?? throw new InvalidDataException(),
+                        Answer = Parent.RunesDetectedVM.Answer ?? throw new InvalidDataException()
+
+                    }, token);
+                    HasSaved = true;
+                    this.RaisePropertyChanged(nameof(CanSave));
+                    await Parent.Parent.ReadingsVM.DoLoad(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
+            }
+            Parent.Parent.IsLoading = false;
+        }
+        public override int StepNumber => 5;
+    }
+    public class RuneDetectorViewModel : ReactiveObject
+    {
+        public Dictionary<int, RuneStepViewModel> RuneSteps { get; } = new Dictionary<int, RuneStepViewModel>();
+        private RuneStepViewModel[] currentStep;
+        public RuneStepViewModel[] CurrentStep
+        {
+            get => currentStep;
+            set => this.RaiseAndSetIfChanged(ref currentStep, value);
+        }
+        public int CurrentStepNumber
+        {
+            get => CurrentStep.First().StepNumber;
+        }
+        
+
+        public void NavigateStep(int stepNumber)
+        {
+            CurrentStep = new RuneStepViewModel[] { RuneSteps[stepNumber] };
+            this.RaisePropertyChanged(nameof(CurrentStepNumber));
+        }
+        
+        
+        public MainWindowViewModel Parent { get; }
+        protected IRunesProxy RunesProxy { get; }
+        protected IChatGPTProxy ChatProxy { get; }
+        protected IConfiguration Config { get; }
+        protected IReadingsDataAdapter ReadingsAdapter { get; }
+        
+        public ICommand StartOver { get; }
+        public RuneAskUniverseStepViewModel AskTheUniverseVM { get; }
+        public RuneSpreadsViewModel SpreadsVM { get; }
+        public RunesSelectImageViewModel SelectImageVM { get; }
+        public RuneReadingViewModel ReadingVM { get; }
+        public RunesDetectedViewModel RunesDetectedVM { get; }
+        public RuneDetectorViewModel(MainWindowViewModel parent, IRunesProxy runesProxy, IChatGPTProxy chatProxy,
+            IConfiguration config,
+            IReadingsDataAdapter readingsAdapter)
+        {
+            Parent = parent;
+            RunesProxy = runesProxy;
+            ChatProxy = chatProxy;
+            Config = config;
+            ReadingsAdapter = readingsAdapter;
+            StartOver = ReactiveCommand.Create(DoStartOver);
+
+
+            AskTheUniverseVM = new RuneAskUniverseStepViewModel(this);
+            SpreadsVM = new RuneSpreadsViewModel(this);
+            SelectImageVM = new RunesSelectImageViewModel(this, RunesProxy);
+            RunesDetectedVM = new RunesDetectedViewModel(this, ChatProxy);
+            ReadingVM = new RuneReadingViewModel(this, readingsAdapter);
+            
+            RuneSteps.Add(AskTheUniverseVM.StepNumber, AskTheUniverseVM);
+            RuneSteps.Add(SpreadsVM.StepNumber, SpreadsVM);
+            RuneSteps.Add(SelectImageVM.StepNumber, SelectImageVM);
+            RuneSteps.Add(RunesDetectedVM.StepNumber, RunesDetectedVM);
+            RuneSteps.Add(ReadingVM.StepNumber, ReadingVM);
+            currentStep = new RuneStepViewModel[] { RuneSteps[1] };
+
+        }
+
+        protected void DoStartOver()
+        {
+            Reset();
+            NavigateStep(1);
+        }
+        public void Reset()
+        {
+            foreach (var vm in RuneSteps.Values)
+                vm.Reset(true);
+        }
+
+        
+        
     }
 
 }

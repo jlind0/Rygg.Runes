@@ -1,95 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<r:ReactiveContentView x:TypeArguments="vm:RuneViewModel" x:DataType="vm:RuneViewModel" ViewModel="{Binding}" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<r:ReactiveContentView x:TypeArguments="vm:RuneDetectorViewModel" x:DataType="vm:RuneDetectorViewModel" ViewModel="{Binding}" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
 xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
 xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
- 
+ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
              x:Class="RyggRunes.MAUI.Client.Views.RunesView">
-    <ContentView.Behaviors>
-        <toolkit:EventToCommandBehavior EventName="ImageDataChanged" 
-                                 Command="{Binding CropInteractiveCommand, Source={x:Reference imgEditor}}">
-            <toolkit:EventToCommandBehavior.CommandParameter>
-                <telerik:CropCommandContext AspectRatio="Square">
-
-                </telerik:CropCommandContext>
-            </toolkit:EventToCommandBehavior.CommandParameter>
-        </toolkit:EventToCommandBehavior>
-    </ContentView.Behaviors>
     <ContentView.Resources>
         <ResourceDictionary>
+            <DataTemplate x:Key="AskTheUniverseTemplate">
+                <views:RuneAskTheUniverse ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="RunesReadingTemplate">
+                <views:RuneReadingView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="DetectRunesTemplate">
+                <views:RunesDetectedView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="SelectImageTemplate">
+                <views:RunesSelectImageView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="SelectSpreadTemplate">
+                <views:RunesSpreadsView ViewModel="{Binding}"/>
+            </DataTemplate>
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
             <c:PixelScaler x:Key="PixelScaler"/>
+            <c:RuneViewTemplateSelector x:Key="RuneViewTemplateSelector"
+                AskTheUniverseTemplate="{StaticResource AskTheUniverseTemplate}" 
+                RunesReadingTemplate="{StaticResource RunesReadingTemplate}" 
+                DetectRunesTemplate="{StaticResource DetectRunesTemplate}" 
+                SelectImageTemplate="{StaticResource SelectImageTemplate}"
+                SelectSpreadTemplate="{StaticResource SelectSpreadTemplate}"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}">
-        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
-            <telerik:RadImageEditorToolbar AutoGenerateItems="False" ImageEditor="{x:Reference imgEditor}" x:Name="imgToolbar">
-                <telerik:ImageEditorCropToolbarItem SelectedCropOperation="{x:Reference editCrop}" >
-                    <telerik:ImageEditorCropToolbarItem.CropOperations>
-                        <telerik:CropOperation x:Name="editCrop" AspectRatio="Square" Text="Square"/>
-                    </telerik:ImageEditorCropToolbarItem.CropOperations>
-                </telerik:ImageEditorCropToolbarItem>
-                <telerik:ImageEditorRotateLeftToolbarItem/>
-                <telerik:ImageEditorRotateRightToolbarItem/>
-            </telerik:RadImageEditorToolbar>
-            <telerik:RadImageEditor x:Name="imgEditor" 
-                HeightRequest="300" 
-                WidthRequest="300" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
-
-            </telerik:RadImageEditor>
-            <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
-        </VerticalStackLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Top" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}"
-                HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}"  
-                    IsVisible="{Binding HasRunes}">
-            <telerik:RadWrapLayout Orientation="Horizontal">
-                <telerik:RadWrapLayout Orientation="Horizontal" Margin="5">
-                    <ListView ItemsSource="{Binding Runes}"/>
-                    <Image  HeightRequest="300" 
-                        WidthRequest="300"
-                        Source="{Binding AnnotatedImage, Converter={StaticResource ByteArrayToImageSourceConverter}, Mode=OneWay}" 
-                        Aspect="AspectFit" />
-                </telerik:RadWrapLayout>
-                <VerticalStackLayout Margin="20">
-                    <Label>Question</Label>
-                    <Editor FontSize="16" Text="{Binding Question}" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.60}}" 
-                            HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.20}}"></Editor>
-                    <Label TextType="Html" WidthRequest="{Binding Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.65}}" FontSize="20" Text="{Binding Answer}" LineBreakMode="WordWrap"/>
-                </VerticalStackLayout>
-            </telerik:RadWrapLayout>
-        </ScrollView>
-        <telerik:RadToolbar x:Name="toolbar" HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.1}}" telerik:RadDockLayout.Dock="Bottom">
-            <telerik:ButtonToolbarItem Command="{Binding TakePhoto}">
-                <telerik:ButtonToolbarItem.ImageSource>
-                    <FontImageSource Glyph="{x:StaticResource camera}"
-                        FontFamily="FASolid"
-                        Size="40" Color="Blue" />
-                </telerik:ButtonToolbarItem.ImageSource>
-            </telerik:ButtonToolbarItem>
-            <telerik:ButtonToolbarItem Command="{Binding PickPhoto}">
-                <telerik:ButtonToolbarItem.ImageSource>
-                    <FontImageSource Glyph="{x:StaticResource photo}"
-                        FontFamily="FASolid"
-                        Size="40" Color="Blue" />
-                </telerik:ButtonToolbarItem.ImageSource>
-            </telerik:ButtonToolbarItem>
-            <telerik:ButtonToolbarItem Command="{Binding AskFuture}" IsVisible="{Binding HasRunes}">
-                <telerik:ButtonToolbarItem.ImageSource>
-                    <FontImageSource Glyph="&#xe1e7;"
-            FontFamily="FASolid"
-            Size="40" Color="Blue" />
-                </telerik:ButtonToolbarItem.ImageSource>
-            </telerik:ButtonToolbarItem>
-            <telerik:ButtonToolbarItem IsVisible="{Binding CanSave}" Command="{Binding SaveReading}">
-                <telerik:ButtonToolbarItem.ImageSource>
-                    <FontImageSource Glyph="{x:StaticResource save}"
-                        FontFamily="FASolid"
-                        Size="40" Color="Blue" />
-                </telerik:ButtonToolbarItem.ImageSource>
-            </telerik:ButtonToolbarItem>
-        </telerik:RadToolbar>
-    </telerik:RadDockLayout>
+    <telerik:RadItemsControl ItemsSource="{Binding CurrentStep}" ItemTemplate="{StaticResource RuneViewTemplateSelector}"/>
 </r:ReactiveContentView>

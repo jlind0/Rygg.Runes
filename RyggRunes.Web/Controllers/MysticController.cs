@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using RyggRunes.Client.Core;
+using Rygg.Runes.Data.Core;
+using Rygg.Runes.Spreads;
 
 namespace RyggRunes.Web.Controllers
 {
@@ -21,12 +23,9 @@ namespace RyggRunes.Web.Controllers
         [HttpPost]
         public Task<string> AskQuestions([FromBody] MysticRequest request, CancellationToken token = default)
         {
-            return ChatProxy.GetReading(request.Runes, request.Question, token);
+            return ChatProxy.GetReading(request.Runes.Select(r => new Rune(r)).ToArray(), 
+                request.SpreadType, request.Question, token);
         }
     }
-    public class MysticRequest
-    {
-        public string[] Runes { get; set; }
-        public string Question { get; set; }
-    }
+    
 }

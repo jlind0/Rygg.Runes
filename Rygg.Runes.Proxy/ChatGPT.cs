@@ -8,9 +8,10 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Principal;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Rygg.Runes.Data.Core;
+using System.Collections.Immutable;
 
 namespace Rygg.Runes.Proxy
 {
@@ -36,12 +37,7 @@ namespace Rygg.Runes.Proxy
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return client;
         }
-        protected class MysticRequest
-        {
-            public string[] Runes { get; set; }
-            public string Question { get; set; }
-        }
-        public async Task<string> GetReading(string[] runes, string message = "Tell me the future", CancellationToken token = default)
+        public async Task<string> GetReading(Rune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default)
         {
             try
             {
@@ -54,9 +50,10 @@ namespace Rygg.Runes.Proxy
                             new AuthenticationHeaderValue("Bearer", result.AccessToken);
                     var content = new StringContent(JsonSerializer.Serialize(new MysticRequest()
                     {
-                        Runes = runes,
-                        Question = message
-                    }), Encoding.UTF8, "application/json");
+                        Runes = runes.Select(r => r.ToString()).ToArray(),
+                        Question = message,
+                        SpreadType = spreadType
+                    }), System.Text.Encoding.UTF8, "application/json");
                     var response = await client.PostAsync("Mystic", content, token);
                     if (response.IsSuccessStatusCode)
                         return await response.Content.ReadAsStringAsync(token);

@@ -6,19 +6,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
-
+using Rygg.Runes.Data.Core;
 namespace Rygg.Runes.Data.Embedded
 {
-    public class Reading
-    {
-        public long Id { get; set; }
-        public string Question { get; set; } = null!;
-        public string Answer { get; set; } = null!;
-        public string[] Runes { get; set; } = null!;
-        public byte[] AnnotatedImage { get; set; } = null!;
-    }
+    
     public interface IReadingsDataAdapter
     {
         IAsyncEnumerable<Reading> GetAll(int pageSize = 5, int page = 1, string? searchCondition = null, [EnumeratorCancellation] CancellationToken token = default);
@@ -76,7 +68,7 @@ namespace Rygg.Runes.Data.Embedded
                     cmd.CommandText = "INSERT INTO Readings(Answer, Question, Runes, AnnotatedImage) VALUES(@Answer, @Question, @Runes, @AnnotatedImage); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@Question", reading.Question);
                     cmd.Parameters.AddWithValue("@Answer", reading.Answer);
-                    cmd.Parameters.AddWithValue("@Runes", string.Join(',', reading.Runes));
+                    cmd.Parameters.AddWithValue("@Runes", string.Join(',', reading.Runes.Select(r => r.ToString())));
                     cmd.Parameters.AddWithValue("@AnnotatedImage", reading.AnnotatedImage);
                     reading.Id = (long)(await cmd.ExecuteScalarAsync(token) ?? throw new InvalidOperationException());
                 }
@@ -126,7 +118,7 @@ namespace Rygg.Runes.Data.Embedded
                                 var data = (byte[])(await c.ExecuteScalarAsync(token) ?? throw new InvalidDataException());
                                 yield return new Reading()
                                 {
-                                    Runes = ((string)dr["Runes"]).Split(','),
+                                    Runes = ((string)dr["Rune"]).Split(',').Select(r => new Rune(r)).ToArray(),
                                     Answer = (string)dr["Answer"],
                                     Question = (string)dr["Question"],
                                     AnnotatedImage = data,

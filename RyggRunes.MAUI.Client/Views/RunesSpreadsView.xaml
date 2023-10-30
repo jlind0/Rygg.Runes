@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView x:TypeArguments="vm:RuneSpreadsViewModel" x:DataType="vm:RuneSpreadsViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
+xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
+             x:Class="RyggRunes.MAUI.Client.Views.RunesSpreadsView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <telerik:RadDockLayout>
+        <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.75}}"
+            WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}">
+            <telerik:RadItemsControl ItemsSource="{Binding Spreads}">
+                <telerik:RadItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <views:RunesSpreadView ViewModel="{Binding}">
+                        </views:RunesSpreadView>
+                    </DataTemplate>
+                </telerik:RadItemsControl.ItemTemplate>
+            </telerik:RadItemsControl>
+        </ScrollView>
+        <telerik:RadToolbar x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
+            <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding Parent.StartOver}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xf895;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+        </telerik:RadToolbar>
+    </telerik:RadDockLayout>
+    
+</r:ReactiveContentView>

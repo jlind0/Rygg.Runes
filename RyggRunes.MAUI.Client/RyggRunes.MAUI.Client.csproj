@@ -117,6 +117,7 @@
 	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Fonts\FA-400.otf" />
 	  <None Remove="Resources\Fonts\FA-Regular-400.otf" />
+	  <None Remove="Resources\Images\rune.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -149,6 +150,24 @@
 	<ItemGroup>
 	  <MauiXaml Update="Resources\Styles\Icons.xaml">
 	    <Generator></Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RuneAskTheUniverse.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RuneReadingView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RunesDetectedView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RunesSelectImageView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RunesSpreadsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RunesSpreadView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RunesView.xaml">
 	    <Generator>MSBuild:Compile</Generator>

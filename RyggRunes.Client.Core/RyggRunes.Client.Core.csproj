@@ -12,4 +12,9 @@
     <PackageReference Include="OpenAI" Version="1.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Rugg.Runes.Data.Core\Rygg.Runes.Data.Core.csproj" />
+    <ProjectReference Include="..\Rygg.Runes.Spreads\Rygg.Runes.Spreads.csproj" />
+  </ItemGroup>
+
 </Project>

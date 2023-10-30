@@ -21,4 +21,23 @@ namespace RyggRunes.MAUI.Client.Converters
             else throw new NotImplementedException();
         }
     }
+    public class RuneViewTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate AskTheUniverseTemplate { get; set; }
+        public DataTemplate SelectSpreadTemplate { get; set; }
+        public DataTemplate SelectImageTemplate { get; set; }
+        public DataTemplate DetectRunesTemplate { get; set; }
+        public DataTemplate RunesReadingTemplate { get; set; }
+        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        {
+            Type type = item.GetType();
+            if (type == typeof(RuneAskUniverseStepViewModel)) return AskTheUniverseTemplate;
+            else if (type == typeof(RuneSpreadsViewModel)) return SelectSpreadTemplate;
+            else if (type == typeof(RunesSelectImageViewModel)) return SelectImageTemplate;
+            else if (type == typeof(RunesDetectedViewModel)) return DetectRunesTemplate;
+            else if (type == typeof(RuneReadingViewModel)) return RunesReadingTemplate;
+            else throw new NotImplementedException();
+
+        }
+    }
 }

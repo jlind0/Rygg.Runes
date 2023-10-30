@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.10" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Rugg.Runes.Data.Core\Rygg.Runes.Data.Core.csproj" />
   </ItemGroup>
 

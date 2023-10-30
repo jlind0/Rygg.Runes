@@ -3,8 +3,8 @@ using Rygg.Runes.Data.Embedded;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Rygg.Runes.Data.Core;
 
 namespace Rygg.Runes.Client.ViewModels
 {
@@ -13,7 +13,7 @@ namespace Rygg.Runes.Client.ViewModels
         public long Id { get => Data.Id; }
         public string Question { get => Data.Question; }
         public string Answer { get => Data.Answer; }
-        public string[] Runes { get => Data.Runes; }
+        public Rune[] Runes { get => Data.Runes; }
         public byte[] AnnotatedImage { get => Data.AnnotatedImage; }
         protected Reading Data { get; }
         public ReadingsViewModel Parent { get; }

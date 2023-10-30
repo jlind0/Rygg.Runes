@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView x:TypeArguments="vm:RuneSpreadViewModel" x:DataType="vm:RuneSpreadViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+                xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+                xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+                xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
+             x:Class="RyggRunes.MAUI.Client.Views.RunesSpreadView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <VerticalStackLayout WidthRequest="450">
+        <telerik:RadListView ItemsSource="{Binding RuneRows}" SelectionMode="None">
+            <telerik:RadListView.LayoutDefinition>
+                <telerik:ListViewLinearLayout Orientation="Vertical"/>
+            </telerik:RadListView.LayoutDefinition>
+            <telerik:RadListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:RuneSpreadRow">
+                    <telerik:ListViewTemplateCell Height="45">
+                        
+                        <telerik:RadListView HeightRequest="45"  ItemsSource="{Binding Runes}" SelectionMode="None">
+                            <telerik:RadListView.LayoutDefinition>
+                                <telerik:ListViewLinearLayout ItemLength="12" Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                            </telerik:RadListView.LayoutDefinition>
+                            <telerik:RadListView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:RuneSpreadItem">
+                                    <telerik:ListViewTemplateCell Height="35">
+                                        <telerik:RadBorder BorderColor="Black" BackgroundColor="Black" CornerRadius="0.8" 
+                                                           WidthRequest="50" HeightRequest="30">
+                                            <telerik:RadBorder.Triggers>
+                                                <DataTrigger TargetType="telerik:RadBorder" Binding="{Binding DoesNotHaveCard}" Value="{x:Boolean True}">
+                                                    <Setter Property="BorderColor" Value="White"/>
+                                                    <Setter Property="BackgroundColor" Value="White"/>
+                                                </DataTrigger>
+                                            </telerik:RadBorder.Triggers>
+                                            <Label Text=" "/>
+                                        </telerik:RadBorder>
+                                    </telerik:ListViewTemplateCell>
+                                </DataTemplate>
+                            </telerik:RadListView.ItemTemplate>
+                        </telerik:RadListView>
+                    </telerik:ListViewTemplateCell>
+                </DataTemplate>
+            </telerik:RadListView.ItemTemplate>
+        </telerik:RadListView>
+        <telerik:RadButton Text="{Binding Name}" Command="{Binding Parent.SelectSpread}" CommandParameter="{Binding}"/>
+    </VerticalStackLayout>
+</r:ReactiveContentView>
