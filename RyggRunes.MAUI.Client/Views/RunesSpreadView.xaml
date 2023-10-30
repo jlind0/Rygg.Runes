@@ -21,10 +21,10 @@
         <CollectionView ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding RuneRows}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="55" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
+                    <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="35" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                <Rectangle Margin="2" BackgroundColor="White" WidthRequest="50" HeightRequest="50">
+                                <Rectangle Margin="2" BackgroundColor="White" WidthRequest="30" HeightRequest="30">
                                     <Rectangle.Triggers>
                                         <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
                                             <Setter Property="BackgroundColor" Value="Black"/>

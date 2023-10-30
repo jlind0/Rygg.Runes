@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
+using Microsoft.Maui.Devices;
 using CommunityToolkit.Maui.Markup;
 #if WINDOWS
 using Windows.Media.Capture;
@@ -22,8 +23,13 @@ namespace RyggRunes.MAUI.Client
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
+#if IOS || ANDROID
+            ViewModel.ScreenHeight = DeviceDisplay.Current.MainDisplayInfo.Height;
+            ViewModel.ScreenWidth = DeviceDisplay.Current.MainDisplayInfo.Width;
+#else
             ViewModel.ScreenWidth = this.Width;
             ViewModel.ScreenHeight = this.Height;
+#endif
             this.WhenActivated(d =>
             {
                 
