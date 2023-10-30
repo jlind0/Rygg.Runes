@@ -18,14 +18,14 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
     <telerik:RadDockLayout>
         <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}"
             WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}">
-            <telerik:RadItemsControl ItemsSource="{Binding Spreads}">
-                <telerik:RadItemsControl.ItemTemplate>
+            <CollectionView WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding Spreads}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <views:RunesSpreadView ViewModel="{Binding}">
                         </views:RunesSpreadView>
                     </DataTemplate>
-                </telerik:RadItemsControl.ItemTemplate>
-            </telerik:RadItemsControl>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </ScrollView>
         <telerik:RadToolbar x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">

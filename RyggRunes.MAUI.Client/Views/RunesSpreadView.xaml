@@ -17,12 +17,11 @@
             <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <VerticalStackLayout>
-        <CollectionView ItemsSource="{Binding RuneRows}"  SelectionMode="None">
-
+    <VerticalStackLayout HorizontalOptions="CenterAndExpand">
+        <CollectionView ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding RuneRows}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <CollectionView HeightRequest="55" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
+                    <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="55" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:RuneSpreadItem">
                                 <Rectangle Margin="2" BackgroundColor="White" WidthRequest="50" HeightRequest="50">

@@ -102,10 +102,6 @@ namespace Rygg.Runes.Client.ViewModels
 
         public RuneSpreadViewModel(RuneSpreadsViewModel parent) : base(parent)
         {
-            
-        }
-        protected override void DoLoad()
-        {
             List<RuneSpreadRow> rows = new List<RuneSpreadRow>();
             int rowCount = Spread.ValidMatrix.GetLength(0);
             int columnCount = Spread.ValidMatrix.GetLength(1);
@@ -123,6 +119,10 @@ namespace Rygg.Runes.Client.ViewModels
                 row++;
             }
             RuneRows = rows.ToArray();
+        }
+        protected override void DoLoad()
+        {
+            
         }
     }
 }
