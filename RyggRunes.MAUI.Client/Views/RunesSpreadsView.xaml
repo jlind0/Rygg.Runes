@@ -27,7 +27,7 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </ScrollView>
-        <telerik:RadToolbar x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
+        <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
