@@ -37,6 +37,6 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to the microphone to record audio for sharing.</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mystical Nexus</string>
+	<string>Divine Advice</string>
 </dict>
 </plist>
