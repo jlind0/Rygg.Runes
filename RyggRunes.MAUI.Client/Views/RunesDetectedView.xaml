@@ -16,18 +16,18 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         </ResourceDictionary>
     </ContentView.Resources>
     <telerik:RadDockLayout>
-        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}">
+        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}">
             <HorizontalStackLayout>
                 <Label>Question:</Label>
                 <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
             </HorizontalStackLayout>
-            <CollectionView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
+            <CollectionView HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 35}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RuneRow">
-                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None" HeightRequest="35">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="2"/>
                             </CollectionView.ItemsLayout>

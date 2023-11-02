@@ -333,7 +333,10 @@ namespace Rygg.Runes.Client.ViewModels
     }
     public class RunesDetectedViewModel : RuneStepViewModel
     {
-        
+        public double? RowCount
+        {
+            get => RuneRows?.Length;
+        }
         private string? answer;
         public string? Answer
         {
