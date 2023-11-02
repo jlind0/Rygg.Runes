@@ -36,7 +36,8 @@ namespace Rygg.Runes.Data.Core
         public string Question { get; set; } = null!;
         public string Answer { get; set; } = null!;
         public PlacedRune[] Runes { get; set; } = null!;
-        public byte[] AnnotatedImage { get; set; } = null!;
+        public byte[]? AnnotatedImage { get; set; }
+        public SpreadTypes? SpreadType { get; set; }
     }
     public class Rune
     {

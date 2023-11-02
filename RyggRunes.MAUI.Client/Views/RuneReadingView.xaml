@@ -26,6 +26,11 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding SaveReading}" IsVisible="{Binding CanSave}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xe053;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding Parent.StartOver}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf895;" Size="40" Color="Blue"/>

@@ -8,9 +8,7 @@
     xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
     xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
              x:Class="RyggRunes.MAUI.Client.Views.ReadingsView">
-    <ContentView.Behaviors>
-        <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
-    </ContentView.Behaviors>
+    
     <ContentView.Resources>
         <ResourceDictionary>
             <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>

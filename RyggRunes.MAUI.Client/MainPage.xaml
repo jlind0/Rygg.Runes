@@ -8,7 +8,7 @@
              x:Class="RyggRunes.MAUI.Client.MainPage"
              xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views">
     <ContentPage.Behaviors>
-       
+        <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding ReadingsVM.Load}"/>
     </ContentPage.Behaviors>
     <telerik:RadBusyIndicator x:Name="BusyIndicator"
                             AnimationContentHeightRequest="100"

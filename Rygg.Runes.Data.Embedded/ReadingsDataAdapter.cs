@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Rygg.Runes.Data.Core;
+using System.Data;
+
 namespace Rygg.Runes.Data.Embedded
 {
     
@@ -37,7 +39,7 @@ namespace Rygg.Runes.Data.Embedded
 
                 using (var command = conn.CreateCommand())
                 {
-                    command.CommandText = "CREATE TABLE IF NOT EXISTS Readings(Id INTEGER PRIMARY KEY AUTOINCREMENT, Question TEXT, Answer TEXT, Runes TEXT, AnnotatedImage BLOB);";
+                    command.CommandText = "CREATE TABLE IF NOT EXISTS Readings(Id INTEGER PRIMARY KEY AUTOINCREMENT, SpreadTypeId INTEGER, Question TEXT, Answer TEXT, Runes TEXT, AnnotatedImage BLOB);";
                     await command.ExecuteNonQueryAsync(token);
                 }
                 using (var command = conn.CreateCommand())
@@ -50,6 +52,23 @@ namespace Rygg.Runes.Data.Embedded
                     command.CommandText = "CREATE TRIGGER IF NOT EXISTS Readings_AI AFTER INSERT ON Readings BEGIN INSERT INTO ReadingsFTS(rowid,Question, Answer, Runes) VALUES(new.Id, new.Question, new.Answer, new.Runes); END;";
                     await command.ExecuteNonQueryAsync(token);
                 }
+                using(var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "PRAGMA table_info('Readings')";
+                    DataTable table = new DataTable();
+                    using (var dr = await cmd.ExecuteReaderAsync(token))
+                    {
+                        table.Load(dr);
+                    }
+                    var cols = table.Rows.Cast<DataRow>().Select(r => r.Field<string>("name")).ToArray();
+                    if(!cols.Any(c => c == "SpreadTypeId"))
+                        using(var command = conn.CreateCommand())
+                        {
+                            command.CommandText = "ALTER TABLE Readings ADD COLUMN SpreadTypeId INTEGER";
+                            await command.ExecuteNonQueryAsync(token);
+                        }
+                }
+                await conn.CloseAsync();
             }
         }
         protected async Task<SqliteConnection> GetConnection(CancellationToken token = default)
@@ -64,12 +83,26 @@ namespace Rygg.Runes.Data.Embedded
             using(var conn = await GetConnection(token))
             {
                 using(var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = "INSERT INTO Readings(Answer, Question, Runes, AnnotatedImage) VALUES(@Answer, @Question, @Runes, @AnnotatedImage); SELECT last_insert_rowid();";
+                { 
+                    string def = "", varib = "";
+                    if (reading.AnnotatedImage != null)
+                    {
+                        def += "AnnotatedImage,"; 
+                        varib += "@AnnotatedImage,";
+                    }
+                    if (reading.SpreadType != null)
+                    {
+                        def += "SpreadTypeId,"; 
+                        varib += "@SpreadTypeId,";
+                    }
+                    cmd.CommandText = $"INSERT INTO Readings(Answer,{def} Question, Runes) VALUES(@Answer, {varib} @Question, @Runes); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@Question", reading.Question);
                     cmd.Parameters.AddWithValue("@Answer", reading.Answer);
                     cmd.Parameters.AddWithValue("@Runes", string.Join(',', reading.Runes.Select(r => r.ToString())));
-                    cmd.Parameters.AddWithValue("@AnnotatedImage", reading.AnnotatedImage);
+                    if(reading.AnnotatedImage != null)
+                        cmd.Parameters.AddWithValue("@AnnotatedImage", reading.AnnotatedImage);
+                    if (reading.SpreadType != null)
+                        cmd.Parameters.AddWithValue("@SpreadTypeId", (int)reading.SpreadType);
                     reading.Id = (long)(await cmd.ExecuteScalarAsync(token) ?? throw new InvalidOperationException());
                 }
             }
@@ -97,7 +130,7 @@ namespace Rygg.Runes.Data.Embedded
                 {
                     if (!string.IsNullOrWhiteSpace(searchCondition))
                     {
-                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition LIMIT @PageSize OFFSET @Offset;";
+                        cmd.CommandText = "SELECT rowid Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition LIMIT @PageSize OFFSET @Offset;";
                         cmd.Parameters.AddWithValue("@SearchCondition", searchCondition);
 
                     }
@@ -113,15 +146,23 @@ namespace Rygg.Runes.Data.Embedded
                             using (var c = conn.CreateCommand())
                             {
                                 var id = (long)dr["rowid"];
-                                c.CommandText = "Select AnnotatedImage FROM Readings WHERE Id = @Id";
+                                c.CommandText = "Select AnnotatedImage,SpreadTypeId FROM Readings WHERE Id = @Id";
                                 c.Parameters.AddWithValue("@Id", id);
-                                var data = (byte[])(await c.ExecuteScalarAsync(token) ?? throw new InvalidDataException());
+                                byte[]? data;
+                                int? spreadTypeId;
+                                using(var drr = await c.ExecuteReaderAsync(token))
+                                {
+                                    await drr.ReadAsync(token);
+                                    data = drr["AnnotatedImage"] as byte[];
+                                    spreadTypeId = drr["SpreadTypeId"] != DBNull.Value ? Convert.ToInt32(drr["SpreadTypeId"]) : null;
+                                }
                                 yield return new Reading()
                                 {
-                                    Runes = ((string)dr["Rune"]).Split(',').Select(r => new PlacedRune(r)).ToArray(),
+                                    Runes = ((string)dr["Runes"]).Split(',').Select(r => new PlacedRune(r)).ToArray(),
                                     Answer = (string)dr["Answer"],
                                     Question = (string)dr["Question"],
-                                    AnnotatedImage = data,
+                                    AnnotatedImage = data ,
+                                    SpreadType = spreadTypeId != null ? (SpreadTypes)spreadTypeId.Value : null,
                                     Id = id
                                 };
                             }

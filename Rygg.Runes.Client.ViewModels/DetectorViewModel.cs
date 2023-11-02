@@ -481,10 +481,11 @@ namespace Rygg.Runes.Client.ViewModels
                     Parent.Parent.IsLoading = true;
                     await ReadingsAdapter.Add(new Reading()
                     {
-                        AnnotatedImage = Parent.SelectImageVM.AnnotatedImage ?? throw new InvalidDataException(),
+                        AnnotatedImage = Parent.SelectImageVM.AnnotatedImage,
                         Runes = Parent.RunesDetectedVM.SelectedRunes,
                         Question = Parent.AskTheUniverseVM.Question ?? throw new InvalidDataException(),
-                        Answer = Parent.RunesDetectedVM.Answer ?? throw new InvalidDataException()
+                        Answer = Parent.RunesDetectedVM.Answer ?? throw new InvalidDataException(),
+                        SpreadType = Parent.SpreadsVM.SelectedSpread.Spread.Type
 
                     }, token);
                     HasSaved = true;
