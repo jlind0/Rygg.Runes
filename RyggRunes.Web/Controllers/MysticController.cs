@@ -23,7 +23,7 @@ namespace RyggRunes.Web.Controllers
         [HttpPost]
         public Task<string> AskQuestions([FromBody] MysticRequest request, CancellationToken token = default)
         {
-            return ChatProxy.GetReading(request.Runes.Select(r => new Rune(r)).ToArray(), 
+            return ChatProxy.GetReading(request.Runes.Select(r => new PlacedRune(r)).ToArray(), 
                 request.SpreadType, request.Question, token);
         }
     }

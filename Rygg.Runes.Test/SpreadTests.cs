@@ -23,9 +23,9 @@ namespace Rygg.Runes.Test
            StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-28-08:20:17lind@yahoo.com1a2e6fad-845f-4fdf-bc0d-aff8910d1874");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             AstrologicalSpread spread = new AstrologicalSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -36,9 +36,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-01:44:08lind@yahoo.com7d574359-ab59-4d7a-b771-b7a38e5de3ea");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             ChoiceSpread spread = new ChoiceSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
         }
         [TestMethod]
@@ -47,9 +47,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-02:21:41lind@yahoo.com28e1cb23-01ea-429a-bde2-c54c580d1db5");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             SimpleLoveSpread spread = new SimpleLoveSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -60,9 +60,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-02:31:21lind@yahoo.com4867e8bd-17c2-4a83-bb37-7a986efcf9b0");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             CurrentRelationshipSpread spread = new CurrentRelationshipSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -73,9 +73,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-02:52:39lind@yahoo.come07af7cb-3d29-4d13-9f52-2d4f1c8d74a6");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             CelticCrossSpread spread = new CelticCrossSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -86,9 +86,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-03:16:36lind@yahoo.com88c45802-1209-4d9a-a83c-433d062ce489");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             AnswerToWhySpread spread = new AnswerToWhySpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -99,9 +99,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-03:37:51lind@yahoo.com497bd007-8f99-4ede-95e7-908f30411dea");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             NornsSpread spread = new NornsSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 
@@ -112,9 +112,9 @@ namespace Rygg.Runes.Test
             StorageBlob blob = new StorageBlob(Configuration);
             var reading = await blob.GetImage("2023-10-29-04:39:23lind@yahoo.comdff1e04d-c3b8-4f62-9fe1-31ccefd524fc");
             Assert.IsNotNull(reading);
-            var runes = reading.annotations.Select(r => new Rune(r)).ToArray();
+            var runes = reading.annotations.Select(r => new PlacedRune(r)).ToArray();
             SevenGemsSpread spread = new SevenGemsSpread();
-            Rune?[,] matrix;
+            PlacedRune?[,] matrix;
             var sr = spread.Validate(runes, out matrix);
 
 

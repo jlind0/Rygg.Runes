@@ -16,18 +16,24 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         </ResourceDictionary>
     </ContentView.Resources>
     <telerik:RadDockLayout>
-        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}">
+        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}">
             <HorizontalStackLayout>
                 <Label>Question:</Label>
                 <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
             </HorizontalStackLayout>
             <CollectionView  ItemsSource="{Binding RuneRows}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RuneRow">
-                        <CollectionView HeightRequest="35" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="2"/>
+                            </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneItem">
-                                    <AbsoluteLayout Margin="2,2,2,2">
+                                    <AbsoluteLayout>
                                         <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="30" HeightRequest="30">
                                             <Rectangle.Triggers>
                                                 <DataTrigger TargetType="Rectangle" Binding="{Binding IsValidSlot}" Value="{x:Boolean True}">
@@ -35,10 +41,15 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                                                 </DataTrigger>
                                             </Rectangle.Triggers>
                                         </Rectangle>
-                                        <Label HeightRequest="30" 
-                                                       WidthRequest="30" FontSize="25" HorizontalOptions="Center" 
-                                                       VerticalOptions="Center" ZIndex="1" Text="{Binding RunicCharachter}" 
-                                                       TextColor="White"/>
+                                        <telerik:RadButton IsVisible="{Binding IsValidSlot}" Background="Black" HeightRequest="30" Command="{Binding KeyboardViewModel.OpenOrClose}"
+                                                       WidthRequest="30" FontSize="25" ZIndex="1" Text="{Binding RunicCharachter}" 
+                                                       TextColor="White">
+                                            <telerik:RadPopup.Popup>
+                                                <telerik:RadPopup IsModal="True" IsOpen="{Binding KeyboardViewModel.IsOpen}">
+                                                    <views:RunicKeyboardView BindingContext="{Binding KeyboardViewModel}"/>
+                                                </telerik:RadPopup>
+                                            </telerik:RadPopup.Popup>
+                                        </telerik:RadButton>
                                     </AbsoluteLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

@@ -19,12 +19,18 @@
     </ContentView.Resources>
     <VerticalStackLayout HorizontalOptions="CenterAndExpand">
         <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 35}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
+            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneSpreadRow">
-                    <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="35" ItemsLayout="HorizontalList" ItemsSource="{Binding Runes}" SelectionMode="None">
+                    <CollectionView ItemSizingStrategy="MeasureAllItems" HeightRequest="35" ItemsSource="{Binding Runes}" SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="2"/>
+                        </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:RuneSpreadItem">
-                                <Rectangle Margin="2,2,2,2" BackgroundColor="White" WidthRequest="30" HeightRequest="30">
+                                <Rectangle BackgroundColor="White" WidthRequest="30" HeightRequest="30">
                                     <Rectangle.Triggers>
                                         <DataTrigger TargetType="Rectangle" Binding="{Binding HasCard}" Value="{x:Boolean True}">
                                             <Setter Property="BackgroundColor" Value="Black"/>

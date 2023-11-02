@@ -118,7 +118,7 @@ namespace Rygg.Runes.Data.Embedded
                                 var data = (byte[])(await c.ExecuteScalarAsync(token) ?? throw new InvalidDataException());
                                 yield return new Reading()
                                 {
-                                    Runes = ((string)dr["Rune"]).Split(',').Select(r => new Rune(r)).ToArray(),
+                                    Runes = ((string)dr["Rune"]).Split(',').Select(r => new PlacedRune(r)).ToArray(),
                                     Answer = (string)dr["Answer"],
                                     Question = (string)dr["Question"],
                                     AnnotatedImage = data,

@@ -13,7 +13,7 @@ namespace Rygg.Runes.Client.ViewModels
         public long Id { get => Data.Id; }
         public string Question { get => Data.Question; }
         public string Answer { get => Data.Answer; }
-        public Rune[] Runes { get => Data.Runes; }
+        public PlacedRune[] Runes { get => Data.Runes; }
         public byte[] AnnotatedImage { get => Data.AnnotatedImage; }
         protected Reading Data { get; }
         public ReadingsViewModel Parent { get; }

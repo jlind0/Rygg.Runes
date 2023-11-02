@@ -25,7 +25,11 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
-            
+            <telerik:ButtonToolbarItem Command="{Binding PickRandomRunes}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xf074;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding TakePhoto}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource camera}"
@@ -38,6 +42,13 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                     <FontImageSource Glyph="{x:StaticResource photo}"
                     FontFamily="FASolid"
                     Size="40" Color="Blue" />
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding PickYourOwnRunes}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource Glyph="&#xe208;"
+        FontFamily="FASolid"
+        Size="40" Color="Blue" />
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding ProcessImage}" IsVisible="{Binding IsReadyToProcess}">

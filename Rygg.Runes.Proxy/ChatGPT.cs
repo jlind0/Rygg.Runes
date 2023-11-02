@@ -37,7 +37,7 @@ namespace Rygg.Runes.Proxy
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return client;
         }
-        public async Task<string> GetReading(Rune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default)
+        public async Task<string> GetReading(PlacedRune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default)
         {
             try
             {

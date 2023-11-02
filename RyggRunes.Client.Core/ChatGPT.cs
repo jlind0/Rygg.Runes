@@ -15,7 +15,7 @@ namespace RyggRunes.Client.Core
 {
     public interface IChatGPTProxy
     {
-        Task<string> GetReading(Rune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default);
+        Task<string> GetReading(PlacedRune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default);
     }
     
     public class ChatGPTProxy : IChatGPTProxy
@@ -33,10 +33,10 @@ namespace RyggRunes.Client.Core
         {
             return new OpenAIAPI(new APIAuthentication(ApiKey, OrgId));
         }
-        public async Task<string> GetReading(Rune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default)
+        public async Task<string> GetReading(PlacedRune[] runes, SpreadTypes spreadType, string message = "Tell me the future", CancellationToken token = default)
         {
             var spread = SpreadFactory.Create(spreadType);
-            spread.Validate(runes, out Rune?[,] matrix);
+            spread.Validate(runes, out PlacedRune?[,] matrix);
             var sb = new System.Text.StringBuilder();
             sb.AppendLine($"The following runes were case using a spread of {spread.Name}:`");
             int j = 0, rowCount = matrix.GetLength(0), columnCount = matrix.GetLength(1);
@@ -45,7 +45,7 @@ namespace RyggRunes.Client.Core
                 int i = 0;
                 while(i < columnCount)
                 {
-                    Rune? rune = matrix[i, j];
+                    PlacedRune? rune = matrix[j, i];
                     if (rune != null)
                         sb.AppendLine($"{rune.Name} @Position: [{j}, {i}]");
                     i++;

@@ -35,50 +35,50 @@ namespace Rygg.Runes.Data.Core
         public long Id { get; set; }
         public string Question { get; set; } = null!;
         public string Answer { get; set; } = null!;
-        public Rune[] Runes { get; set; } = null!;
+        public PlacedRune[] Runes { get; set; } = null!;
         public byte[] AnnotatedImage { get; set; } = null!;
     }
     public class Rune
     {
-        public Rune(string data, Point? pt = null)
-        {
-            var d = data.Split(' ');
-            this.Name = d[0];
-            if (d.Length > 1)
-            {
-                this.Probability = double.Parse(d[1]);
-                this.X1 = int.Parse(d[2]);
-                this.Y1 = int.Parse(d[3]);
-                this.X2 = int.Parse(d[4]);
-                this.Y2 = int.Parse(d[5]);
-            }
-            else if (pt != null)
-            {
-                this.Probability = 1;
-                this.X1 = pt.Value.X;
-                this.X2 = pt.Value.X;
-                this.Y1 = pt.Value.Y;
-                this.Y2 = pt.Value.Y;
-            }
-            else
-                throw new InvalidDataException();
-        }
-        public override string ToString()
-        {
-            return $"{Name} {Probability} {X1} {Y1} {X2} {Y2}";
-        }
         public string Name { get; set; } = null!;
-        public double Probability { get; set; }
-        public int X1 { get; set; }
-        public int Y1 { get; set; }
-        public int X2 { get; set; }
-        public int Y2 { get; set; }
-        public PointF Center
+        private static Rune[]? alphabet = null;
+        public static Rune[] Alphabet
         {
             get
             {
-                return new PointF((X1 + X2) / 2.0f, (Y1 + Y2) / 2.0f);
+                if(alphabet == null)
+                {
+                    alphabet = new Rune[]{ 
+                    new Rune("ansuz"),
+                    new Rune("berkana"),
+                    new Rune("dagaz"),
+                    new Rune("ehwaz"),
+                    new Rune("eywas"),
+                    new Rune("fehu"),
+                    new Rune("gebo"),
+                    new Rune("hagall"),
+                    new Rune("ice"),
+                    new Rune("ingwaz"),
+                    new Rune("jera"),
+                    new Rune("kanu"),
+                    new Rune("lagu"),
+                    new Rune("mannaz"),
+                    new Rune("nyedis"),
+                    new Rune("othala"),
+                    new Rune("pertho"),
+                    new Rune("raido"),
+                    new Rune("sowuli"),
+                    new Rune("teiwaz"),
+                    new Rune("thurizas"),
+                    new Rune("urus"),
+                    new Rune("wunjo") };
+                }
+                return alphabet ?? throw new InvalidOperationException();
             }
+        }
+        public Rune(string name)
+        {
+            Name = name;
         }
         public string RunicCharachter
         {
@@ -114,5 +114,49 @@ namespace Rygg.Runes.Data.Core
                 }
             }
         }
+    }
+    public class PlacedRune : Rune
+    {
+        public PlacedRune(string data, Point? pt = null) :
+            base(data.Split(' ')[0])
+        {
+            var d = data.Split(' ');
+            if (d.Length > 1)
+            {
+                this.Probability = double.Parse(d[1]);
+                this.X1 = int.Parse(d[2]);
+                this.Y1 = int.Parse(d[3]);
+                this.X2 = int.Parse(d[4]);
+                this.Y2 = int.Parse(d[5]);
+            }
+            else if (pt != null)
+            {
+                this.Probability = 1;
+                this.X1 = pt.Value.X;
+                this.X2 = pt.Value.X;
+                this.Y1 = pt.Value.Y;
+                this.Y2 = pt.Value.Y;
+            }
+            else
+                throw new InvalidDataException();
+        }
+        public override string ToString()
+        {
+            return $"{Name} {Probability} {X1} {Y1} {X2} {Y2}";
+        }
+        
+        public double Probability { get; set; }
+        public int X1 { get; set; }
+        public int Y1 { get; set; }
+        public int X2 { get; set; }
+        public int Y2 { get; set; }
+        public PointF Center
+        {
+            get
+            {
+                return new PointF((X1 + X2) / 2.0f, (Y1 + Y2) / 2.0f);
+            }
+        }
+        
     }
 }

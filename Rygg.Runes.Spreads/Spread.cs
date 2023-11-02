@@ -39,13 +39,13 @@ namespace Rygg.Runes.Spreads
         public abstract SpreadTypes Type { get; }
         public abstract int RuneCount { get; }
         public abstract string Name { get; }
-        public virtual SpreadResult Validate(Rune[] runes, out Rune?[,] matrix)
+        public virtual SpreadResult Validate(PlacedRune[] runes, out PlacedRune?[,] matrix)
         {
             matrix = GenerateMatrix(runes, out SpreadResult result);
             return result;
         }
         public abstract bool[,] ValidMatrix { get; }
-        protected virtual SpreadResult ValidateCount(ref Rune[] runes)
+        protected virtual SpreadResult ValidateCount(ref PlacedRune[] runes)
         {
             runes = runes.Where(r => r.Probability >= 0.5d).ToArray();
             if (runes.Length > RuneCount)
@@ -54,26 +54,31 @@ namespace Rygg.Runes.Spreads
                 return SpreadResult.NotEnoughRunes;
             return SpreadResult.Fits;
         }
-        protected virtual IEnumerable<IGrouping<double, Rune>> GroupRunes(Rune[] runes, int closeness = 75)
+        protected virtual IEnumerable<IGrouping<double, PlacedRune>> GroupRunes(PlacedRune[] runes, double closeness = 75)
         {
             return runes.OrderBy(r => r.Probability).Take(RuneCount).GroupBy(r => Math.Round(r.Center.Y / closeness) * closeness).Where(g => g.Key > 10);
         }
-        protected Rune?[,] GenerateMatrix(Rune[] runes, out SpreadResult result)
-        {
+        protected PlacedRune?[,] GenerateMatrix(PlacedRune[] runes, out SpreadResult result)
+        { 
             var validMatrix = this.ValidMatrix;
             var rowCount = validMatrix.GetLength(0);
             var columnCount = validMatrix.GetLength(1);
             result = ValidateCount(ref runes);
-            int closeNess = 75;
-            IEnumerable<IGrouping<double, Rune>> groupedRunes;
-            do
+            IEnumerable<IGrouping<double, PlacedRune>> groupedRunes;
+            if (!runes.All(r => r.Center.Y < 12 && r.Center.X < 12))
             {
-                groupedRunes = GroupRunes(runes, closeNess);
-                closeNess += 25;
+                int closeNess = 75;
+
+                do
+                {
+                    groupedRunes = GroupRunes(runes, closeNess);
+                    closeNess += 25;
+                }
+                while (groupedRunes.Count() > rowCount);
             }
-            while (groupedRunes.Count() > rowCount);
-            
-            Rune[,] matrix = new Rune[rowCount, columnCount];
+            else groupedRunes = runes.GroupBy(r => (double)r.Center.Y);
+
+            PlacedRune[,] matrix = new PlacedRune[rowCount, columnCount];
            
             int row = 0;
             int runeCt = 0;

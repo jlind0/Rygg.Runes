@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Rygg.Runes.Data.Core;
 using System.Reactive;
+using System.Reactive.Joins;
+using System.Drawing;
 
 namespace Rygg.Runes.Client.ViewModels
 {
@@ -79,6 +81,8 @@ namespace Rygg.Runes.Client.ViewModels
         public ICommand PickPhoto { get; }
         protected IRunesProxy RunesProxy { get; }
         public ICommand ProcessImage { get; }
+        public ICommand PickRandomRunes { get; }
+        public ICommand PickYourOwnRunes { get; }
         public bool IsReadyToProcess
         {
             get => CapturedImageBytes != null;
@@ -101,6 +105,43 @@ namespace Rygg.Runes.Client.ViewModels
             TakePhoto = ReactiveCommand.CreateFromTask(DoTakePhoto);
             PickPhoto = ReactiveCommand.CreateFromTask(DoPickPhoto);
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
+            PickRandomRunes = ReactiveCommand.Create(DoPickRandomRunes);
+            PickYourOwnRunes = ReactiveCommand.Create(DoPickYourOwnRunes);
+        }
+        protected void DoPickYourOwnRunes()
+        {
+            Parent.RunesDetectedVM.SetRunesDetected(Array.Empty<PlacedRune>());
+            Parent.NavigateStep(StepNumber + 1);
+        }
+        protected void DoPickRandomRunes()
+        {
+            var runes = Rune.Alphabet;
+            var validMatrix = Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix;
+            int m = 0, rowCount = validMatrix.GetLength(0), columnCount = validMatrix.GetLength(1);
+            List<PlacedRune> lst = new List<PlacedRune>();
+            while(m < rowCount)
+            {
+                int n = 0;
+                while(n < columnCount)
+                {
+                    if (validMatrix[m, n])
+                    {
+
+                        Random rand = new Random(m + n);
+                        PlacedRune pr;
+                        do
+                        {
+                            pr = new PlacedRune(runes[rand.Next(0, runes.Length - 1)].Name, new Point((n + 1) * 75, (m + 1) * 75));
+                        }
+                        while(lst.Any(r => r.Name == pr.Name));
+                        lst.Add(pr);
+                    }
+                    n++;
+                }
+                m++;
+            }
+            Parent.RunesDetectedVM.SetRunesDetected(lst.ToArray());
+            Parent.NavigateStep(StepNumber + 1);
         }
         protected async Task DoTakePhoto(CancellationToken token = default)
         {
@@ -187,7 +228,7 @@ namespace Rygg.Runes.Client.ViewModels
                     if (resp != null)
                     {
                         AnnotatedImage = resp.AnnotatedImage;
-                        Parent.RunesDetectedVM.SetRunesDetected(resp.Annotations.Select(r => new Rune(r)).ToArray());
+                        Parent.RunesDetectedVM.SetRunesDetected(resp.Annotations.Select(r => new PlacedRune(r)).ToArray());
                         Parent.NavigateStep(Parent.RunesDetectedVM.StepNumber);
                         this.RaisePropertyChanged(nameof(IsReadyToProcess));
                     }
@@ -249,7 +290,18 @@ namespace Rygg.Runes.Client.ViewModels
     }
     public class RuneItem : ReactiveObject
     {
-        public Rune? Rune { get; private set; }
+        public RunicKeyboardViewModel KeyboardViewModel { get; }
+        private PlacedRune? rune;
+        public PlacedRune? Rune
+        {
+            get => rune;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref rune, value);
+                this.RaisePropertyChanged(nameof(RunicCharachter));
+                this.RaisePropertyChanged(nameof(RuneName));
+            }
+        }
         
         public string? RunicCharachter
         {
@@ -265,27 +317,23 @@ namespace Rygg.Runes.Client.ViewModels
             get => _isValidSlot;
         }
         public bool IsBlank { get => Rune == null; }
-        public ReactiveCommand<string, Unit> SetRune { get; }
         public int Row { get; }
         public int Column { get; }
         public RunesDetectedViewModel Parent { get; }
-        public RuneItem(Rune? rune, int row, int column, bool isValidSlot, RunesDetectedViewModel parent)
+
+        public RuneItem(PlacedRune? rune, int row, int column, bool isValidSlot, RunesDetectedViewModel parent)
         {
+            KeyboardViewModel = new RunicKeyboardViewModel(this);
             Row = row;
             Column = column;
             Rune = rune;
             _isValidSlot = isValidSlot;
-            SetRune = ReactiveCommand.Create<string>(DoSetRune);
             Parent = parent;
-        }
-        protected void DoSetRune(string rune)
-        {
-            //TODO: rethink rune
-            throw new NotImplementedException();
         }
     }
     public class RunesDetectedViewModel : RuneStepViewModel
     {
+        
         private string? answer;
         public string? Answer
         {
@@ -296,19 +344,29 @@ namespace Rygg.Runes.Client.ViewModels
         public RuneRow[]? RuneRows
         {
             get => runeRows;
-            set => this.RaiseAndSetIfChanged(ref runeRows, value);
+            set { 
+                this.RaiseAndSetIfChanged(ref runeRows, value);
+                this.RaisePropertyChanged(nameof(SelectedRunes));
+            }
         }
-        public Rune[] SelectedRunes
+        public PlacedRune[] SelectedRunes
         {
             get
             {
-                List<Rune> runes = new List<Rune>();
+                List<PlacedRune> runes = new List<PlacedRune>();
                 if (RuneRows != null)
                 {
                     foreach (var row in RuneRows)
                     {
                         foreach (var rune in row.Runes.Where(r => r.Rune != null))
-                            runes.Add(rune.Rune ?? throw new InvalidDataException());
+                        {
+                            var r = rune.Rune ?? throw new InvalidDataException();
+                            r.X1 = (1 + rune.Column) * 75;
+                            r.X2 = (1 + rune.Column) * 75;
+                            r.Y1 = (1 + rune.Row) * 75;
+                            r.Y2 = (1 + rune.Row) * 75;
+                            runes.Add(r);
+                        }
                     }
                 }
                 return runes.ToArray();
@@ -316,6 +374,7 @@ namespace Rygg.Runes.Client.ViewModels
         }
         protected IChatGPTProxy ChatProxy { get; }
         public ICommand AskTheFuture { get; }
+        
         protected async Task DoAskFuture(bool isFirst = true, CancellationToken token = default)
         {
             if (string.IsNullOrWhiteSpace(Parent.AskTheUniverseVM.Question))
@@ -356,11 +415,12 @@ namespace Rygg.Runes.Client.ViewModels
         {
             ChatProxy = chatProxy;
             AskTheFuture = ReactiveCommand.CreateFromTask<bool>(DoAskFuture);
+            
         }
-        public void SetRunesDetected(Rune[] runes)
+        public void SetRunesDetected(PlacedRune[] runes)
         {
             RuneRows = null;
-            Parent.SpreadsVM.SelectedSpread.Spread.Validate(runes, out Rune?[,] matrix);
+            Parent.SpreadsVM.SelectedSpread.Spread.Validate(runes, out PlacedRune?[,] matrix);
             List<RuneRow> rows = new();
             int j = 0, rowCount = matrix.GetLength(0), columnCount = matrix.GetLength(1);
             while(j < rowCount)
@@ -369,7 +429,7 @@ namespace Rygg.Runes.Client.ViewModels
                 int i = 0;
                 while(i < columnCount)
                 {
-                    Rune? rune = matrix[j, i];
+                    PlacedRune? rune = matrix[j, i];
                     items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i], this));
                     i++;
                 }
