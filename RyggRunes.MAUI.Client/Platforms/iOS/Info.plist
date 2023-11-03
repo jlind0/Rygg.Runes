@@ -31,7 +31,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>net.azurewebsites.ryggrunes-api</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.1.0</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to the camera to capture photos of runes that are cast.</string>
 	<key>NSMicrophoneUsageDescription</key>
