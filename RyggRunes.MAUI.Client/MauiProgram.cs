@@ -13,6 +13,8 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Markup;
 using Rygg.Runes.Data.Embedded;
+using System.Runtime.CompilerServices;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace RyggRunes.MAUI.Client
 {
@@ -22,6 +24,18 @@ namespace RyggRunes.MAUI.Client
         {
             var builder = MauiApp.CreateBuilder();
             builder
+                .ConfigureLifecycleEvents(events =>
+                {
+#if ANDROID
+                    events.AddAndroid(platform =>
+                    {
+                        platform.OnActivityResult((activity, rc, result, data) =>
+                        {
+                            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(rc, result, data);
+                        });
+                    });
+#endif
+                })
                 .UseTelerik().UseMauiCommunityToolkit().UseMauiCommunityToolkitMarkup()
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
@@ -46,6 +60,9 @@ namespace RyggRunes.MAUI.Client
 #elif IOS
                 .WithRedirectUri(builder.Configuration["AzureAD:iOSRedirectURI"])
                 .WithIosKeychainSecurityGroup(builder.Configuration["AzureAD:iOSKeyChainGroup"])
+#elif ANDROID
+                .WithParentActivityOrWindow(() => Platform.CurrentActivity)
+                .WithRedirectUri(builder.Configuration["AzureAD:AndroidRedirectURI"])
 #elif MACCATALYST
                 .WithRedirectUri(builder.Configuration["AzureAD:iOSRedirectURI"])
 #endif                

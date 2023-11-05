@@ -22,4 +22,8 @@
     <ProjectReference Include="..\RyggRunes.Client.Core\RyggRunes.Client.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\android\" />
+  </ItemGroup>
+
 </Project>

@@ -16,7 +16,7 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         </ResourceDictionary>
     </ContentView.Resources>
     <telerik:RadDockLayout>
-        <ScrollView telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}"
+        <ScrollView VerticalOptions="FillAndExpand" telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}"
             WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}">
             <CollectionView WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding Spreads}" SelectionMode="None">
                 <CollectionView.ItemsLayout>

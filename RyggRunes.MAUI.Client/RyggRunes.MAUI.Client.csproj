@@ -38,6 +38,10 @@
 	  <ApplicationVersion>14</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">

@@ -21,30 +21,28 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                 <Label>Question:</Label>
                 <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
             </HorizontalStackLayout>
-            <CollectionView HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 35}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
+            <CollectionView HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 60}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RuneRow">
-                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None" HeightRequest="35">
+                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None" HeightRequest="60">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="2"/>
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneItem">
                                     <AbsoluteLayout>
-                                        <Rectangle ZIndex="0" BackgroundColor="White" WidthRequest="30" HeightRequest="30">
-                                            <Rectangle.Triggers>
-                                                <DataTrigger TargetType="Rectangle" Binding="{Binding IsValidSlot}" Value="{x:Boolean True}">
-                                                    <Setter Property="BackgroundColor" Value="Black"/>
-                                                </DataTrigger>
-                                            </Rectangle.Triggers>
-                                        </Rectangle>
-                                        <telerik:RadButton IsVisible="{Binding IsValidSlot}" Background="Black" HeightRequest="30" Command="{Binding KeyboardViewModel.OpenOrClose}"
-                                                       WidthRequest="30" FontSize="25" ZIndex="1" Text="{Binding RunicCharachter}" 
+                                        <telerik:RadButton x:Name="btnRune" IsEnabled="{Binding IsValidSlot}" BackgroundColor="Black" HeightRequest="50" Command="{Binding KeyboardViewModel.OpenOrClose}"
+                                                       WidthRequest="50" Text="{Binding RunicCharachter}" 
                                                        TextColor="White">
-                                            <telerik:RadPopup.Popup>
+                                            <telerik:RadButton.Triggers>
+                                                <DataTrigger Binding="{Binding IsBlank}" TargetType="telerik:RadButton" Value="{x:Boolean True}">
+                                                    <Setter Property="BackgroundColor" Value="White"/>
+                                                </DataTrigger>
+                                            </telerik:RadButton.Triggers>
+                                        <telerik:RadPopup.Popup>
                                                 <telerik:RadPopup IsModal="True" IsOpen="{Binding KeyboardViewModel.IsOpen}">
                                                     <views:RunicKeyboardView BindingContext="{Binding KeyboardViewModel}"/>
                                                 </telerik:RadPopup>
