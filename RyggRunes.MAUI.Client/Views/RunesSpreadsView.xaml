@@ -16,21 +16,18 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         </ResourceDictionary>
     </ContentView.Resources>
     <telerik:RadDockLayout>
-        <ScrollView VerticalOptions="FillAndExpand" telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}"
-            WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}">
-            <CollectionView WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding Spreads}" SelectionMode="None">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
+        <telerik:RadItemsControl telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.74}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
+            <telerik:RadItemsControl.ItemTemplate>
                     <DataTemplate>
+                    <telerik:ItemView>
                         <views:RunesSpreadView ViewModel="{Binding}">
                         </views:RunesSpreadView>
+                    </telerik:ItemView>
+                        
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-        <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
+                </telerik:RadItemsControl.ItemTemplate>
+            </telerik:RadItemsControl>
+            <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
