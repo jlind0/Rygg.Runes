@@ -18,8 +18,8 @@
         <telerik:RadBusyIndicator.Resources>
             <ResourceDictionary>
                 <DataTemplate x:Key="AdminTemplate">
-                    <VerticalStackLayout>
-                        <Label Text="Coming Soon"/>
+                    <VerticalStackLayout x:DataType="vm:AdminViewModel">
+                        <telerik:RadButton Text="Logout" IsVisible="{Binding Parent.IsLoggedIn}" Command="{Binding Logout}"/>
                     </VerticalStackLayout>
                 </DataTemplate>
                 <DataTemplate x:Key="HistoryTemplate">

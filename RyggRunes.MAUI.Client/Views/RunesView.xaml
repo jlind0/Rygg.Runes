@@ -35,5 +35,5 @@ xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.
                 SelectSpreadTemplate="{StaticResource SelectSpreadTemplate}"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <telerik:RadItemsControl ItemsSource="{Binding CurrentStep}" ItemTemplate="{StaticResource RuneViewTemplateSelector}"/>
+    <telerik:RadItemsControl HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}" ItemsSource="{Binding CurrentStep}" ItemTemplate="{StaticResource RuneViewTemplateSelector}"/>
 </r:ReactiveContentView>

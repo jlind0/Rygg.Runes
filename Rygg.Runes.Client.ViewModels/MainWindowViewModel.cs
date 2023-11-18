@@ -80,7 +80,7 @@ namespace Rygg.Runes.Client.ViewModels
         public ReactiveCommand<ViewModes, Unit> SelectViewMode { get; }
         protected string ApiScope { get; }
         protected IPublicClientApplication ClientApplication { get; }
-        protected string SignInSignOutPolicy { get; }
+        public string SignInSignOutPolicy { get; }
         protected IReadingsDataAdapter ReadingsDataAdapter { get; }
         public HomeViewModel HomeVM { get; }
         public ReadingsViewModel ReadingsVM { get; }
@@ -92,7 +92,7 @@ namespace Rygg.Runes.Client.ViewModels
 
             HomeVM = new HomeViewModel(this, runesProxy, chatProxy, config, readingsDataAdapter);
             ReadingsVM = new ReadingsViewModel(this, readingsDataAdapter);
-            AdminVM = new AdminViewModel(this);
+            AdminVM = new AdminViewModel(this, clientApplication);
             selectedViewModel = new ReactiveObject[] { HomeVM };
             SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"] ?? throw new InvalidDataException();
             ClientApplication = clientApplication;
