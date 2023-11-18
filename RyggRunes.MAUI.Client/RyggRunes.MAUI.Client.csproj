@@ -33,10 +33,12 @@
 		<UserSecretsId>1a7239c0-7983-4363-8943-84d6d98e0aa0</UserSecretsId>
 		<PackageIcon>mysticalicon.png</PackageIcon>
 	</PropertyGroup>
-
+  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <UseInterpreter>true</UseInterpreter>
+  </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
@@ -47,7 +49,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <MtouchLink>None</MtouchLink>
 	  <MtouchUseLlvm>False</MtouchUseLlvm>
 	  <MtouchDebug>True</MtouchDebug>
@@ -58,21 +60,21 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
@@ -81,7 +83,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
 	  <MtouchLink>SdkOnly</MtouchLink>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchProfiling>True</MtouchProfiling>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
@@ -91,14 +93,14 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>16</ApplicationVersion>
+	  <ApplicationVersion>20</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
