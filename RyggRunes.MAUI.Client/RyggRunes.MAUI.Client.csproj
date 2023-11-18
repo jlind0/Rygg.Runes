@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
     <iOSMinimumVersion>16.1</iOSMinimumVersion>
     <MacCatalystMinimumVersion>16.1</MacCatalystMinimumVersion>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
 		<RootNamespace>RyggRunes.MAUI.Client</RootNamespace>
 		<UseMaui>true</UseMaui>
+    <MauiVersion>8.0.3</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
@@ -36,9 +37,9 @@
   <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
     <UseInterpreter>true</UseInterpreter>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
@@ -47,9 +48,9 @@
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <MtouchLink>None</MtouchLink>
 	  <MtouchUseLlvm>False</MtouchUseLlvm>
 	  <MtouchDebug>True</MtouchDebug>
@@ -58,32 +59,32 @@
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
 	  <MtouchLink>SdkOnly</MtouchLink>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchProfiling>True</MtouchProfiling>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
@@ -91,21 +92,21 @@
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Mystical Nexus</ApplicationTitle>
-	  <ApplicationVersion>20</ApplicationVersion>
+	  <ApplicationVersion>21</ApplicationVersion>
 	  <ApplicationId>net.azurewebsites.ryggrunes-api</ApplicationId>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 	  <ProvisioningType>manual</ProvisioningType>
 	  <CodesignKey>Apple Distribution: Jason Lind (SC8PAAC8A8)</CodesignKey>
 	  <CodesignProvision>Rygg Runes Detector App Store</CodesignProvision>
@@ -139,16 +140,20 @@
 	<ItemGroup>
 	  <EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+  </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.56.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.57.0" />
 		<PackageReference Include="ReactiveUI" Version="19.5.1" />
 		<PackageReference Include="ReactiveUI.MAUI" Version="19.5.1" />
-		<PackageReference Include="Telerik.UI.for.Maui" Version="6.2.0" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
+		<PackageReference Include="Telerik.UI.for.Maui" Version="6.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
