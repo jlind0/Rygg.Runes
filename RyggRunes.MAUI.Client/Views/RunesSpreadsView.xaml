@@ -23,10 +23,13 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
             <telerik:RadListView.ItemTemplate>
                     <DataTemplate>
                         <telerik:ListViewTemplateCell>
+                        <HorizontalStackLayout>
                             <telerik:ItemView>
                                 <views:RunesSpreadView ViewModel="{Binding}">
                                 </views:RunesSpreadView>
                             </telerik:ItemView>
+                            <Label BackgroundColor="WhiteSmoke" WidthRequest="20"/>
+                        </HorizontalStackLayout>
                         </telerik:ListViewTemplateCell>
 
                         
