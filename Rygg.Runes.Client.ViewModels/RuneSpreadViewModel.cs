@@ -47,7 +47,6 @@ namespace Rygg.Runes.Client.ViewModels
             Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this));
-            SelectedSpread = Spreads.First();
         }
         protected void DoSelectSpread(RuneSpreadViewModel spread)
         {
