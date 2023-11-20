@@ -17,12 +17,16 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <VerticalStackLayout telerik:RadDockLayout.Dock="Top"  HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.70}}">
             <views:RunesSpreadView ViewModel="{Binding Parent.SpreadsVM.SelectedSpread}" BindingContext="{Binding Parent.SpreadsVM.SelectedSpread}"/>
             <Image Aspect="AspectFit" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.5}}" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
-            <telerik:RadButton IsVisible="{Binding IsReadyToProcess}" x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
         <telerik:RadToolbar x:Name="toolbar" HeightRequest="85" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding ProcessImage}" IsVisible="{Binding IsReadyToProcess}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource Glyph="&#xe02b;" FontFamily="FASolid" Size="40" Color="Blue"/>
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding PickRandomRunes}">
@@ -49,11 +53,6 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                     <FontImageSource Glyph="&#xe208;"
         FontFamily="FASolid"
         Size="40" Color="Blue" />
-                </telerik:ButtonToolbarItem.ImageSource>
-            </telerik:ButtonToolbarItem>
-            <telerik:ButtonToolbarItem Command="{Binding ProcessImage}" IsVisible="{Binding IsReadyToProcess}">
-                <telerik:ButtonToolbarItem.ImageSource>
-                    <FontImageSource Glyph="&#xe02b;" FontFamily="FASolid" Size="40" Color="Blue"/>
                 </telerik:ButtonToolbarItem.ImageSource>
             </telerik:ButtonToolbarItem>
             <telerik:ButtonToolbarItem Command="{Binding Parent.StartOver}">

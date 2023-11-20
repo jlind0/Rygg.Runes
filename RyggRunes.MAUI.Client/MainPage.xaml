@@ -36,7 +36,7 @@
         </telerik:RadBusyIndicator.Resources>
         <telerik:RadDockLayout WidthRequest="{Binding ScreenWidth}" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
             
-            <VerticalStackLayout VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
+            <VerticalStackLayout MinimumWidthRequest="50" VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
                 <VerticalStackLayout >
                     <Label HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}"></Label>
                 </VerticalStackLayout>

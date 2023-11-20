@@ -19,7 +19,7 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
     </ContentView.Behaviors>
     <telerik:RadDockLayout>
-        <CollectionView telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
+        <CollectionView telerik:RadDockLayout.Dock="Top"  HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
             <CollectionView.ItemTemplate>
                     <DataTemplate>
                     <telerik:ItemView>
