@@ -19,8 +19,8 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
     </ContentView.Behaviors>
     <telerik:RadDockLayout>
-        <telerik:RadItemsControl telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
-            <telerik:RadItemsControl.ItemTemplate>
+        <CollectionView telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
+            <CollectionView.ItemTemplate>
                     <DataTemplate>
                     <telerik:ItemView>
                         <views:RunesSpreadView ViewModel="{Binding}">
@@ -28,8 +28,8 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                     </telerik:ItemView>
                         
                     </DataTemplate>
-                </telerik:RadItemsControl.ItemTemplate>
-            </telerik:RadItemsControl>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
