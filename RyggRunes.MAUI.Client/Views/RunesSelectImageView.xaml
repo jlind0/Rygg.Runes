@@ -14,10 +14,10 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <c:PixelScaler x:Key="PixelScaler"/>
     </ContentView.Resources>
     <telerik:RadDockLayout HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}">
-        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" IsVisible="{Binding IsReadyToProcess}">
-
+        <VerticalStackLayout telerik:RadDockLayout.Dock="Top"  HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.70}}">
+            <views:RunesSpreadView ViewModel="{Binding Parent.SpreadsVM.SelectedSpread}" BindingContext="{Binding Parent.SpreadsVM.SelectedSpread}"/>
             <Image Aspect="AspectFit" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.5}}" Source="{Binding CapturedImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
-            <telerik:RadButton x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
+            <telerik:RadButton IsVisible="{Binding IsReadyToProcess}" x:Name="processImage" Text="Detect Runes" Command="{Binding ProcessImage}"/>
         </VerticalStackLayout>
         <telerik:RadToolbar x:Name="toolbar" HeightRequest="85" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
