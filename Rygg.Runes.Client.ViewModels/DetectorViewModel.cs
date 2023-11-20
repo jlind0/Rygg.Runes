@@ -300,6 +300,7 @@ namespace Rygg.Runes.Client.ViewModels
                 this.RaiseAndSetIfChanged(ref rune, value);
                 this.RaisePropertyChanged(nameof(RunicCharachter));
                 this.RaisePropertyChanged(nameof(RuneName));
+                this.RaisePropertyChanged(nameof(IsBlank));
             }
         }
         
@@ -316,7 +317,11 @@ namespace Rygg.Runes.Client.ViewModels
         {
             get => _isValidSlot;
         }
-        public bool IsBlank { get => !IsValidSlot; }
+        public bool IsBlank { get => Rune == null; }
+        public bool NotAValidSlot
+        {
+            get => !IsValidSlot;
+        }
         public int Row { get; }
         public int Column { get; }
         public RunesDetectedViewModel Parent { get; }

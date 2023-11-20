@@ -38,7 +38,7 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                                                        WidthRequest="50" Text="{Binding RunicCharachter}" 
                                                        TextColor="White">
                                             <telerik:RadButton.Triggers>
-                                                <DataTrigger Binding="{Binding IsBlank}" TargetType="telerik:RadButton" Value="{x:Boolean True}">
+                                                <DataTrigger Binding="{Binding NotAValidSlot}" TargetType="telerik:RadButton" Value="{x:Boolean True}">
                                                     <Setter Property="BackgroundColor" Value="White"/>
                                                 </DataTrigger>
                                             </telerik:RadButton.Triggers>
