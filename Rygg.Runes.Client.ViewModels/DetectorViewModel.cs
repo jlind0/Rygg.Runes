@@ -316,7 +316,7 @@ namespace Rygg.Runes.Client.ViewModels
         {
             get => _isValidSlot;
         }
-        public bool IsBlank { get => Rune == null; }
+        public bool IsBlank { get => !IsValidSlot; }
         public int Row { get; }
         public int Column { get; }
         public RunesDetectedViewModel Parent { get; }
@@ -439,7 +439,11 @@ namespace Rygg.Runes.Client.ViewModels
                 while(i < columnCount)
                 {
                     PlacedRune? rune = matrix[j, i];
-                    items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i], this));
+                    if (Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i])
+                        items.Add(new RuneItem(rune, j, i, Parent.SpreadsVM.SelectedSpread.Spread.ValidMatrix[j, i], this));
+                    else
+                        items.Add(new RuneItem(null, j, i, false, this));
+
                     i++;
                 }
                 rows.Add(new RuneRow(items.ToArray(), this));
