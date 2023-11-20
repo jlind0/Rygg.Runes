@@ -355,6 +355,7 @@ namespace Rygg.Runes.Client.ViewModels
             set { 
                 this.RaiseAndSetIfChanged(ref runeRows, value);
                 this.RaisePropertyChanged(nameof(SelectedRunes));
+                this.RaisePropertyChanged(nameof(RowCount));
             }
         }
         public PlacedRune[] SelectedRunes
