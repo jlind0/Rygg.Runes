@@ -389,11 +389,17 @@ namespace Rygg.Runes.Client.ViewModels
             {
                 Parent.Parent.IsLoading = true;
                 Answer = null;
-                string answ = await ChatProxy.GetReading(Parent.RunesDetectedVM.SelectedRunes,
-                    Parent.SpreadsVM.SelectedSpread.Spread.Type,
-                    Parent.AskTheUniverseVM.Question, token);
-                Answer = answ.Replace("\\n", "<br>");
-                Parent.NavigateStep(5);
+                var result = Parent.SpreadsVM.SelectedSpread.Spread.Validate(SelectedRunes, out PlacedRune?[,] runes);
+                if (result == Spreads.SpreadResult.Fits)
+                {
+                    string answ = await ChatProxy.GetReading(Parent.RunesDetectedVM.SelectedRunes,
+                        Parent.SpreadsVM.SelectedSpread.Spread.Type,
+                        Parent.AskTheUniverseVM.Question, token);
+                    Answer = answ.Replace("\\n", "<br>");
+                    Parent.NavigateStep(5);
+                }
+                else
+                    await Parent.Parent.Alert.Handle("Rune placement is invalid.").GetAwaiter();
             }
             catch (MsalClientException ex)
             {
