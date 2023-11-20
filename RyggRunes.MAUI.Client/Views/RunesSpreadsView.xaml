@@ -19,17 +19,20 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
     </ContentView.Behaviors>
     <telerik:RadDockLayout>
-        <CollectionView telerik:RadDockLayout.Dock="Top"  HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
-            <CollectionView.ItemTemplate>
+        <telerik:RadListView telerik:RadDockLayout.Dock="Top" SelectionMode="None" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
+            <telerik:RadListView.ItemTemplate>
                     <DataTemplate>
-                    <telerik:ItemView>
-                        <views:RunesSpreadView ViewModel="{Binding}">
-                        </views:RunesSpreadView>
-                    </telerik:ItemView>
+                        <telerik:ListViewTemplateCell>
+                            <telerik:ItemView>
+                                <views:RunesSpreadView ViewModel="{Binding}">
+                                </views:RunesSpreadView>
+                            </telerik:ItemView>
+                        </telerik:ListViewTemplateCell>
+
                         
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </telerik:RadListView.ItemTemplate>
+            </telerik:RadListView>
             <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
