@@ -15,8 +15,11 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
             <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
+    <ContentView.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
+    </ContentView.Behaviors>
     <telerik:RadDockLayout>
-        <telerik:RadItemsControl telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.74}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
+        <telerik:RadItemsControl telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
             <telerik:RadItemsControl.ItemTemplate>
                     <DataTemplate>
                     <telerik:ItemView>

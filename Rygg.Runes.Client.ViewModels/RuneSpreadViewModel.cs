@@ -18,16 +18,22 @@ namespace Rygg.Runes.Client.ViewModels
     {
         public override int StepNumber => 2;
         public ObservableCollection<RuneSpreadViewModel> Spreads { get; } = new ObservableCollection<RuneSpreadViewModel>();
-        private RuneSpreadViewModel selectedSpread;
+        private RuneSpreadViewModel? selectedSpread;
         public ReactiveCommand<RuneSpreadViewModel, Unit> SelectSpread { get; }
-        public RuneSpreadViewModel SelectedSpread
+        public RuneSpreadViewModel? SelectedSpread
         {
             get => selectedSpread;
             set => this.RaiseAndSetIfChanged(ref selectedSpread, value);
         }
+        public ICommand Load { get; }
         public RuneSpreadsViewModel(RuneDetectorViewModel parent) :base(parent)
         {
             SelectSpread = ReactiveCommand.Create<RuneSpreadViewModel>(DoSelectSpread);
+            Load = ReactiveCommand.Create(DoLoad);
+        }
+        protected void DoLoad()
+        {
+            Spreads.Clear();
             Spreads.Add(new RuneSpreadViewModel<AstrologicalSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<ChoiceSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<SimpleLoveSpread>(this));
@@ -41,7 +47,7 @@ namespace Rygg.Runes.Client.ViewModels
             Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this));
             Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this));
-            selectedSpread = Spreads.First();
+            SelectedSpread = Spreads.First();
         }
         protected void DoSelectSpread(RuneSpreadViewModel spread)
         {
