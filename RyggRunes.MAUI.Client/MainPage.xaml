@@ -72,6 +72,7 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
+            <Label Text=" " telerik:RadDockLayout.Dock="Top" WidthRequest="1" HeightRequest="1" IsVisible="{Binding IsLoggedIn}"/>
         </telerik:RadDockLayout>
     </telerik:RadBusyIndicator>
     
