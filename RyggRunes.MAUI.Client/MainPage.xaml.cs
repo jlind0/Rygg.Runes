@@ -65,7 +65,11 @@ namespace RyggRunes.MAUI.Client
                 {
                     try
                     {
+#if !ANDROID
                         var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+#else
+                        var status = PermissionStatus.Granted;
+#endif
                         var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
                         interaction.SetOutput(status == PermissionStatus.Granted && cameraStatus == PermissionStatus.Granted);
                     }

@@ -26,19 +26,19 @@ namespace Rygg.Runes.Client.ViewModels
         {
             Parent = parent;
             Runes = Rune.Alphabet.Select(r => new RuneKeyViewModel(r, this)).ToArray();
-            SelectRune = ReactiveCommand.Create<Rune, PlacedRune>(DoSelectRune);
-            OpenOrClose = ReactiveCommand.Create(DoOpenOrClose);
+            SelectRune = ReactiveCommand.CreateFromTask<Rune, PlacedRune>(DoSelectRune);
+            OpenOrClose = ReactiveCommand.CreateFromTask(DoOpenOrClose);
         }
-        public PlacedRune DoSelectRune(Rune rune)
+        protected async Task<PlacedRune> DoSelectRune(Rune rune)
         {
             var r = new PlacedRune(rune.Name, new Point(Parent.Row, Parent.Column));
             Parent.Rune = r;
-            this.DoOpenOrClose();
+            await DoOpenOrClose();
             return r;
         }
-        public void DoOpenOrClose()
+        protected Task DoOpenOrClose()
         {
-            IsOpen = !IsOpen;
+            return Parent.Parent.Parent.Parent.Dispatcher.Dispatch(() => IsOpen = !IsOpen);
         }
     }
     public class RuneKeyViewModel : ReactiveObject
