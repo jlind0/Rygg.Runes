@@ -31,22 +31,28 @@ namespace Rygg.Runes.Client.ViewModels
             SelectSpread = ReactiveCommand.Create<RuneSpreadViewModel>(DoSelectSpread);
             Load = ReactiveCommand.Create(DoLoad);
         }
+        private readonly object sync = new object();
         protected void DoLoad()
         {
-            Spreads.Clear();
-            Spreads.Add(new RuneSpreadViewModel<AstrologicalSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<ChoiceSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<SimpleLoveSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<CurrentRelationshipSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<YesNoSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<CelticCrossSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<AnswerToWhySpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<NornsSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<AdviceSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<SevenGemsSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this));
-            Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this));
+            lock (sync)
+            {
+                if (Spreads.Count == 0)
+                {
+                    Spreads.Add(new RuneSpreadViewModel<AstrologicalSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<ChoiceSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<SimpleLoveSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<CurrentRelationshipSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<YesNoSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<CelticCrossSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<AnswerToWhySpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<NornsSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<AdviceSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<SevenGemsSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this));
+                    Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this));
+                }
+            }
         }
         protected void DoSelectSpread(RuneSpreadViewModel spread)
         {

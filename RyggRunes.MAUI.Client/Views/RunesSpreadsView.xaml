@@ -19,21 +19,17 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
         <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding Load}"/>
     </ContentView.Behaviors>
     <telerik:RadDockLayout>
-        <telerik:RadListView telerik:RadDockLayout.Dock="Top" SelectionMode="None" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.84}}" ItemsSource="{Binding Spreads}">
-            <telerik:RadListView.ItemTemplate>
-                    <DataTemplate>
-                        <telerik:ListViewTemplateCell>
-                            <telerik:ItemView>
-                                <views:RunesSpreadView ViewModel="{Binding}">
-                                </views:RunesSpreadView>
-                            </telerik:ItemView>
-                        </telerik:ListViewTemplateCell>
-
-                        
+        <ScrollView HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}"  telerik:RadDockLayout.Dock="Top">
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Spreads}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RuneSpreadsViewModel">
+                        <views:RunesSpreadView ViewModel="{Binding}"/>
                     </DataTemplate>
-                </telerik:RadListView.ItemTemplate>
-            </telerik:RadListView>
-            <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <telerik:RadToolbar HeightRequest="80" x:Name="toolbar" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
                 <telerik:ButtonToolbarItem.ImageSource>
                     <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
