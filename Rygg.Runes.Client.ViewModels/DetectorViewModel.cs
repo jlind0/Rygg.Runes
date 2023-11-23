@@ -83,7 +83,6 @@ namespace Rygg.Runes.Client.ViewModels
         public ICommand ProcessImage { get; }
         public ICommand PickRandomRunes { get; }
         public ICommand PickYourOwnRunes { get; }
-        public ICommand Focused { get; }
         public bool IsReadyToProcess
         {
             get => CapturedImageBytes != null;
@@ -108,11 +107,6 @@ namespace Rygg.Runes.Client.ViewModels
             ProcessImage = ReactiveCommand.CreateFromTask(DoProcessImage);
             PickRandomRunes = ReactiveCommand.Create(DoPickRandomRunes);
             PickYourOwnRunes = ReactiveCommand.Create(DoPickYourOwnRunes);
-            Focused = ReactiveCommand.Create(DoFocus);
-        }
-        protected void DoFocus()
-        {
-            this.RaisePropertyChanged(nameof(Parent.SpreadsVM.SelectedSpread));
         }
         protected void DoPickYourOwnRunes()
         {

@@ -36,9 +36,9 @@
         </telerik:RadBusyIndicator.Resources>
         <telerik:RadDockLayout WidthRequest="{Binding ScreenWidth}" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
 
-            <VerticalStackLayout MinimumWidthRequest="50" VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
-                <Label WidthRequest="50" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}"></Label>
-                <telerik:RadButton >
+            <VerticalStackLayout MinimumWidthRequest="70" VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
+                <Label WidthRequest="70" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}"></Label>
+                <telerik:RadButton x:Name="btnMenu" WidthRequest="65">
                     <telerik:RadButton.Triggers>
                         <EventTrigger Event="Clicked">
                             <c:PropertySetter Target="{x:Reference popup}" Property="IsOpen" Value="{x:Boolean True}"/>
