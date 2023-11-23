@@ -94,12 +94,15 @@ namespace Rygg.Runes.Client.ViewModels
                 if (isFirstLoad)
                     await ReadingsDataAdapter.CreateDatabase(token);
                 isFirstLoad = false;
-                Readings.Clear();
-                Count = await ReadingsDataAdapter.Count(SearchCondition, token);
-                await foreach(var reading in ReadingsDataAdapter.GetAll(PageSize, Page ,SearchCondition, token))
+                await Parent.Dispatcher.Dispatch(() => Readings.Clear());
+                await Task.Run(async () =>
                 {
-                    Readings.Add(new ReadingViewModel(this, reading));
-                }
+                    Count = await ReadingsDataAdapter.Count(SearchCondition, token);
+                    await foreach (var reading in ReadingsDataAdapter.GetAll(PageSize, Page, SearchCondition, token))
+                    {
+                        await Parent.Dispatcher.Dispatch(() => Readings.Add(new ReadingViewModel(this, reading)));
+                    }
+                });
                 this.RaisePropertyChanged(nameof(CanPageBack));
                 this.RaisePropertyChanged(nameof(CanPageForward));
             }

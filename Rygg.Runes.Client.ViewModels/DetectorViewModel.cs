@@ -507,7 +507,7 @@ namespace Rygg.Runes.Client.ViewModels
                 if (CanSave)
                 {
                     Parent.Parent.IsLoading = true;
-                    await ReadingsAdapter.Add(new Reading()
+                    await Task.Run(() => ReadingsAdapter.Add(new Reading()
                     {
                         AnnotatedImage = Parent.SelectImageVM.AnnotatedImage,
                         Runes = Parent.RunesDetectedVM.SelectedRunes,
@@ -515,7 +515,7 @@ namespace Rygg.Runes.Client.ViewModels
                         Answer = Parent.RunesDetectedVM.Answer ?? throw new InvalidDataException(),
                         SpreadType = Parent.SpreadsVM.SelectedSpread.Spread.Type
 
-                    }, token);
+                    }, token));
                     HasSaved = true;
                     this.RaisePropertyChanged(nameof(CanSave));
                     await Parent.Parent.ReadingsVM.DoLoad(token);
@@ -525,7 +525,11 @@ namespace Rygg.Runes.Client.ViewModels
             {
                 await Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
             }
-            Parent.Parent.IsLoading = false;
+            finally
+            {
+                Parent.Parent.IsLoading = false;
+
+            }
         }
         public override int StepNumber => 5;
     }
