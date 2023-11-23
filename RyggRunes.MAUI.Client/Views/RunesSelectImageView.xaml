@@ -8,11 +8,14 @@ xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.
 xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
 xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
 xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
-             x:Class="RyggRunes.MAUI.Client.Views.RunesSelectImageView">
+             x:Class="RyggRunes.MAUI.Client.Views.RunesSelectImageView" >
     <ContentView.Resources>
         <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
         <c:PixelScaler x:Key="PixelScaler"/>
     </ContentView.Resources>
+    <ContentView.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Focused" Command="{Binding Focused}"/>
+    </ContentView.Behaviors>
     <telerik:RadDockLayout HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}">
         <VerticalStackLayout telerik:RadDockLayout.Dock="Top"  HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.70}}">
             <views:RunesSpreadView ViewModel="{Binding Parent.SpreadsVM.SelectedSpread}" BindingContext="{Binding Parent.SpreadsVM.SelectedSpread}"/>
