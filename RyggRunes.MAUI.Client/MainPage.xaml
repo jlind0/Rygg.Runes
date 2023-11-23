@@ -10,7 +10,7 @@
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding ReadingsVM.Load}"/>
     </ContentPage.Behaviors>
-    <telerik:RadBusyIndicator x:Name="BusyIndicator"
+    <telerik:RadBusyIndicator x:Name="BusyIndicator" AnimationType="Animation1"
                             AnimationContentHeightRequest="100"
                             AnimationContentWidthRequest="100"
                             AnimationContentColor="#674bb2"
@@ -34,6 +34,9 @@
                 
             </ResourceDictionary>
         </telerik:RadBusyIndicator.Resources>
+        <telerik:RadBusyIndicator.BusyContent>
+            <Label Text="Loading..." HorizontalOptions="Center" VerticalOptions="Center"/>
+        </telerik:RadBusyIndicator.BusyContent>
         <telerik:RadDockLayout WidthRequest="{Binding ScreenWidth}" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
 
             <VerticalStackLayout MinimumWidthRequest="70" VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
@@ -58,7 +61,7 @@
                     </telerik:RadPopup.Popup>
                 </telerik:RadButton>
             </VerticalStackLayout>
-            <telerik:RadItemsControl telerik:RadDockLayout.Dock="Bottom" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" ItemsSource="{Binding SelectedViewModel}" ItemTemplate="{StaticResource SelectorView}"/>
+            <StackLayout telerik:RadDockLayout.Dock="Bottom" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" BindableLayout.ItemsSource="{Binding SelectedViewModel}" BindableLayout.ItemTemplateSelector="{StaticResource SelectorView}"/>
             <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
                 <Button.Triggers>
                     <DataTrigger Binding="{Binding IsLoggedIn}" TargetType="Button"  Value="True">

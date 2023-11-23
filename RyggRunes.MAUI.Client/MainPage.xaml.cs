@@ -9,6 +9,8 @@ using DynamicData.Binding;
 using System.Reactive.Disposables;
 using Microsoft.Maui.Devices;
 using CommunityToolkit.Maui.Markup;
+using RyggRunes.MAUI.Client.Converters;
+
 #if WINDOWS
 using Windows.Media.Capture;
 #endif
@@ -19,7 +21,7 @@ namespace RyggRunes.MAUI.Client
        
         public MainPage(MainWindowViewModel vm)
         {
-
+            vm.Dispatcher = new MauiDispatcherProxy(Dispatcher);
             ViewModel = vm;
             InitializeComponent();
             BindingContext = ViewModel;
@@ -32,9 +34,10 @@ namespace RyggRunes.MAUI.Client
 #endif
             this.WhenActivated(d =>
             {
-                
-                this.WhenPropertyChanged(p => p.Width).Subscribe(p => ViewModel.ScreenWidth = p.Value).DisposeWith(d);
-                this.WhenPropertyChanged(p => p.Height).Subscribe(p => ViewModel.ScreenHeight = p.Value).DisposeWith(d);
+                this.WhenPropertyChanged(p => p.Width).Subscribe(p => 
+                    ViewModel.ScreenWidth = p.Value).DisposeWith(d);
+                this.WhenPropertyChanged(p => p.Height).Subscribe(p => 
+                    ViewModel.ScreenHeight = p.Value).DisposeWith(d);
                 ViewModel.Alert.RegisterHandler(async interaction =>
                 {
                     await DisplayAlert("Alert", interaction.Input, "OK");

@@ -200,38 +200,47 @@ namespace Rygg.Runes.Client.ViewModels
                 if (await Parent.Parent.HasPermissions.Handle("permissions").GetAwaiter())
                 {
                     Reset();
-                    using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
+                    await Task.Run(() =>
                     {
-                        int sourceWidth = sourceBitmap.Width;
-                        int sourceHeight = sourceBitmap.Height;
-                        var targetWidth = (sourceWidth > 512 ? 512 : sourceWidth);
-                        // Calculate the aspect ratio to maintain the original image's proportions
-                        float aspectRatio = (float)sourceWidth / sourceHeight;
-                        var targetHeight = (int)(targetWidth / aspectRatio);
-                        if (targetHeight > 512)
+                        using (SKBitmap sourceBitmap = SKBitmap.Decode(fileBytes))
                         {
-                            targetWidth = (int)(aspectRatio * 512);
-                            targetHeight = 512;
-                        }
-                        using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
-                        {
-                            using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
+                            int sourceWidth = sourceBitmap.Width;
+                            int sourceHeight = sourceBitmap.Height;
+                            var targetWidth = (sourceWidth > 512 ? 512 : sourceWidth);
+                            // Calculate the aspect ratio to maintain the original image's proportions
+                            float aspectRatio = (float)sourceWidth / sourceHeight;
+                            var targetHeight = (int)(targetWidth / aspectRatio);
+                            if (targetHeight > 512)
                             {
-                                using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
+                                targetWidth = (int)(aspectRatio * 512);
+                                targetHeight = 512;
+                            }
+                            using (SKBitmap resizedBitmap = sourceBitmap.Resize(new SKImageInfo(targetWidth, targetHeight), SKFilterQuality.Medium))
+                            {
+                                using (SKImage compressedImage = SKImage.FromBitmap(resizedBitmap))
                                 {
-                                    fileBytes = compressedData.ToArray();
+                                    using (SKData compressedData = compressedImage.Encode(SKEncodedImageFormat.Jpeg, 100))
+                                    {
+                                        fileBytes = compressedData.ToArray();
+                                    }
                                 }
                             }
                         }
-                    }
-                    var resp = await RunesProxy.ProcessImage(fileBytes, token);
-                    if (resp != null)
+                    });
+                    await Task.Run(async () =>
                     {
-                        AnnotatedImage = resp.AnnotatedImage;
-                        Parent.RunesDetectedVM.SetRunesDetected(resp.Annotations.Select(r => new PlacedRune(r)).ToArray());
-                        Parent.NavigateStep(Parent.RunesDetectedVM.StepNumber);
-                        this.RaisePropertyChanged(nameof(IsReadyToProcess));
-                    }
+                        var resp = await RunesProxy.ProcessImage(fileBytes, token);
+                        if (resp != null)
+                        {
+                            await Parent.Parent.Dispatcher.Dispatch(() =>
+                            {
+                                AnnotatedImage = resp.AnnotatedImage;
+                                Parent.RunesDetectedVM.SetRunesDetected(resp.Annotations.Select(r => new PlacedRune(r)).ToArray());
+                                Parent.NavigateStep(Parent.RunesDetectedVM.StepNumber);
+                                this.RaisePropertyChanged(nameof(IsReadyToProcess));
+                            });
+                        }
+                    });
                 }
                 else
                     await Parent.Parent.Alert.Handle("Permissions required").GetAwaiter();
@@ -394,18 +403,21 @@ namespace Rygg.Runes.Client.ViewModels
             try
             {
                 Parent.Parent.IsLoading = true;
-                Answer = null;
-                var result = Parent.SpreadsVM.SelectedSpread.Spread.Validate(SelectedRunes, out PlacedRune?[,] runes);
-                if (result == Spreads.SpreadResult.Fits)
-                {
-                    string answ = await ChatProxy.GetReading(Parent.RunesDetectedVM.SelectedRunes,
-                        Parent.SpreadsVM.SelectedSpread.Spread.Type,
-                        Parent.AskTheUniverseVM.Question, token);
-                    Answer = answ.Replace("\\n", "<br>");
-                    Parent.NavigateStep(5);
-                }
-                else
-                    await Parent.Parent.Alert.Handle("Rune placement is invalid.").GetAwaiter();
+                await Task.Run(async () => {
+                    await Parent.Parent.Dispatcher.Dispatch(() => Answer = null);
+                    var result = Parent.SpreadsVM.SelectedSpread.Spread.Validate(SelectedRunes, out PlacedRune?[,] runes);
+                    if (result == Spreads.SpreadResult.Fits)
+                    {
+                        string answ = await ChatProxy.GetReading(Parent.RunesDetectedVM.SelectedRunes,
+                            Parent.SpreadsVM.SelectedSpread.Spread.Type,
+                            Parent.AskTheUniverseVM.Question, token);
+                        await Parent.Parent.Dispatcher.Dispatch(() => Answer = answ.Replace("\\n", "<br>"));
+                        await Parent.Parent.Dispatcher.Dispatch(() => Parent.NavigateStep(5));
+                    }
+                    else
+                        await Parent.Parent.Alert.Handle("Rune placement is invalid.").GetAwaiter();
+                });
+                
             }
             catch (MsalClientException ex)
             {

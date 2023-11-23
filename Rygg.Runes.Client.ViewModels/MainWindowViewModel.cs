@@ -29,6 +29,7 @@ namespace Rygg.Runes.Client.ViewModels
     }
     public class MainWindowViewModel : ReactiveObject
     {
+        public IDispatcherProxy Dispatcher { get; set; } = null!;
         private readonly Interaction<string, bool> hasPermissions;
         private readonly Interaction<string, bool> alert;
         private readonly Interaction<string, Stream> openFile;

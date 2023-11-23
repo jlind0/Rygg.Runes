@@ -18,7 +18,7 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
     <telerik:RadDockLayout>
         <telerik:RadScrollView telerik:RadDockLayout.Dock="Top"
             HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.72}}">
-            <Label TextType="Html" HeightRequest="100000" WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.65}}" FontSize="30" Text="{Binding Parent.RunesDetectedVM.Answer}" LineBreakMode="WordWrap"/>
+            <Label TextType="Html" Padding="20" FontSize="20" Text="{Binding Parent.RunesDetectedVM.Answer}" LineBreakMode="WordWrap"/>
         </telerik:RadScrollView>
         <telerik:RadToolbar x:Name="toolbar" HeightRequest="85" telerik:RadDockLayout.Dock="Bottom">
             <telerik:ButtonToolbarItem Command="{Binding MoveBack}">

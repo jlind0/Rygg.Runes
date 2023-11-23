@@ -29,29 +29,29 @@ namespace Rygg.Runes.Client.ViewModels
         public RuneSpreadsViewModel(RuneDetectorViewModel parent) : base(parent)
         {
             SelectSpread = ReactiveCommand.Create<RuneSpreadViewModel>(DoSelectSpread);
-            Load = ReactiveCommand.Create(DoLoad);
+            Load = ReactiveCommand.CreateFromTask(DoLoad);
         }
-        private readonly object sync = new object();
-        protected void DoLoad()
+        protected async Task DoLoad()
         {
-            lock (sync)
+            if (Spreads.Count == 0)
             {
-                if (Spreads.Count == 0)
+                await Task.Run(async () =>
                 {
-                    Spreads.Add(new RuneSpreadViewModel<AstrologicalSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<ChoiceSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<SimpleLoveSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<CurrentRelationshipSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<YesNoSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<CelticCrossSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<AnswerToWhySpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<NornsSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<AdviceSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<SevenGemsSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this));
-                    Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this));
-                }
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<AstrologicalSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<ChoiceSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<SimpleLoveSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<CurrentRelationshipSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<YesNoSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<CelticCrossSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<AnswerToWhySpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<NornsSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<AdviceSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<SevenGemsSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<FiveCardSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<DecisonSpread>(this)));
+                    await Parent.Parent.Dispatcher.Dispatch(() => Spreads.Add(new RuneSpreadViewModel<FourCardSpread>(this)));
+                });
+                
             }
         }
         protected void DoSelectSpread(RuneSpreadViewModel spread)

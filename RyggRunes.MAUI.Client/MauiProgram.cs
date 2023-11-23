@@ -104,7 +104,7 @@ namespace RyggRunes.MAUI.Client
             builder.Services.AddSingleton<IReadingsDataAdapter>(new ReadingsDataAdapter(FileSystem.AppDataDirectory));
             builder.Services.AddScoped<MainWindowViewModel>();
             builder.Services.TryAddTransient<MainPage>();
-            
+
             return builder.Build();
         }
     }

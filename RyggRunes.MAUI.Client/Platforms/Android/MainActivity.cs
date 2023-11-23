@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using AndroidX.AppCompat.App;
 using Microsoft.Identity.Client;
 
 namespace RyggRunes.MAUI.Client
@@ -10,6 +11,11 @@ namespace RyggRunes.MAUI.Client
     
     public class MainActivity : MauiAppCompatActivity
     {
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
+            base.OnCreate(savedInstanceState);
+        }
     }
     [Activity(Exported = true)]
     [IntentFilter(new[] { Intent.ActionView },
@@ -18,6 +24,6 @@ namespace RyggRunes.MAUI.Client
         DataScheme = "msal459171c1-bdde-4417-8c55-60e7f7807ba5")]
     public class MsalActivity : BrowserTabActivity
     {
-
+        
     }
 }

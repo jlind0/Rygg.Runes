@@ -19,7 +19,7 @@
     <telerik:RadDockLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}">
         <HorizontalStackLayout HeightRequest="50" telerik:RadDockLayout.Dock="Top">
             <Editor Text="{Binding SearchCondition}" WidthRequest="200"></Editor>
-            <telerik:RadButton x:Name="btnSearch">
+            <telerik:RadButton x:Name="btnSearch" Command="{Binding Search}">
                 <telerik:RadButton.ImageSource>
                     <FontImageSource Glyph="{x:StaticResource search}"
                         FontFamily="FASolid"

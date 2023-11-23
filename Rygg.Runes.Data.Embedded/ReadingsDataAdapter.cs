@@ -130,7 +130,7 @@ namespace Rygg.Runes.Data.Embedded
                 {
                     if (!string.IsNullOrWhiteSpace(searchCondition))
                     {
-                        cmd.CommandText = "SELECT rowid Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition LIMIT @PageSize OFFSET @Offset;";
+                        cmd.CommandText = "SELECT rowid, Question, Answer, Runes FROM ReadingsFTS WHERE ReadingsFTS MATCH @SearchCondition LIMIT @PageSize OFFSET @Offset;";
                         cmd.Parameters.AddWithValue("@SearchCondition", searchCondition);
 
                     }
