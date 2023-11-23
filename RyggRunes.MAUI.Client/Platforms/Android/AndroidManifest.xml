@@ -3,9 +3,14 @@
 	<application android:allowBackup="true" android:supportsRtl="true" android:label="Divine Advice"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<queries>
 		<intent>
 			<action android:name="android.support.customtabs.action.CustomTabsService" />
 		</intent>
 	</queries>
+	<uses-sdk />
 </manifest>
