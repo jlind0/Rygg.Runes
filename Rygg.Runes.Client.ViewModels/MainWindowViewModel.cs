@@ -122,6 +122,7 @@ namespace Rygg.Runes.Client.ViewModels
                 ViewModes.Home => new ReactiveObject[] { HomeVM },
                 _ => throw new NotImplementedException(),
             };
+            this.RaisePropertyChanged(nameof(SelectedViewModel));
         }
        
         public async Task DoLogin(bool forceInteractive = false, CancellationToken token = default)
