@@ -32,7 +32,7 @@ namespace Rygg.Runes.Client.ViewModels
         protected async Task<PlacedRune> DoSelectRune(Rune rune)
         {
             var r = new PlacedRune(rune.Name, new Point(Parent.Row, Parent.Column));
-            Parent.Rune = r;
+            await Parent.Parent.Parent.Parent.Dispatcher.Dispatch(() => Parent.Rune = r);
             await DoOpenOrClose();
             return r;
         }
