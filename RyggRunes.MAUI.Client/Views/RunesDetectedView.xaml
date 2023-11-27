@@ -21,17 +21,11 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                 <Label>Question:</Label>
                 <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
             </HorizontalStackLayout>
-            <CollectionView HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 60}, Mode=OneWay}" ItemsSource="{Binding RuneRows}" SelectionMode="None">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding RuneRows}" HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 60}, Mode=OneWay}">
+                <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:RuneRow">
-                        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None" HeightRequest="60">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="2"/>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Runes}" HeightRequest="60">
+                            <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RuneItem">
                                     <AbsoluteLayout>
                                         <telerik:RadButton x:Name="btnRune" IsEnabled="{Binding IsValidSlot}" BackgroundColor="Black" HeightRequest="50" Command="{Binding KeyboardViewModel.OpenOrClose}"
@@ -50,11 +44,11 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                                         </telerik:RadButton>
                                     </AbsoluteLayout>
                                 </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
         </VerticalStackLayout>
         
         <telerik:RadToolbar x:Name="toolbar" HeightRequest="85" telerik:RadDockLayout.Dock="Bottom">
