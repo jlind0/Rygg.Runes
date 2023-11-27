@@ -16,20 +16,18 @@
             <c:PixelScaler x:Key="PixelScaler"/>
         </ResourceDictionary>
     </ContentView.Resources>
-    <telerik:RadWrapLayout>
-        <CollectionView ItemsSource="{Binding Runes}" SelectionMode="None" 
-            WidthRequest="{Binding Parent.Parent.Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}"
-            HeightRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Horizontal" Span="6"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
+    <ScrollView WidthRequest="{Binding Parent.Parent.Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}"
+HeightRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}">
+        <telerik:RadWrapLayout BindableLayout.ItemsSource="{Binding Runes}"
+    >
+            <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="vm:RuneKeyViewModel">
                     <telerik:RadButton Command="{Binding Parent.SelectRune}" CommandParameter="{Binding Rune}"
-                        Text="{Binding Rune.RunicCharachter}" WidthRequest="50" HeightRequest="50" BorderThickness="5" TextColor="Black" 
-                        BorderColor="Black"/>
+                Text="{Binding Rune.RunicCharachter}" WidthRequest="50" HeightRequest="50" BorderThickness="5" TextColor="Black" 
+                BorderColor="Black"/>
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </telerik:RadWrapLayout>
+            </BindableLayout.ItemTemplate>
+        </telerik:RadWrapLayout>
+    </ScrollView>
+    
 </r:ReactiveContentView>
