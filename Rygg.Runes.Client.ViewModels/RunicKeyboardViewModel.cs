@@ -7,6 +7,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Drawing;
+using System.Reactive.Linq;
 
 namespace Rygg.Runes.Client.ViewModels
 {
@@ -36,9 +37,16 @@ namespace Rygg.Runes.Client.ViewModels
             await DoOpenOrClose();
             return r;
         }
-        protected Task DoOpenOrClose()
+        protected async Task DoOpenOrClose()
         {
-            return Parent.Parent.Parent.Parent.Dispatcher.Dispatch(() => IsOpen = !IsOpen);
+            try
+            {
+                await Parent.Parent.Parent.Parent.Dispatcher.Dispatch(() => IsOpen = !IsOpen);
+            }
+            catch(Exception ex)
+            {
+                await Parent.Parent.Parent.Parent.Alert.Handle(ex.Message).GetAwaiter();
+            }
         }
     }
     public class RuneKeyViewModel : ReactiveObject
