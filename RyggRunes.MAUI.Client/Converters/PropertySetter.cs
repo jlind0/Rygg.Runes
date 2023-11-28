@@ -8,12 +8,12 @@ using Telerik.Maui.Controls;
 
 namespace RyggRunes.MAUI.Client.Converters
 {
-    public class PropertySetter : TriggerAction<RadButton>
+    public class PropertySetter : TriggerAction<Button>
     {
         public object Target { get; set; }
         public string Property { get; set; }
         public object Value { get; set; }
-        protected override void Invoke(RadButton sender)
+        protected override void Invoke(Button sender)
         {
             if (Target != null && !string.IsNullOrEmpty(Property))
             {

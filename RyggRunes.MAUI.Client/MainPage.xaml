@@ -41,15 +41,15 @@
 
             <VerticalStackLayout MinimumWidthRequest="70" VerticalOptions="End"  HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.87}}" IsVisible="{Binding IsLoggedIn}" telerik:RadDockLayout.Dock="Left">
                 <Label WidthRequest="70" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}"></Label>
-                <telerik:RadButton x:Name="btnMenu" WidthRequest="65">
-                    <telerik:RadButton.Triggers>
+                <Button x:Name="btnMenu" FontFamily="FASolid" WidthRequest="65" BackgroundColor="White">
+                    <Button.Triggers>
                         <EventTrigger Event="Clicked">
                             <c:PropertySetter Target="{x:Reference popup}" Property="IsOpen" Value="{x:Boolean True}"/>
                         </EventTrigger>
-                    </telerik:RadButton.Triggers>
-                    <telerik:RadButton.ImageSource>
+                    </Button.Triggers>
+                    <Button.ImageSource>
                         <FontImageSource FontFamily="FASolid" Color="Black" Glyph="&#xf111;" Size="30"/>
-                    </telerik:RadButton.ImageSource>
+                    </Button.ImageSource>
                     <telerik:RadPopup.Popup>
                         <telerik:RadPopup x:Name="popup" Placement="Bottom">
                             <VerticalStackLayout>
@@ -59,7 +59,8 @@
                             </VerticalStackLayout>
                         </telerik:RadPopup>
                     </telerik:RadPopup.Popup>
-                </telerik:RadButton>
+                </Button>
+                
             </VerticalStackLayout>
             <StackLayout telerik:RadDockLayout.Dock="Bottom" HeightRequest="{Binding ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.95}}" IsVisible="{Binding IsLoggedIn}" BindableLayout.ItemsSource="{Binding SelectedViewModel}" BindableLayout.ItemTemplateSelector="{StaticResource SelectorView}"/>
             <Button Text="Login" WidthRequest="150" HeightRequest="50" Command="{Binding Login}" telerik:RadDockLayout.Dock="Top">
@@ -72,7 +73,6 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Label Text=" " telerik:RadDockLayout.Dock="Top" WidthRequest="1" HeightRequest="1" IsVisible="{Binding IsLoggedIn}"/>
         </telerik:RadDockLayout>
     </telerik:RadBusyIndicator>
     

@@ -37,8 +37,8 @@ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
                                                 </DataTrigger>
                                             </telerik:RadButton.Triggers>
                                         <telerik:RadPopup.Popup>
-                                                <telerik:RadPopup IsModal="True" IsOpen="{Binding KeyboardViewModel.IsOpen}">
-                                                    <views:RunicKeyboardView BindingContext="{Binding KeyboardViewModel}"/>
+                                                <telerik:RadPopup Placement="Center" IsModal="True" IsOpen="{Binding KeyboardViewModel.IsOpen}">
+                                                    <views:RunicKeyboardView ViewModel="{Binding KeyboardViewModel}" BindingContext="{Binding KeyboardViewModel}"/>
                                                 </telerik:RadPopup>
                                             </telerik:RadPopup.Popup>
                                         </telerik:RadButton>
