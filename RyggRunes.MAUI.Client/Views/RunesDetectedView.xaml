@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView x:TypeArguments="vm:RunesDetectedViewModel" x:DataType="vm:RunesDetectedViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                          xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
+xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
+             x:Class="RyggRunes.MAUI.Client.Views.RunesDetectedView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <telerik:RadDockLayout>
+        <VerticalStackLayout telerik:RadDockLayout.Dock="Top" HeightRequest="{Binding Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.7}}">
+            <HorizontalStackLayout>
+                <Label>Question:</Label>
+                <Label WidthRequest="{Binding Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler},ConverterParameter={x:Double 0.9}, Mode=OneWay}" Text="{Binding Parent.AskTheUniverseVM.Question}" LineBreakMode="WordWrap"/>
+            </HorizontalStackLayout>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding RuneRows}" HeightRequest="{Binding RowCount, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 60}, Mode=OneWay}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RuneRow">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Runes}" HeightRequest="60">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:RuneItem">
+                                    <AbsoluteLayout>
+                                        <telerik:RadButton x:Name="btnRune" IsEnabled="{Binding IsValidSlot}" BackgroundColor="Black" HeightRequest="50" Command="{Binding KeyboardViewModel.OpenOrClose}"
+                                                       WidthRequest="50" Text="{Binding RunicCharachter}" 
+                                                       TextColor="White">
+                                            <telerik:RadButton.Triggers>
+                                                <DataTrigger Binding="{Binding NotAValidSlot}" TargetType="telerik:RadButton" Value="{x:Boolean True}">
+                                                    <Setter Property="BackgroundColor" Value="White"/>
+                                                </DataTrigger>
+                                            </telerik:RadButton.Triggers>
+                                        <telerik:RadPopup.Popup>
+                                                <telerik:RadPopup Placement="Center" IsModal="True" IsOpen="{Binding KeyboardViewModel.IsOpen}">
+                                                    <views:RunicKeyboardView ViewModel="{Binding KeyboardViewModel}" BindingContext="{Binding KeyboardViewModel}"/>
+                                                </telerik:RadPopup>
+                                            </telerik:RadPopup.Popup>
+                                        </telerik:RadButton>
+                                    </AbsoluteLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+        
+        <telerik:RadToolbar x:Name="toolbar" HeightRequest="85" telerik:RadDockLayout.Dock="Bottom">
+            <telerik:ButtonToolbarItem Command="{Binding MoveBack}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xf2ea;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding Parent.StartOver}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xf895;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+            <telerik:ButtonToolbarItem Command="{Binding AskTheFuture}">
+                <telerik:ButtonToolbarItem.ImageSource>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#xe1e7;" Size="40" Color="Blue"/>
+                </telerik:ButtonToolbarItem.ImageSource>
+            </telerik:ButtonToolbarItem>
+        </telerik:RadToolbar>
+    </telerik:RadDockLayout>
+</r:ReactiveContentView>

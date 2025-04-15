@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView x:TypeArguments="vm:RunicKeyboardViewModel" x:DataType="vm:RunicKeyboardViewModel" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+                xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+                xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+                xmlns:d="clr-namespace:Rygg.Runes.Data.Embedded;assembly=Rygg.Runes.Data.Embedded"
+                xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
+                xmlns:dc="clr-namespace:Rygg.Runes.Data.Core;assembly=Rygg.Runes.Data.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RyggRunes.MAUI.Client.Views.RunicKeyboardView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ScrollView WidthRequest="{Binding Parent.Parent.Parent.Parent.ScreenWidth, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}"
+HeightRequest="{Binding Parent.Parent.Parent.Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.4}}">
+        <telerik:RadWrapLayout BindableLayout.ItemsSource="{Binding Runes}"
+    >
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="vm:RuneKeyViewModel">
+                    <telerik:RadButton Command="{Binding Parent.SelectRune}" CommandParameter="{Binding Rune}"
+                Text="{Binding Rune.RunicCharachter}" WidthRequest="50" HeightRequest="50" BorderThickness="5" TextColor="Black" 
+                BorderColor="Black"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </telerik:RadWrapLayout>
+    </ScrollView>
+    
+</r:ReactiveContentView>

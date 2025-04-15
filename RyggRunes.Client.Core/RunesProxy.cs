@@ -10,6 +10,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Reflection.Emit;
+using Microsoft.Identity.Client;
 
 namespace RyggRunes.Client.Core
 {
@@ -35,11 +36,16 @@ namespace RyggRunes.Client.Core
             public string[] annotations { get; set; }
             public string annotatedImage { get; set; }
         }
+        protected string ApiScope { get; }
+        protected string SignInSignOutPolicy { get; }
         protected Uri BaseUri { get; }
-        public RunesProxy(IConfiguration config)
+        protected IPublicClientApplication ClientApplication { get; }
+        public RunesProxy(IConfiguration config, IPublicClientApplication clientApplication)
         {
             BaseUri = new Uri(config["RunesAPI:BaseUri"]);
-
+            ClientApplication = clientApplication;
+            ApiScope = config["MSGraphApi:Scopes"] ?? throw new InvalidDataException();
+            SignInSignOutPolicy = config["AzureAD:SignUpSignInPolicyId"] ?? throw new InvalidDataException();
         }
         protected HttpClient Create()
         {
@@ -54,9 +60,14 @@ namespace RyggRunes.Client.Core
             try
             {
                 RunesPostResponse? resp = null;
+                var accounts = (await ClientApplication.GetAccountsAsync(SignInSignOutPolicy)).ToList();
+
+                var result = await ClientApplication.AcquireTokenSilent(new string[] { ApiScope }, accounts.First()).WithForceRefresh(true).ExecuteAsync(token);
                 using (var client = Create())
                 {
-                    using(var content = new ByteArrayContent(imageBytes))
+                    client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                    using (var content = new ByteArrayContent(imageBytes))
                     {
                         content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                         var response = await client.PostAsync("process_image/", content, token);

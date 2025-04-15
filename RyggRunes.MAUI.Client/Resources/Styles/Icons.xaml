@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <x:String x:Key="camera">&#xf030;</x:String>
+    <x:String x:Key="photo">&#xf03e;</x:String>
+    <x:String x:Key="save">&#xf56e;</x:String>
+    <x:String x:Key="search">&#xf002;</x:String>
+    <x:String x:Key="crystalBall">&#xe362;</x:String>
+</ResourceDictionary>

@@ -7,3 +7,8 @@ torch
 torchvision
 gunicorn
 whitenoise
+authlib
+requests
+pyjwt
+python-decouple
+azure-storage-blob

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView x:TypeArguments="vm:RuneDetectorViewModel" x:DataType="vm:RuneDetectorViewModel" ViewModel="{Binding}" xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+ xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
+             x:Class="RyggRunes.MAUI.Client.Views.RunesView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="AskTheUniverseTemplate">
+                <views:RuneAskTheUniverse ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="RunesReadingTemplate">
+                <views:RuneReadingView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="DetectRunesTemplate">
+                <views:RunesDetectedView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="SelectImageTemplate">
+                <views:RunesSelectImageView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="SelectSpreadTemplate">
+                <views:RunesSpreadsView ViewModel="{Binding}"/>
+            </DataTemplate>
+            <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <c:PixelScaler x:Key="PixelScaler"/>
+            <c:RuneViewTemplateSelector x:Key="RuneViewTemplateSelector"
+                AskTheUniverseTemplate="{StaticResource AskTheUniverseTemplate}" 
+                RunesReadingTemplate="{StaticResource RunesReadingTemplate}" 
+                DetectRunesTemplate="{StaticResource DetectRunesTemplate}" 
+                SelectImageTemplate="{StaticResource SelectImageTemplate}"
+                SelectSpreadTemplate="{StaticResource SelectSpreadTemplate}"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <StackLayout HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.8}}" BindableLayout.ItemsSource="{Binding CurrentStep}" BindableLayout.ItemTemplateSelector="{StaticResource RuneViewTemplateSelector}"/>
+</r:ReactiveContentView>

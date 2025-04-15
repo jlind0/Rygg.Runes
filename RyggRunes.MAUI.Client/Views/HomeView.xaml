@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<r:ReactiveContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui" x:TypeArguments="vm:HomeViewModel" ViewModel="{Binding}"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:DataType="vm:HomeViewModel"
+             xmlns:r="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+xmlns:c="clr-namespace:RyggRunes.MAUI.Client.Converters;assembly=RyggRunes.MAUI.Client"
+xmlns:vm="clr-namespace:Rygg.Runes.Client.ViewModels;assembly=Rygg.Runes.Client.ViewModels"
+                       xmlns:views="clr-namespace:RyggRunes.MAUI.Client.Views"
+             x:Class="RyggRunes.MAUI.Client.Views.HomeView"
+                       >
+    <ContentView.Resources>
+        <Style TargetType="telerik:TabViewHeaderItem" x:Key="TabViewHeaderItemStyle">
+            <Setter Property="TextColor" Value="Blue" />
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup Name="CommonStates">
+                        <VisualState Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="Black" />
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="White" />
+                                <Setter Property="BackgroundColor" Value="Black" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <c:ByteToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+        <c:PixelScaler x:Key="PixelScaler"/>
+    </ContentView.Resources>
+    <telerik:RadTabView 
+IsVisible="{Binding Parent.IsLoggedIn}" HeaderItemStyle="{StaticResource TabViewHeaderItemStyle}"  HeaderPosition="Bottom" IsContentSwipeEnabled="False">
+
+        <telerik:TabViewItem HeaderText="Runes">
+            <views:RunesView HeightRequest="{Binding Parent.ScreenHeight, Converter={StaticResource PixelScaler}, ConverterParameter={x:Double 0.85}}" BindingContext="{Binding RunesVM}"/>
+        </telerik:TabViewItem>
+        <telerik:TabViewItem HeaderText="Tarot">
+            <Label Text="Coming Soon"/>
+        </telerik:TabViewItem>
+        <telerik:TabViewItem HeaderText="Palm">
+            <Label Text="Coming Soon"/>
+        </telerik:TabViewItem>
+        <telerik:TabViewItem HeaderText="Psychic">
+            <Label Text="Coming Soon"/>
+        </telerik:TabViewItem>
+    </telerik:RadTabView>
+</r:ReactiveContentView>

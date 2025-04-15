@@ -10,11 +10,11 @@ WORKDIR /app
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt /app/
-COPY packages/rune_ocr-0.0.1.tar.gz /app/packages/
+COPY packages/rune_ocr-0.0.3.tar.gz /app/packages/
 RUN apt-get update
 RUN apt-get install libgl1-mesa-glx -y
 RUN pip install -r requirements.txt
-RUN pip install packages/rune_ocr-0.0.1.tar.gz
+RUN pip install packages/rune_ocr-0.0.3.tar.gz
 
 
 
@@ -27,4 +27,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 80
 
 # Start the Django development server (use the same command as you would use locally)
-CMD gunicorn -b 0:80 RyggRuneDetector.wsgi
+CMD gunicorn -w 10 -b 0:80 -t 180 RyggRuneDetector.wsgi

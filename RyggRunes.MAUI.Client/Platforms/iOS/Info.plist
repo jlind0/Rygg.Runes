@@ -28,5 +28,17 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>CFBundleIdentifier</key>
+	<string>net.azurewebsites.ryggrunes-api</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.1.0</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to the camera to capture photos of runes that are cast.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone to record audio for sharing.</string>
+	<key>CFBundleDisplayName</key>
+	<string>Divine Advice</string>
+  <key>UIUserInterfaceStyle</key>
+  <string>Light</string>
 </dict>
 </plist>

@@ -7,7 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Rygg Runes Detector"
+        Title="Divine Advice"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

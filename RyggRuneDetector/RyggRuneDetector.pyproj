@@ -60,10 +60,11 @@
     <Folder Include="RyggRuneDetector\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\model_RuneOCR_20230722.onnx" />
+    <Content Include=".env" />
+    <Content Include="app\rune_ocr_v2__yolov7_512_HQ2.onnx" />
     <Content Include="app\templates\app\image_processing\upload.html" />
     <Content Include="Dockerfile" />
-    <Content Include="packages\rune_ocr-0.0.1.tar.gz" />
+    <Content Include="packages\rune_ocr-0.0.3.tar.gz" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
